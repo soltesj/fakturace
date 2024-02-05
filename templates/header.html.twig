@@ -1,0 +1,60 @@
+<header class="p-3 mb-3 border-bottom text-bg-dark">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="{{ path('app_home') }}"
+               class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none text-white">
+                <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+                    <use href="#bootstrap"/>
+                </svg>
+            </a>
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li>
+                    <a href="{{ path('app_home') }}" class="nav-link {% if app.current_route=='app_home' %}text-secondary{% else %} text-white{% endif %}">
+                        <svg class="bi d-block mx-auto mb-1" width="24" height="24">
+                            <use href="#home"/>
+                        </svg>
+                        Domu
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-white">
+                        <svg class="bi d-block mx-auto mb-1" width="24" height="24">
+                            <use href="#price"/>
+                        </svg>
+                        Cena
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-white">
+                        <svg class="bi d-block mx-auto mb-1" width="24" height="24">
+                            <use href="#question"/>
+                        </svg>
+                        FAQ
+                    </a>
+                </li>
+            </ul>
+
+            <div class="text-end">
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li>
+                        <a href="{{ path('app_login') }}"
+                           class="nav-link {% if app.current_route=='app_login' %}text-secondary{% else %} text-white{% endif %}">
+                            <svg class="bi d-block mx-auto mb-1" width="24" height="24">
+                                <use href="#person"/>
+                            </svg>
+                            Přihlásit
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_register') }}" class="nav-link {% if app.current_route=='app_register' %}text-secondary{% else %} text-white{% endif %}">
+                            <svg class="bi d-block mx-auto mb-1" width="24" height="24">
+                                <use href="#person-add"/>
+                            </svg>
+                            Registrovat
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>

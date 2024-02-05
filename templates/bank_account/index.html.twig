@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}BankAccount index{% endblock %}
+
+{% block body %}
+    <h1 class="mb-5">
+        <svg class="bi me-3 mb-1" width="30" height="30">
+            <use href="#arrow-left-circle"/>
+        </svg>
+        Bank Account
+    </h1>
+    <a href="{{ path('app_bank_account_new') }}" class="text-decoration-none">
+        <svg width="16" height="16" class="bi me-1">
+            <use href="#plus-circle-fill"/>
+        </svg>
+        NOVÝ</a>
+    <table class="table mt-3">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Short name</th>
+            <th>Number</th>
+            <th>Code</th>
+            <th>Iban</th>
+            <th>Bic</th>
+            <th>Sequence</th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for bank_account in bank_accounts %}
+            <tr>
+                <td><a href="{{ path('app_bank_account_edit', {'id': bank_account.id}) }}">{{ bank_account.name }}</a>
+                </td>
+                <td>{{ bank_account.shortName }}</td>
+                <td>{{ bank_account.accountNumber }}</td>
+                <td>{{ bank_account.bankCode }}</td>
+                <td>{{ bank_account.iban }}</td>
+                <td>{{ bank_account.bic }}</td>
+                <td>{{ bank_account.sequence }}</td>
+                <td>
+                    <a href="{{ path('app_bank_account_delete', {'id': bank_account.id}) }}" class="text-secondary icon-link-hover">
+                        <svg class="bi d-block mx-auto" width="20" height="20">
+                            <use href="#dash-circle-fill"/>
+                        </svg></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

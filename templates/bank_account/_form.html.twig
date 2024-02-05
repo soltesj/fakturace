@@ -1,0 +1,18 @@
+{{ form_start(form) }}
+<div class="row mb-5">
+    <div class="col-md-6">
+        {{ form_row(form.name) }}
+        {{ form_row(form.accountNumber) }}
+        {{ form_row(form.iban) }}
+        {{ form_row(form.token) }}
+        {{ form_row(form.sequence) }}
+    </div>
+    <div class="col-md-6">
+        {{ form_row(form.shortName) }}
+        {{ form_row(form.bankCode) }}
+        {{ form_row(form.bic) }}
+        {{ form_row(form.routingNumber) }}
+    </div>
+    <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+</div>
+{{ form_end(form) }}

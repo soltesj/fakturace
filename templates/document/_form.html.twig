@@ -1,0 +1,72 @@
+{{ form_start(form) }}
+<div class="row">
+    <div class="col-md-4">
+        {{ form_row(form.documentType) }}
+        {{ form_row(form.documentNumber) }}
+        {{ form_row(form.variableSymbol) }}
+        {{ form_row(form.paymentType) }}
+        {{ form_row(form.transferTax) }}
+    </div>
+    <div class="col-md-4">
+        {{ form_row(form.dateIssue) }}
+        {{ form_row(form.dateTaxable) }}
+        {{ form_row(form.dateDue) }}
+        {{ form_row(form.bankAccount) }}
+    </div>
+    <div class="col-md-4">
+        {{ form_row(form.customer) }}
+        {{ form_row(form.customerName) }}
+        <div class="row">
+            <div class="col-md-6">
+                {{ form_row(form.customerStreet) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.customerHouseNumber) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                {{ form_row(form.customerTown) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.customerZipcode) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                {{ form_row(form.customerIc) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.customerDic) }}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mb-5">
+    <div class="col-md-6">
+        {{ form_row(form.currency) }}
+    </div>
+    <div class="col-md-6">
+        {{ form_row(form.rate) }}
+    </div>
+    <div class="col-md-12">
+        {{ form_row(form.tag) }}
+    </div>
+    <div class="col-md-12">
+        {{ form_row(form.description) }}
+    </div>
+</div>
+<div class="row"
+     data-index="{{ form.documentItems|length > 0 ? form.documentItems|last.vars.name + 1 : 0 }}"
+     data-prototype="{{ form_widget(form.documentItems.vars.prototype)|e('html_attr') }}">
+{% for documentItem in form.documentItems %}
+    <div class="col-md-3">{{ form_widget(documentItem.name) }}</div>
+    <div class="col-md-3">{{ form_widget(documentItem.quantity) }}</div>
+    <div class="col-md-1"> {{ form_widget(documentItem.unit) }}</div>
+    <div class="col-md-3"> {{ form_widget(documentItem.price) }}</div>
+    <div class="col-md-1"> {{ form_widget(documentItem.vat) }}</div>
+    <div class="col-md-1"> {{ form_widget(documentItem.priceWithVat) }}</div>
+{% endfor %}
+</div>
+<button class="btn btn-success">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

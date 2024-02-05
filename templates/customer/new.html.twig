@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Customer{% endblock %}
+
+{% block body %}
+    <h1 class="mb-5">
+        <a href="{{ path('app_customer_index') }}" class="text-decoration-none">
+            <svg class="bi me-3 mb-1" width="30" height="30">
+                <use href="#arrow-left-circle"/>
+            </svg>
+        </a>
+        Novy zakaznik
+    </h1>
+
+    {{ include('customer/_form.html.twig') }}
+{% endblock %}

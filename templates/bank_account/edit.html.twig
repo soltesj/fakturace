@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit BankAccount{% endblock %}
+
+{% block body %}
+    <h1 class="mb-5">
+        <a href="{{ path('app_bank_account_index') }}" class="text-decoration-none">
+            <svg class="bi me-3 mb-1" width="30" height="30">
+                <use href="#arrow-left-circle"/>
+            </svg>
+        </a> Edit</h1>
+
+    {{ include('bank_account/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_bank_account_index') }}">back to list</a>
+
+{% endblock %}

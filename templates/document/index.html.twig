@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Document index{% endblock %}
+
+{% block body %}
+    <h1>Document index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>DocumentNumber</th>
+                <th>CustomerId</th>
+                <th>DateIssue</th>
+                <th>DatePay</th>
+                <th>PriceNoVat</th>
+                <th>PriceTotal</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for document in documents %}
+            <tr>
+                <td><a href="{{ path('app_document_edit', {'id': document.id}) }}">{{ document.documentNumber }}</a></td>
+                <td>{{ document.customer.name|default(null) ? document.customerName|default(null) }}</td>
+                <td>{{ document.dateIssue ? document.dateIssue|date('Y-m-d') : '' }}</td>
+                <td>{{ document.dateDue ? document.dateDue|date('Y-m-d') : '' }}</td>
+                <td>{{ document.priceNoVat }}</td>
+                <td>{{ document.priceTotal }}</td>
+                <td>
+
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_document_new') }}">Create new</a>
+{% endblock %}

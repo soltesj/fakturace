@@ -1,0 +1,27 @@
+{% form_theme form 'bootstrap_5_horizontal_layout.html.twig' %}
+{{ form_start(form) }}
+<div class="row mb-5">
+    <div class="col-md-6">
+        {{ form_row(form.name) }}
+        {{ form_row(form.contact) }}
+        {{ form_row(form.street) }}
+        {{ form_row(form.buildingNumber) }}
+        {{ form_row(form.city) }}
+        {{ form_row(form.zipcode) }}
+        {{ form_row(form.vatPayer) }}
+    </div>
+    <div class="col-md-6">
+        {{ form_row(form.ic) }}
+        {{ form_row(form.dic) }}
+        {{ form_row(form.phone) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.website) }}
+        {{ form_row(form.country) }}
+    </div>
+    <div class="col-md-10">
+    {{ form_row(form.info) }}
+    {{ form_row(form.emailInvoiceMessage) }}
+    </div>
+    <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+</div>
+{{ form_end(form) }}
