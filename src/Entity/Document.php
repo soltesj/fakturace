@@ -40,7 +40,7 @@ class Document
     #[ORM\ManyToOne]
     private ?Currency $currency;
 
-    #[ORM\Column(name: 'transaction_id', type: Types::STRING, length: 32, nullable: false)]
+    #[ORM\Column(name: 'transaction_id', type: Types::STRING, length: 32, nullable: true)]
     private string $transactionId;
 
     #[ORM\Column(name: 'state_id', type: Types::BOOLEAN, nullable: false)]
