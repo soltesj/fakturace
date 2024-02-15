@@ -12,28 +12,31 @@ class DocumentItem
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    protected ?int $id;
+    protected ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'documentItems')]
     private ?Document $document = null;
 
     #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
-    private ?string $name;
+    private ?string $name = null;
 
     #[ORM\Column(name: 'quantity', type: Types::DECIMAL, precision: 10, scale: 2, nullable: false)]
-    private ?float $quantity;
+    private ?float $quantity = null;
 
     #[ORM\Column(name: 'unit', type: Types::STRING, length: 10, nullable: true)]
-    private ?string $unit;
+    private ?string $unit = null;
 
     #[ORM\Column(name: 'price', type: Types::DECIMAL, precision: 10, scale: 2, nullable: false)]
-    private ?string $price;
+    private ?string $price = null;
 
-    #[ORM\Column(name: 'vat', type: Types::SMALLINT, nullable: true)]
-    private ?int $vat;
+    #[ORM\Column( type: Types::SMALLINT, nullable: true)]
+    private ?int $vatAmount = null;
 
     #[ORM\Column(name: 'price_with_vat', type: Types::BOOLEAN, nullable: true)]
-    private ?bool $priceWithVat;
+    private ?bool $priceWithVat = null;
+
+    #[ORM\ManyToOne]
+    private ?VatLevel $vat = null;
 
     public function getId(): ?int
     {
@@ -80,14 +83,14 @@ class DocumentItem
         $this->price = $price;
     }
 
-    public function getVat(): ?int
+    public function getVatAmount(): ?int
     {
-        return $this->vat;
+        return $this->vatAmount;
     }
 
-    public function setVat(?int $vat): void
+    public function setVatAmount(?int $vatAmount): void
     {
-        $this->vat = $vat;
+        $this->vatAmount = $vatAmount;
     }
 
     public function isPriceWithVat(): ?bool
@@ -108,6 +111,18 @@ class DocumentItem
     public function setDocument(?Document $document): static
     {
         $this->document = $document;
+
+        return $this;
+    }
+
+    public function getVat(): ?VatLevel
+    {
+        return $this->vat;
+    }
+
+    public function setVat(?VatLevel $vat): static
+    {
+        $this->vat = $vat;
 
         return $this;
     }

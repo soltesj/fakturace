@@ -67,9 +67,13 @@ class Company
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'companies')]
     private Collection $users;
 
+    #[ORM\ManyToMany(targetEntity: Currency::class)]
+    private Collection $currency;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->currency = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -264,6 +268,30 @@ class Company
     public function setEmailInvoiceMessage(?string $emailInvoiceMessage): void
     {
         $this->emailInvoiceMessage = $emailInvoiceMessage;
+    }
+
+    /**
+     * @return Collection<int, Currency>
+     */
+    public function getCurrency(): Collection
+    {
+        return $this->currency;
+    }
+
+    public function addCurrency(Currency $currency): static
+    {
+        if (!$this->currency->contains($currency)) {
+            $this->currency->add($currency);
+        }
+
+        return $this;
+    }
+
+    public function removeCurrency(Currency $currency): static
+    {
+        $this->currency->removeElement($currency);
+
+        return $this;
     }
 
 }

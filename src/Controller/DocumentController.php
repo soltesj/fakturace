@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Document\Types;
 use App\Entity\Document;
+use App\Entity\DocumentItem;
 use App\Form\DocumentFormType;
 use App\Repository\CompanyRepository;
 use App\Repository\DocumentRepository;
+use App\Repository\VatLevelRepository;
 use App\Service\CompanyTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,6 +17,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
 #[Route('/document')]
@@ -21,14 +25,12 @@ class DocumentController extends AbstractController
 {
     use CompanyTrait;
 
-    const INVOICE_OUTGOING = 1;
-    const INVOICE_OUTGOING_ADVANCE = 3;
-    const INVOICE_OUTGOING_TYPES = [self::INVOICE_OUTGOING,self::INVOICE_OUTGOING_ADVANCE];
     private SessionInterface $session;
 
     public function __construct(
-        private RequestStack $requestStack,
-        private CompanyRepository $companyRepository,
+        private readonly RequestStack $requestStack,
+        private readonly CompanyRepository $companyRepository,
+        private VatLevelRepository $vatLevelRepository,
     ) {
         $this->session = $requestStack->getSession();
     }
@@ -37,7 +39,7 @@ class DocumentController extends AbstractController
     public function index(DocumentRepository $documentRepository): Response
     {
         $company = $this->getCompany();
-        $documents = $documentRepository->findByCompany($company,self::INVOICE_OUTGOING_TYPES);
+        $documents = $documentRepository->findByCompany($company, Types::INVOICE_OUTGOING_TYPES);
 
         return $this->render('document/index.html.twig', [
             'documents' => $documents,
@@ -48,7 +50,10 @@ class DocumentController extends AbstractController
     #[Route('/new', name: 'app_document_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $document = new Document();
+        $company = $this->getCompany();
+        $documentItem = new DocumentItem();
+        $document = new Document($company);
+        //['document_types' => Types::INVOICE_OUTGOING_TYPES]
         $form = $this->createForm(DocumentFormType::class, $document);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -61,6 +66,7 @@ class DocumentController extends AbstractController
         return $this->render('document/new.html.twig', [
             'document' => $document,
             'form' => $form,
+            'company' => $company,
         ]);
     }
 
@@ -68,6 +74,7 @@ class DocumentController extends AbstractController
     public function edit(Request $request, Document $document, EntityManagerInterface $entityManager): Response
     {
         $company = $this->getCompany();
+        $vats = $this->vatLevelRepository->getValidVatByCountryPairedById($company->getCountry());
         if ($document->getCompany() !== $company) {
             $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
 
@@ -84,6 +91,8 @@ class DocumentController extends AbstractController
         return $this->render('document/edit.html.twig', [
             'document' => $document,
             'form' => $form,
+            'company' => $company,
+            'vats' => $vats,
         ]);
     }
 
@@ -96,8 +105,7 @@ class DocumentController extends AbstractController
 
             return $this->redirectToRoute('app_customer_index');
         }
-
-        if ($this->isCsrfTokenValid('delete' . $document->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$document->getId(), $request->request->get('_token'))) {
             $entityManager->remove($document);
             $entityManager->flush();
         }

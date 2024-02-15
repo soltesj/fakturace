@@ -3,9 +3,18 @@
 {% block title %}Document index{% endblock %}
 
 {% block body %}
-    <h1>Document index</h1>
-
-    <table class="table">
+    <h1 class="mb-5">
+        <svg class="bi me-3 mb-1" width="30" height="30">
+            <use href="#arrow-left-circle"/>
+        </svg>
+        Faktury - vydané
+    </h1>
+    <a href="{{ path('app_document_new') }}" class="text-decoration-none">
+        <svg width="16" height="16" class="bi me-1">
+            <use href="#plus-circle-fill"/>
+        </svg>
+        NOVÁ FAKTURA</a>
+    <table class="table mt-3">
         <thead>
             <tr>
                 <th>DocumentNumber</th>
@@ -37,6 +46,4 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_document_new') }}">Create new</a>
 {% endblock %}

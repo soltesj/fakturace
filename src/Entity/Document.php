@@ -14,13 +14,13 @@ class Document
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    protected ?int $id;
+    protected ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'documents')]
     private ?self $document = null;
 
     #[ORM\OneToMany(mappedBy: 'document', targetEntity: self::class)]
-    private Collection $documents;
+    private ?Collection $documents = null;
 
     #[ORM\ManyToOne]
     private ?Company $company = null;
@@ -35,46 +35,46 @@ class Document
     private ?Customer $customer = null;
 
     #[ORM\ManyToOne]
-    private PaymentType $paymentType;
+    private ?PaymentType $paymentType = null;
 
     #[ORM\ManyToOne]
-    private ?Currency $currency;
+    private ?Currency $currency = null;
 
     #[ORM\Column(name: 'transaction_id', type: Types::STRING, length: 32, nullable: true)]
-    private string $transactionId;
+    private ?string $transactionId = null;
 
     #[ORM\Column(name: 'state_id', type: Types::BOOLEAN, nullable: false)]
-    private bool $stateId;
+    private ?bool $stateId = null;
 
     #[ORM\Column(name: 'transfer_tax', type: Types::BOOLEAN, nullable: false)]
-    private bool $transferTax;
+    private ?bool $transferTax = null;
 
     #[ORM\Column(name: 'send', type: Types::BOOLEAN, nullable: true)]
     private ?bool $send = null;
 
     #[ORM\Column(name: 'currency', type: Types::STRING, length: 4, nullable: false)]
-    private string $currencyString;
+    private ?string $currencyString = null;
 
-    #[ORM\Column(name: 'rate', type: Types::FLOAT, precision: 10, scale: 4, nullable: false)]
-    private float $rate;
+    #[ORM\Column(name: 'rate', type: Types::DECIMAL, precision: 6, scale: 2, nullable: true)]
+    private ?string $rate = null;
 
     #[ORM\Column(name: 'document_number', type: Types::STRING, length: 20, nullable: false)]
-    private string $documentNumber;
+    private ?string $documentNumber = null;
 
     #[ORM\Column(name: 'variable_symbol', type: Types::STRING, length: 10, nullable: false)]
-    private string $variableSymbol;
+    private ?string $variableSymbol = null;
 
     #[ORM\Column(name: 'constant_symbol', type: Types::STRING, length: 4, nullable: false)]
-    private string $constantSymbol;
+    private ?string $constantSymbol = null;
 
     #[ORM\Column(name: 'specific_symbol', type: Types::STRING, length: 10, nullable: false)]
-    private string $specificSymbol;
+    private ?string $specificSymbol = null;
 
     #[ORM\ManyToOne]
     private ?BankAccount $bankAccount = null;
 
     #[ORM\OneToMany(mappedBy: 'document', targetEntity: DocumentItem::class)]
-    private Collection $documentItems;
+    private ?Collection $documentItems = null;
     #[ORM\Column(name: 'bank_routing', type: Types::STRING, length: 32, nullable: true)]
     private ?string $bankRouting = null;
 
@@ -82,19 +82,19 @@ class Document
     private ?string $bankAccountNumber = null;
 
     #[ORM\Column(name: 'iban', type: Types::STRING, length: 64, nullable: false)]
-    private ?string $iban;
+    private ?string $iban = null;
 
     #[ORM\Column(name: 'bic', type: Types::STRING, length: 64, nullable: false)]
-    private ?string $bic;
+    private ?string $bic = null;
 
     #[ORM\Column(name: 'date_issue', type: Types::DATE_MUTABLE, nullable: false)]
-    private DateTimeInterface $dateIssue;
+    private ?DateTimeInterface $dateIssue = null;
 
     #[ORM\Column(name: 'date_taxable', type: Types::DATE_MUTABLE, nullable: true)]
-    private DateTimeInterface $dateTaxable;
+    private ?DateTimeInterface $dateTaxable = null;
 
     #[ORM\Column(name: 'date_due', type: Types::DATE_MUTABLE, nullable: true)]
-    private DateTimeInterface $dateDue;
+    private ?DateTimeInterface $dateDue = null;
 
     #[ORM\Column(name: 'customer_name', type: Types::STRING, length: 255, nullable: true)]
     private ?string $customerName = null;
@@ -118,35 +118,37 @@ class Document
     private ?string $customerIc = null;
 
     #[ORM\Column(name: 'customer_dic', type: Types::STRING, length: 20, nullable: false)]
-    private ?string $customerDic;
+    private ?string $customerDic = null;
 
     #[ORM\Column(name: 'description', type: Types::TEXT, length: 65535, nullable: false)]
-    private ?string $description;
+    private ?string $description = null;
 
     #[ORM\Column(name: 'vat_high', type: Types::BOOLEAN, nullable: false)]
-    private ?bool $vatHigh;
+    private ?bool $vatHigh = null;
 
     #[ORM\Column(name: 'vat_low', type: Types::BOOLEAN, nullable: false)]
-    private ?bool $vatLow;
+    private ?bool $vatLow = null;
 
-    #[ORM\Column(name: 'price_without_high_vat', type: Types::FLOAT, precision: 10, scale: 2, nullable: false)]
-    private ?float $priceWithoutHighVat;
+    #[ORM\Column(name: 'price_without_high_vat', type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    private ?string $priceWithoutHighVat = null;
 
-    #[ORM\Column(name: 'price_without_low_vat', type: Types::FLOAT, precision: 10, scale: 2, nullable: false)]
-    private ?float $priceWithoutLowVat;
+    #[ORM\Column(name: 'price_without_low_vat', type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    private ?string $priceWithoutLowVat = null;
 
-    #[ORM\Column(name: 'price_no_vat', type: Types::FLOAT, precision: 10, scale: 2, nullable: false)]
-    private ?float $priceNoVat;
+    #[ORM\Column(name: 'price_no_vat', type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    private ?string $priceNoVat = null;
 
-    #[ORM\Column(name: 'priceTotal', type: Types::FLOAT, precision: 10, scale: 2, nullable: false)]
-    private ?float $priceTotal;
+    #[ORM\Column(name: 'priceTotal', type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    private ?string $priceTotal = null;
 
     #[ORM\Column(name: 'tag', type: Types::TEXT, length: 65535, nullable: false)]
-    private ?string $tag;
+    private ?string $tag = null;
 
-    public function __construct()
+    public function __construct(Company $company)
     {
         $this->documents = new ArrayCollection();
+        $this->documentItems = new ArrayCollection();
+        $this->company = $company;
     }
 
     public function getId(): ?int
@@ -214,12 +216,12 @@ class Document
         $this->currencyString = $currencyString;
     }
 
-    public function getRate(): float
+    public function getRate(): ?string
     {
         return $this->rate;
     }
 
-    public function setRate(float $rate): void
+    public function setRate(?string $rate): void
     {
         $this->rate = $rate;
     }
@@ -454,42 +456,42 @@ class Document
         $this->vatLow = $vatLow;
     }
 
-    public function getPriceWithoutHighVat(): float
+    public function getPriceWithoutHighVat(): ?string
     {
         return $this->priceWithoutHighVat;
     }
 
-    public function setPriceWithoutHighVat(float $priceWithoutHighVat): void
+    public function setPriceWithoutHighVat(?string $priceWithoutHighVat): void
     {
         $this->priceWithoutHighVat = $priceWithoutHighVat;
     }
 
-    public function getPriceWithoutLowVat(): float
+    public function getPriceWithoutLowVat(): ?string
     {
         return $this->priceWithoutLowVat;
     }
 
-    public function setPriceWithoutLowVat(float $priceWithoutLowVat): void
+    public function setPriceWithoutLowVat(?string $priceWithoutLowVat): void
     {
         $this->priceWithoutLowVat = $priceWithoutLowVat;
     }
 
-    public function getPriceNoVat(): float
+    public function getPriceNoVat(): ?string
     {
         return $this->priceNoVat;
     }
 
-    public function setPriceNoVat(float $priceNoVat): void
+    public function setPriceNoVat(?string $priceNoVat): void
     {
         $this->priceNoVat = $priceNoVat;
     }
 
-    public function getPriceTotal(): float
+    public function getPriceTotal(): ?string
     {
         return $this->priceTotal;
     }
 
-    public function setPriceTotal(float $priceTotal): void
+    public function setPriceTotal(?string $priceTotal): void
     {
         $this->priceTotal = $priceTotal;
     }

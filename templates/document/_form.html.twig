@@ -1,72 +1,180 @@
 {{ form_start(form) }}
-<div class="row">
-    <div class="col-md-4">
-        {{ form_row(form.documentType) }}
-        {{ form_row(form.documentNumber) }}
-        {{ form_row(form.variableSymbol) }}
-        {{ form_row(form.paymentType) }}
-        {{ form_row(form.transferTax) }}
-    </div>
-    <div class="col-md-4">
-        {{ form_row(form.dateIssue) }}
-        {{ form_row(form.dateTaxable) }}
-        {{ form_row(form.dateDue) }}
-        {{ form_row(form.bankAccount) }}
-    </div>
-    <div class="col-md-4">
-        {{ form_row(form.customer) }}
-        {{ form_row(form.customerName) }}
-        <div class="row">
-            <div class="col-md-6">
-                {{ form_row(form.customerStreet) }}
-            </div>
-            <div class="col-md-6">
-                {{ form_row(form.customerHouseNumber) }}
+<div data-controller="extended-info">
+    <div class="row">
+        <div class="col-md-4">
+            {{ form_row(form.documentType) }}
+            <div data-extended-info-target="extendedInfo">
+                {{ form_row(form.documentNumber) }}
+                {{ form_row(form.variableSymbol) }}
+                {{ form_row(form.paymentType) }}
+                {{ form_row(form.transferTax) }}
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                {{ form_row(form.customerTown) }}
-            </div>
-            <div class="col-md-6">
-                {{ form_row(form.customerZipcode) }}
+        <div class="col-md-4">
+            {{ form_row(form.dateIssue) }}
+            <div data-extended-info-target="extendedInfo">
+                {{ form_row(form.dateTaxable) }}
+                {{ form_row(form.dateDue) }}
+                {{ form_row(form.bankAccount) }}
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                {{ form_row(form.customerIc) }}
+        <div class="col-md-4">
+            {{ form_row(form.customer) }}
+            <div data-extended-info-target="extendedInfo">
+                {{ form_row(form.customerName) }}
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form_row(form.customerStreet) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.customerHouseNumber) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form_row(form.customerTown) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.customerZipcode) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form_row(form.customerIc) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.customerDic) }}
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
-                {{ form_row(form.customerDic) }}
-            </div>
+        </div>
+    </div>
+    <div class="row" data-extended-info-target="extendedInfo">
+        <div class="col-md-4">
+            {{ form_row(form.currency) }}
+        </div>
+        <div class="col-md-4">
+            {{ form_row(form.rate) }}
+        </div>
+        <div class="col-md-8">
+            {{ form_row(form.description) }}
+        </div>
+    </div>
+    <div class="row mb-5">
+        <div class="col-md-8">
+            {{ form_row(form.tag) }}
+        </div>
+        <div class="col-md-4 text-center">
+            <button type="button"
+                    class="btn btn-info mt-2"
+                    data-action="extended-info#toggleInfo">
+                <svg width="16" height="16" class="bi me-1">
+                    <use href="#plus-circle"/>
+                </svg>
+                Více informací
+            </button>
         </div>
     </div>
 </div>
-<div class="row mb-5">
-    <div class="col-md-6">
-        {{ form_row(form.currency) }}
-    </div>
-    <div class="col-md-6">
-        {{ form_row(form.rate) }}
-    </div>
-    <div class="col-md-12">
-        {{ form_row(form.tag) }}
-    </div>
-    <div class="col-md-12">
-        {{ form_row(form.description) }}
+<div {{ stimulus_controller('price-calc', {
+    vats: vats
+}) }}>
+    <div
+            {{ stimulus_controller('document-item-collection', {
+                isVatPayer: company.vatPayer,
+                index:  form.documentItems|length > 0 ? form.documentItems|last.vars.name + 1 : 0,
+            }) }}
+
+            {#        data-document-item-collection-index-value="{{ form.documentItems|length > 0 ? form.documentItems|last.vars.name + 1 : 0 }}" #}
+            data-document-item-collection-prototype-value="
+     {{ '<div class="col-md-4">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.name)|e('html_attr') }}{{ '</div>'|e('html_attr') }}
+    {{ '<div class="col-md-1">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.quantity,{'attr':{
+                'data-price-calc-target':'quantity',
+                'data-action':'price-calc#calc'
+            }})|e('html_attr') }}{{ '</div>'|e('html_attr') }}
+    {{ '<div class="col-md-1">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.unit)|e('html_attr') }}{{ '</div>'|e('html_attr') }}
+    {{ '<div class="col-md-3">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.price, {'attr':{
+                'data-price-calc-target':'price',
+                'data-action':'price-calc#calc'
+            }})|e('html_attr') }}{{ '</div>'|e('html_attr') }}
+    {{ '<div class="col-md-1" data-document-item-collection-target="vatAmount">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.vat,{'attr':{
+                'data-price-calc-target':'vat',
+                'data-action':'price-calc#calc'
+            }})|e('html_attr') }}{{ '</div>'|e('html_attr') }}
+    {{ '<div class="col-md-1" data-document-item-collection-target="isPriceWithVat">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.priceWithVat,{
+                'label_attr': {'class': 'd-none'},
+                'attr': {'data-price-calc-target':'isPriceWithVat'}
+            })|e('html_attr') }}{{ '</div>'|e('html_attr') }}
+    {{ '<div class="col-md-1"><div class="form-control" data-price-calc-target="priceItem">&nbsp;</div></div>'|e('html_attr') }}
+    {{ '</div>'|e('html_attr') }}"
+    >
+
+        <button type="button" {{ stimulus_action('document-item-collection', 'addCollectionElement') }}
+                class="btn btn-info">
+            <svg width="16" height="16" class="bi me-1">
+                <use href="#plus-circle"/>
+            </svg>
+        </button>
+        <div class="row">
+            <div class="col-md-4">name</div>
+            <div class="col-md-1">quantity</div>
+            <div class="col-md-1">unit</div>
+            <div class="col-md-3">price</div>
+            <div class="col-md-1"
+                 data-document-item-collection-target="vatAmount">vat
+            </div>
+            <div class="col-md-1"
+                 data-document-item-collection-target="isPriceWithVat">priceWithVat
+            </div>
+            <div class="col-md-1">priceTotal</div>
+        </div>
+
+        <div {{ stimulus_target('document-item-collection', 'collectionContainer') }}>
+            {% for documentItem in form.documentItems %}
+                <div class="row">
+                    <div class="col-md-4">{{ form_widget(documentItem.name) }}</div>
+                    <div class="col-md-1">{{ form_widget(documentItem.quantity, {'attr':{
+                            'data-price-calc-target':'quantity',
+                            'data-action':'price-calc#calc'
+                        }}) }}</div>
+                    <div class="col-md-1">{{ form_widget(documentItem.unit) }}</div>
+                    <div class="col-md-3">{{ form_widget(documentItem.price, {'attr':{
+                            'data-price-calc-target':'price',
+                            'data-action':'price-calc#calc'
+                        }}) }}</div>
+                    <div class="col-md-1"
+                         data-document-item-collection-target="vatAmount">
+                        {{ form_widget(documentItem.vat, {'attr':{
+                            'data-price-calc-target':'vat',
+                            'data-action':'price-calc#calc'
+                        }}) }}</div>
+                    <div class="col-md-1"
+                         data-document-item-collection-target="isPriceWithVat"> {{ form_widget(documentItem.priceWithVat,{
+                            'label_attr' : { 'class': 'd-none' },
+                            'attr' : { 'data-price-calc-target':'isPriceWithVat' },
+                        }) }}
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-control" data-price-calc-target="priceItem">00.00</div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+        <div class="row mt-3">
+            <div class="offset-md-6 col-md-3 text-end">Celkem bez DPH:</div>
+            <div class="col-md-3 text-end" data-price-calc-target="priceTotal">0.00</div>
+        </div>
+        <div class="row">
+            <div class="offset-md-6 col-md-3 text-end">DPH:</div>
+            <div class="col-md-3 text-end" data-price-calc-target="priceVat">0.00</div>
+        </div>
+        <div class="row">
+            <div class="offset-md-6 col-md-3 text-end">Cena celkem:</div>
+            <div class="col-md-3 text-end" data-price-calc-target="priceTotalVat">0.00</div>
+        </div>
     </div>
 </div>
-<div class="row"
-     data-index="{{ form.documentItems|length > 0 ? form.documentItems|last.vars.name + 1 : 0 }}"
-     data-prototype="{{ form_widget(form.documentItems.vars.prototype)|e('html_attr') }}">
-{% for documentItem in form.documentItems %}
-    <div class="col-md-3">{{ form_widget(documentItem.name) }}</div>
-    <div class="col-md-3">{{ form_widget(documentItem.quantity) }}</div>
-    <div class="col-md-1"> {{ form_widget(documentItem.unit) }}</div>
-    <div class="col-md-3"> {{ form_widget(documentItem.price) }}</div>
-    <div class="col-md-1"> {{ form_widget(documentItem.vat) }}</div>
-    <div class="col-md-1"> {{ form_widget(documentItem.priceWithVat) }}</div>
-{% endfor %}
-</div>
-<button class="btn btn-success">{{ button_label|default('Save') }}</button>
+
+<button class="btn btn-success" type="submit">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}

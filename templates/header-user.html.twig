@@ -1,89 +1,125 @@
 <header class="p-3 mb-3 border-bottom text-bg-dark">
-    <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark" aria-label="Fourth navbar example">
+        <div class="container-lg">
             <a href="{{ path('app_dash_board') }}"
-               class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none text-white">
+               class="navbar-brand text-decoration-none text-white">
                 <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
                     <use href="#bootstrap"/>
                 </svg>
             </a>
-            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li>
-                    <a href="{{ path('app_dash_board') }}" class="nav-link {% if app.current_route=='app_dash_board' %}text-secondary{% else %} text-white{% endif %}">
-                        <svg class="bi d-block mx-auto mb-1" width="24" height="24">
-                            <use href="#speedometer2"/>
-                        </svg>
-                        Přehledy
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ path('app_document_index') }}" class="nav-link text-white">
-                        <svg class="bi d-block mx-auto mb-1" width="24" height="24">
-                            <use href="#table"/>
-                        </svg>
-                        Faktury vydané
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link text-white">
-                        <svg class="bi d-block mx-auto mb-1" width="24" height="24">
-                            <use href="#table"/>
-                        </svg>
-                        Faktury přijaté
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link text-white">
-                        <svg class="bi d-block mx-auto mb-1" width="24" height="24">
-                            <use href="#grid"/>
-                        </svg>
-                        Platby
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ path('app_customer_index') }}" class="nav-link {% if app.current_route=='app_customer_index' %}text-secondary{% else %} text-white{% endif %}">
-                        <svg class="bi d-block mx-auto mb-1" width="24" height="24">
-                            <use href="#people-circle"/>
-                        </svg>
-                        Adresář
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="d-block nav-link text-white dropdown-toggle" data-bs-toggle="dropdown"
-                       aria-expanded="false">
-                        <svg class="bi d-block mx-auto mb-1" width="24" height="24">
-                            <use href="#gear"/>
-                        </svg>
-                        Nastavení
-                    </a>
-                    <ul class="dropdown-menu text-small">
-                        <li><a class="dropdown-item" href="{{ path('app_company_edit') }}">Firemní údaje</a></li>
-                        <li><a class="dropdown-item" href="{{ path('app_bank_account_index') }}">Bankovní účty</a></li>
-                        <li><a class="dropdown-item" href="#">Format čísel dokladu</a></li>
-                    </ul>
-                </li>
-            </ul>
-            <div class="d-block text-white me-3">
-                <svg class="bi d-block mx-auto mb-1" width="24" height="24">
-                    <use href="#company-building"/>
-                </svg>{{ company.name }}
-            </div>
-            <div class="dropdown text-end">
-                <a href="#" class="d-block nav-link text-white dropdown-toggle"
-                   data-bs-toggle="dropdown" aria-expanded="false">
-                    <svg class="bi d-block mx-auto mb-1" width="24" height="24">
-                        <use href="#person"/>
-                    </svg>
-                    {{ app.user.name|first|upper }}{{ app.user.surname|first|upper }}
-                </a>
-                <ul class="dropdown-menu text-small">
-                    <li><a class="dropdown-item" href="{{ path('app_user_edit') }}">Osobní údaje</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample04"
+                    aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarsExample04">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    <li class="nav-item">
+                        <a href="{{ path('app_dash_board') }}"
+                           class="nav-link {% if app.current_route=='app_dash_board' %}text-secondary{% else %} text-white{% endif %}">
+                            <svg class="bi d-md-block me-2 mx-md-auto" width="20" height="20">
+                                <use href="#speedometer2"/>
+                            </svg>
+                            Přehledy
+                        </a>
                     </li>
-                    <li><a class="dropdown-item" href="{{ path('app_logout') }}">Odhlásit</a></li>
+                    <li class="nav-item">
+                        <a href="{{ path('app_document_index') }}" class="nav-link text-white">
+                            <svg class="bi d-md-block me-2 mx-md-auto mb-md-1" width="20" height="20">
+                                <use href="#table"/>
+                            </svg>
+                            Faktury vydané
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link text-white">
+                            <svg class="bi d-md-block me-2 mx-md-auto  mb-md-1" width="20" height="20">
+                                <use href="#table"/>
+                            </svg>
+                            Faktury přijaté
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link text-white">
+                            <svg class="bi d-md-block me-2 mx-md-auto  mb-md-1" width="20" height="20">
+                                <use href="#grid"/>
+                            </svg>
+                            Platby
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ path('app_customer_index') }}"
+                           class="nav-link {% if app.current_route=='app_customer_index' %}text-secondary{% else %} text-white{% endif %}">
+                            <svg class="bi d-md-block me-2 mx-md-auto  mb-md-1" width="20" height="20">
+                                <use href="#people-circle"/>
+                            </svg>
+                            Adresář
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link text-white dropdown-toggle" data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            <svg class="bi d-md-block me-2 mx-md-auto  mb-md-1" width="20" height="20">
+                                <use href="#gear"/>
+                            </svg>
+                            Nastavení
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="nav-item"><a class="dropdown-item" href="{{ path('app_company_edit') }}">Firemní
+                                    údaje</a>
+                            </li>
+                            <li class="nav-item"><a class="dropdown-item"
+                                                    href="{{ path('app_bank_account_index') }}">Bankovní
+                                    účty</a></li>
+                            <li class="nav-item"><a class="dropdown-item" href="#">Format čísel dokladu</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="navbar-nav mb-2 mb-md-0 justify-content-sm-end">
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link text-white dropdown-toggle" data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            <svg class="bi d-md-block me-2 mx-md-auto  mb-md-1" width="20" height="20">
+                                <use href="#company-building"/>
+                            </svg>
+                            {{ company.name }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="nav-item"><a class="dropdown-item" href="#">Switch company</a></li>
+                            <li class="nav-item">
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li class="nav-item"><a class="dropdown-item" href="#">Switch company</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="navbar-nav mb-2 mb-md-0 justify-content-sm-end">
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link text-white dropdown-toggle" data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            <svg class="bi d-md-block me-2 mx-md-auto  mb-md-1" width="20" height="20">
+                                <use href="#person"/>
+                            </svg>
+                            <div class="d-none d-md-inline">
+                                {{ app.user.name|first|upper }}{{ app.user.surname|first|upper }}
+                            </div>
+                            <div class="d-inline d-md-none">
+                                {{ app.user.name }} {{ app.user.surname }}
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="nav-item"><a class="dropdown-item" href="{{ path('app_user_edit') }}">Osobní
+                                    údaje</a></li>
+                            <li class="nav-item">
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li class="nav-item"><a class="dropdown-item" href="{{ path('app_logout') }}">Odhlásit</a>
+                            </li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
-    </div>
+    </nav>
 </header>

@@ -3,64 +3,29 @@
 namespace App\Form;
 
 use App\Entity\DocumentItem;
+use App\Entity\VatLevel;
+use DateTime;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DocumentItemFormType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('name', options: [
+        $builder->add('name')->add('quantity')->add('unit')->add('price')
+            ->add('vat', EntityType::class, [
+                'class' => VatLevel::class,
+                'query_builder' => function (EntityRepository $er): QueryBuilder {
+                    return $er->createQueryBuilder('vat_level')->andWhere('vat_level.validTo is null or vat_level.validTo >= :now')->setParameter('now',
+                            new DateTime())->orderBy('vat_level.vatAmount', 'DESC');
 
-            'label' => 'document Type',
-            'attr' => [
-                'placeholder' => 'name',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
-        ])->add('quantity', options: [
-                'label' => 'quantity',
-                'attr' => [
-                    'placeholder' => 'quantity',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
-                ],
-            ])->add('unit', options: [
-                'label' => 'unit',
-                'attr' => [
-                    'placeholder' => 'unit',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
-                ],
-            ])->add('price', options: [
-                'label' => 'price',
-                'attr' => [
-                    'placeholder' => 'price',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
-                ],
-            ])->add('vat', options: [
-                'label' => 'vat',
-                'attr' => [
-                    'placeholder' => 'vat',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
-                ],
-            ])->add('priceWithVat', options: [
-                'label' => 'priceWithVat',
-                'attr' => [
-                    'placeholder' => 'priceWithVat',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
-                ],
-            ]);
+                },
+                'choice_label' => 'vatAmount',])->add('priceWithVat');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

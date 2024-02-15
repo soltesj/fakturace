@@ -3,8 +3,10 @@
 {% block title %}Edit Document{% endblock %}
 
 {% block body %}
-    <h1>Edit Document</h1>
-
+    <h1 class="mb-5">
+        <a href="{{ path('app_document_index') }}"><svg class="bi me-3 mb-1" width="30" height="30"><use href="#arrow-left-circle"/></svg></a>
+        Edit Document
+    </h1>
     {{ include('document/_form.html.twig', {'button_label': 'Update'}) }}
 
     <a href="{{ path('app_document_index') }}">back to list</a>
