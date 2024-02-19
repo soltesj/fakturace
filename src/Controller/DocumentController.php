@@ -51,12 +51,20 @@ class DocumentController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $company = $this->getCompany();
+        $vats = $this->vatLevelRepository->getValidVatByCountryPairedById($company->getCountry());
         $documentItem = new DocumentItem();
         $document = new Document($company);
+        $document->addDocumentItem($documentItem);
         //['document_types' => Types::INVOICE_OUTGOING_TYPES]
         $form = $this->createForm(DocumentFormType::class, $document);
         $form->handleRequest($request);
+
+
         if ($form->isSubmitted() && $form->isValid()) {
+            foreach ($document->getDocumentItems()as $documentItem){
+                $document->addDocumentItem($documentItem);
+            }
+            dump($document);
             $entityManager->persist($document);
             $entityManager->flush();
 
@@ -67,6 +75,7 @@ class DocumentController extends AbstractController
             'document' => $document,
             'form' => $form,
             'company' => $company,
+            'vats' => $vats,
         ]);
     }
 

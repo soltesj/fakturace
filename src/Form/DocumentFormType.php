@@ -32,9 +32,12 @@ class DocumentFormType extends AbstractType
             'class' => DocumentType::class,
             'choice_label' => 'name',
             'query_builder' => function (EntityRepository $er) use ($documentTypes): QueryBuilder {
-        return $er->createQueryBuilder('document_type')->andWhere('document_type in (:document_type)')->setParameter('document_type',
-            $documentTypes)->orderBy('document_type.name', 'ASC');
-    },
+                return $er->createQueryBuilder('document_type')
+                    ->andWhere('document_type in (:document_type)')
+                    ->setParameter('document_type',
+                        $documentTypes)
+                    ->orderBy('document_type.name', 'ASC');
+            },
             'label' => 'document Type',
             'attr' => [
                 'placeholder' => 'Document Type',
@@ -103,8 +106,11 @@ class DocumentFormType extends AbstractType
         ])->add('bankAccount', EntityType::class, [
             'class' => BankAccount::class,
             'query_builder' => function (EntityRepository $er) use ($company): QueryBuilder {
-                return $er->createQueryBuilder('bank_account')->andWhere('bank_account.company = :company')->setParameter('company',
-                        $company)->orderBy('bank_account.sequence', 'ASC');
+                return $er->createQueryBuilder('bank_account')
+                    ->andWhere('bank_account.company = :company')
+                    ->setParameter('company',
+                        $company)
+                    ->orderBy('bank_account.sequence', 'ASC');
             },
             'choice_label' => 'name',
             'label' => 'bankAccount',
@@ -118,8 +124,11 @@ class DocumentFormType extends AbstractType
             'class' => Customer::class,
             'choice_label' => 'name',
             'query_builder' => function (EntityRepository $er) use ($company): QueryBuilder {
-                return $er->createQueryBuilder('customer')->andWhere('customer.company = :company')->setParameter('company',
-                    $company)->orderBy('customer.name', 'ASC');
+                return $er->createQueryBuilder('customer')
+                    ->andWhere('customer.company = :company')
+                    ->setParameter('company',
+                        $company)
+                    ->orderBy('customer.name', 'ASC');
             },
             'label' => 'customer',
             'attr' => [
@@ -196,8 +205,11 @@ class DocumentFormType extends AbstractType
         ])->add('currency', EntityType::class, [
             'class' => Currency::class,
             'query_builder' => function (EntityRepository $er) use ($company): QueryBuilder {
-                return $er->createQueryBuilder('currency')->andWhere('currency.id in( :companyCurrencies)')->setParameter('companyCurrencies',
-                    $company->getCurrency())->orderBy('currency.currencyCode', 'ASC');
+                return $er->createQueryBuilder('currency')
+                    ->andWhere('currency.id in( :companyCurrencies)')
+                    ->setParameter('companyCurrencies',
+                        $company->getCurrency())
+                    ->orderBy('currency.currencyCode', 'ASC');
             },
             'choice_label' => 'currencyCode',
             'label' => 'currency',
@@ -231,20 +243,23 @@ class DocumentFormType extends AbstractType
             'row_attr' => [
                 'class' => 'form-floating mb-3',
             ],
-        ])->add('vatLow', HiddenType::class)->add('priceWithoutHighVat', HiddenType::class)->add('priceWithoutLowVat',
-            HiddenType::class)->add('priceNoVat', HiddenType::class)->add('priceTotal',
-            HiddenType::class)->add('documentItems', CollectionType::class, [
-            'entry_type' => DocumentItemFormType::class,
-            'entry_options' => ['label' => false],
-            'allow_add' => true,
-        ]);
+        ])
+            ->add('priceWithoutHighVat',HiddenType::class)
+            ->add('priceWithoutLowVat', HiddenType::class)
+            ->add('priceNoVat', HiddenType::class)
+            ->add('priceTotal', HiddenType::class)
+            ->add('documentItems', CollectionType::class, [
+                'entry_type' => DocumentItemFormType::class,
+                'entry_options' => ['label' => false],
+                'allow_add' => true,
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Document::class,
-            'document_types'
+            'document_types',
         ]);
     }
 }

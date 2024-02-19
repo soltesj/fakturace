@@ -174,6 +174,18 @@
             <div class="col-md-3 text-end" data-price-calc-target="priceTotalVat">0.00</div>
         </div>
     </div>
+    {{ form_row(form.priceTotal, {
+        'attr' : { 'data-price-calc-target':'priceTotalWithVat' },
+    }) }}
+    {{ form_row(form.priceWithoutHighVat, {
+        'attr' : { 'data-price-calc-target':'priceWithoutHighVat' },
+    }) }}
+    {{ form_row(form.priceWithoutLowVat, {
+        'attr' : { 'data-price-calc-target':'priceWithoutLowVat' },
+    }) }}
+    {{ form_row(form.priceNoVat, {
+        'attr' : { 'data-price-calc-target':'priceTotalWithoutVat' },
+    }) }}
 </div>
 
 <button class="btn btn-success" type="submit">{{ button_label|default('Save') }}</button>

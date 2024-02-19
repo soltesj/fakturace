@@ -30,7 +30,7 @@
         {% for document in documents %}
             <tr>
                 <td><a href="{{ path('app_document_edit', {'id': document.id}) }}">{{ document.documentNumber }}</a></td>
-                <td>{{ document.customer.name|default(null) ? document.customerName|default(null) }}</td>
+                <td>{{ document.customer.name|default(null) ? document.customer.name|default(null) : document.customerName|default(null) }}</td>
                 <td>{{ document.dateIssue ? document.dateIssue|date('Y-m-d') : '' }}</td>
                 <td>{{ document.dateDue ? document.dateDue|date('Y-m-d') : '' }}</td>
                 <td>{{ document.priceNoVat }}</td>

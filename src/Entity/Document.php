@@ -43,7 +43,7 @@ class Document
     #[ORM\Column(name: 'transaction_id', type: Types::STRING, length: 32, nullable: true)]
     private ?string $transactionId = null;
 
-    #[ORM\Column(name: 'state_id', type: Types::BOOLEAN, nullable: false)]
+    #[ORM\Column(name: 'state_id', type: Types::INTEGER, nullable: true)]
     private ?bool $stateId = null;
 
     #[ORM\Column(name: 'transfer_tax', type: Types::BOOLEAN, nullable: false)]
@@ -52,7 +52,7 @@ class Document
     #[ORM\Column(name: 'send', type: Types::BOOLEAN, nullable: true)]
     private ?bool $send = null;
 
-    #[ORM\Column(name: 'currency', type: Types::STRING, length: 4, nullable: false)]
+    #[ORM\Column(name: 'currency', type: Types::STRING, length: 4, nullable: true)]
     private ?string $currencyString = null;
 
     #[ORM\Column(name: 'rate', type: Types::DECIMAL, precision: 6, scale: 2, nullable: true)]
@@ -61,19 +61,19 @@ class Document
     #[ORM\Column(name: 'document_number', type: Types::STRING, length: 20, nullable: false)]
     private ?string $documentNumber = null;
 
-    #[ORM\Column(name: 'variable_symbol', type: Types::STRING, length: 10, nullable: false)]
+    #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
     private ?string $variableSymbol = null;
 
-    #[ORM\Column(name: 'constant_symbol', type: Types::STRING, length: 4, nullable: false)]
+    #[ORM\Column(type: Types::STRING, length: 4, nullable: true)]
     private ?string $constantSymbol = null;
 
-    #[ORM\Column(name: 'specific_symbol', type: Types::STRING, length: 10, nullable: false)]
+    #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
     private ?string $specificSymbol = null;
 
     #[ORM\ManyToOne]
     private ?BankAccount $bankAccount = null;
 
-    #[ORM\OneToMany(mappedBy: 'document', targetEntity: DocumentItem::class)]
+    #[ORM\OneToMany(mappedBy: 'document', targetEntity: DocumentItem::class, cascade: ['persist', 'remove'])]
     private ?Collection $documentItems = null;
     #[ORM\Column(name: 'bank_routing', type: Types::STRING, length: 32, nullable: true)]
     private ?string $bankRouting = null;
@@ -81,10 +81,10 @@ class Document
     #[ORM\Column(name: 'bank_account_number', type: Types::STRING, length: 50, nullable: true)]
     private ?string $bankAccountNumber = null;
 
-    #[ORM\Column(name: 'iban', type: Types::STRING, length: 64, nullable: false)]
+    #[ORM\Column(type: Types::STRING, length: 64, nullable: true)]
     private ?string $iban = null;
 
-    #[ORM\Column(name: 'bic', type: Types::STRING, length: 64, nullable: false)]
+    #[ORM\Column(type: Types::STRING, length: 64, nullable: true)]
     private ?string $bic = null;
 
     #[ORM\Column(name: 'date_issue', type: Types::DATE_MUTABLE, nullable: false)]
@@ -117,31 +117,31 @@ class Document
     #[ORM\Column(name: 'customer_ic', type: Types::STRING, length: 20, nullable: true)]
     private ?string $customerIc = null;
 
-    #[ORM\Column(name: 'customer_dic', type: Types::STRING, length: 20, nullable: false)]
+    #[ORM\Column(name: 'customer_dic', type: Types::STRING, length: 20, nullable: true)]
     private ?string $customerDic = null;
 
     #[ORM\Column(name: 'description', type: Types::TEXT, length: 65535, nullable: false)]
     private ?string $description = null;
 
-    #[ORM\Column(name: 'vat_high', type: Types::BOOLEAN, nullable: false)]
+    #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
     private ?bool $vatHigh = null;
 
-    #[ORM\Column(name: 'vat_low', type: Types::BOOLEAN, nullable: false)]
+    #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
     private ?bool $vatLow = null;
 
-    #[ORM\Column(name: 'price_without_high_vat', type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    #[ORM\Column( type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $priceWithoutHighVat = null;
 
-    #[ORM\Column(name: 'price_without_low_vat', type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    #[ORM\Column( type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $priceWithoutLowVat = null;
 
-    #[ORM\Column(name: 'price_no_vat', type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    #[ORM\Column( type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $priceNoVat = null;
 
-    #[ORM\Column(name: 'priceTotal', type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    #[ORM\Column( type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $priceTotal = null;
 
-    #[ORM\Column(name: 'tag', type: Types::TEXT, length: 65535, nullable: false)]
+    #[ORM\Column( type: Types::TEXT, length: 65535, nullable: true)]
     private ?string $tag = null;
 
     public function __construct(Company $company)
