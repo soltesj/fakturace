@@ -21,7 +21,7 @@ class DocumentItem
     private ?string $name = null;
 
     #[ORM\Column(name: 'quantity', type: Types::DECIMAL, precision: 10, scale: 2, nullable: false)]
-    private ?float $quantity = null;
+    private ?string $quantity = null;
 
     #[ORM\Column(name: 'unit', type: Types::STRING, length: 10, nullable: true)]
     private ?string $unit = null;

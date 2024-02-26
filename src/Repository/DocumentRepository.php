@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Document;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 
 /**
  * @extends ServiceEntityRepository<Document>
@@ -22,19 +24,36 @@ class DocumentRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Document[] Returns an array of Document objects
+     * @return ?Document[] Returns an array of Document objects
+     * @throws Exception
      */
-    public function findByCompany($company, $documentType = [], $order = 'DESC'): array
-    {
+    public function findByCompany(
+        $company,
+        $documentType = [],
+        $order = 'DESC',
+        ?DateTime $from = null,
+        ?DateTime $to = null
+    ): ?array {
+        if ($from === null) {
+            $from = new DateTime((new DateTime())->format('Y').'-01-01 00:00:00');
+        }
         $qb = $this->createQueryBuilder('document')
             ->andWhere('document.company = :company')
-            ->setParameter('company', $company);
-        $qb->andWhere('document.documentType in (:documentType)')
-            ->setParameter('documentType', $documentType);
-        $qb->orderBy('document.dateIssue', $order);
+            ->setParameter('company', $company)
+            ->andWhere('document.documentType in (:documentType)')
+            ->setParameter('documentType', $documentType)
+            ->andWhere('document.dateIssue >= (:dateIssueFrom)')
+            ->setParameter('dateIssueFrom', $from);
+        if($to!==null){
+            $qb->andWhere('document.dateIssue <= (:dateIssueTo)')
+                ->setParameter('dateIssueTo', $to);
+        }
+        $qb->orderBy('document.dateIssue', $order)
+            ->orderBy('document.id', $order);
 
         return $qb->getQuery()->getResult();
     }
+
 
 //    public function findOneBySomeField($value): ?Document
 //    {

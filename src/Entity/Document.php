@@ -7,8 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 
 #[ORM\Entity]
+#[UniqueConstraint(name: "UX_company_id_document_number", columns: ['company_id','document_number'])]
 class Document
 {
     #[ORM\Id]
@@ -44,7 +46,7 @@ class Document
     private ?string $transactionId = null;
 
     #[ORM\Column(name: 'state_id', type: Types::INTEGER, nullable: true)]
-    private ?bool $stateId = null;
+    private ?int $stateId = null;
 
     #[ORM\Column(name: 'transfer_tax', type: Types::BOOLEAN, nullable: false)]
     private ?bool $transferTax = null;
@@ -176,12 +178,12 @@ class Document
         $this->transactionId = $transactionId;
     }
 
-    public function isStateId(): bool
+    public function isStateId(): ?int
     {
         return $this->stateId;
     }
 
-    public function setStateId(bool $stateId): void
+    public function setStateId(?int $stateId): void
     {
         $this->stateId = $stateId;
     }
@@ -236,12 +238,12 @@ class Document
         $this->documentNumber = $documentNumber;
     }
 
-    public function getVariableSymbol(): string
+    public function getVariableSymbol(): ?string
     {
         return $this->variableSymbol;
     }
 
-    public function setVariableSymbol(string $variableSymbol): void
+    public function setVariableSymbol(?string $variableSymbol): void
     {
         $this->variableSymbol = $variableSymbol;
     }
