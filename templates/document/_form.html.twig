@@ -10,11 +10,16 @@
                 {{ form_row(form.transferTax) }}
             </div>
         </div>
-        <div class="col-md-4">
-            {{ form_row(form.dateIssue) }}
+        <div class="col-md-4" {{ stimulus_controller('dates',{
+            maturityDays: company.maturityDays|default(14)
+        }) }}>
+            {{ form_row(form.dateIssue, {'attr':{
+                'data-dates-target':'dateIssue',
+                'data-action':'dates#changeDate'
+            }}) }}
             <div data-extended-info-target="extendedInfo">
-                {{ form_row(form.dateTaxable) }}
-                {{ form_row(form.dateDue) }}
+                {{ form_row(form.dateTaxable, {'attr':{'data-dates-target':'dateTaxable'}}) }}
+                {{ form_row(form.dateDue, {'attr':{'data-dates-target':'dateDue'}}) }}
                 {{ form_row(form.bankAccount) }}
             </div>
         </div>

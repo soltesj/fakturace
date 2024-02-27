@@ -70,6 +70,9 @@ class Company
     #[ORM\ManyToMany(targetEntity: Currency::class)]
     private Collection $currency;
 
+    #[ORM\Column]
+    private ?int $maturityDays = null;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -290,6 +293,18 @@ class Company
     public function removeCurrency(Currency $currency): static
     {
         $this->currency->removeElement($currency);
+
+        return $this;
+    }
+
+    public function getMaturityDays(): ?int
+    {
+        return $this->maturityDays;
+    }
+
+    public function setMaturityDays(int $maturityDays): static
+    {
+        $this->maturityDays = $maturityDays;
 
         return $this;
     }
