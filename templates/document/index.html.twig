@@ -9,22 +9,34 @@
         </svg>
         Faktury - vydané
     </h1>
-    <a href="{{ path('app_document_new') }}" class="text-decoration-none">
-        <svg width="16" height="16" class="bi me-1">
-            <use href="#plus-circle-fill"/>
-        </svg>
-        NOVÁ FAKTURA</a>
+    <div class=" mb-3">
+        <a href="{{ path('app_document_new') }}" class="text-decoration-none">
+            <svg width="16" height="16" class="bi me-1">
+                <use href="#plus-circle-fill"/>
+            </svg>
+            NOVÁ FAKTURA</a>
+        <a href="#" class="text-decoration-none mx-4">
+            <svg width="16" height="16" class="bi me-1">
+                <use href="#cash-coin"/>
+            </svg>
+            PŘÍJMOUT PLATBY</a>
+        <a href="#" class="text-decoration-none">
+            <svg width="16" height="16" class="bi me-1">
+                <use href="#download"/>
+            </svg>
+            EXPORT SEZNAMU</a>
+    </div>
     <table class="table mt-3">
         <thead>
-            <tr>
-                <th>DocumentNumber</th>
-                <th>CustomerId</th>
-                <th>DateIssue</th>
-                <th>DatePay</th>
-                <th>PriceNoVat</th>
-                <th>PriceTotal</th>
-                <th>actions</th>
-            </tr>
+        <tr>
+            <th>DocumentNumber</th>
+            <th>CustomerId</th>
+            <th>DateIssue</th>
+            <th>DatePay</th>
+            <th>PriceNoVat</th>
+            <th>PriceTotal</th>
+            <th>actions</th>
+        </tr>
         </thead>
         <tbody>
         {% for document in documents %}
@@ -35,9 +47,7 @@
                 <td>{{ document.dateDue ? document.dateDue|date('Y-m-d') : '' }}</td>
                 <td>{{ document.priceNoVat }}</td>
                 <td>{{ document.priceTotal }}</td>
-                <td>
-
-                </td>
+                <td></td>
             </tr>
         {% else %}
             <tr>
