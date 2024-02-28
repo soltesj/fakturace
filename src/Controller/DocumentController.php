@@ -7,6 +7,7 @@ use App\Document\DocumentNumber;
 use App\Document\Types;
 use App\Entity\Document;
 use App\Entity\DocumentItem;
+use App\Form\DocumentFilterType;
 use App\Form\DocumentFormType;
 use App\Repository\CompanyRepository;
 use App\Repository\DocumentNumbersRepository;
@@ -15,6 +16,7 @@ use App\Repository\VatLevelRepository;
 use App\Service\CompanyTrait;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,25 +38,53 @@ class DocumentController extends AbstractController
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly CompanyRepository $companyRepository,
-        private VatLevelRepository $vatLevelRepository,
-        private DocumentManager $documentManager,
-        private DocumentNumber $documentNumber,
-        private DocumentNumbersRepository $documentNumbersRepository,
-        private LoggerInterface $logger
-
+        private readonly VatLevelRepository $vatLevelRepository,
+        private readonly DocumentManager $documentManager,
+        private readonly DocumentNumber $documentNumber,
+        private readonly DocumentNumbersRepository $documentNumbersRepository,
+        private readonly LoggerInterface $logger
     ) {
         $this->session = $requestStack->getSession();
     }
 
     #[Route('/', name: 'app_document_index', methods: ['GET'])]
-    public function index(DocumentRepository $documentRepository): Response
-    {
+    public function index(
+        Request $request,
+        DocumentRepository $documentRepository,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $documents = [];
+        $dateFrom = (new DateTime())->format('Y').'-01-01';
         $company = $this->getCompany();
-        $documents = $documentRepository->findByCompany($company, Types::INVOICE_OUTGOING_TYPES);
+        $formFilter = $this->createForm(DocumentFilterType::class);
+        $formFilter->handleRequest($request);
+        if ($formFilter->isSubmitted()) {
+            $data = $formFilter->getData();
+            if ($data['dateFrom'] instanceof DateTime) {
+                $dateFrom = $data['dateFrom']->format('Y-m-d');
+            }
+            if ($data['dateTo'] instanceof DateTime) {
+                $dateTo = $data['dateTo']->format('Y-m-d');
+                $entityManager->getFilters()
+                    ->enable('document_dateTo')
+                    ->setParameter('dateTo', $dateTo);
+            }
+        }
+
+        $entityManager->getFilters()
+            ->enable('document_dateFrom')
+            ->setParameter('dateFrom', $dateFrom);
+        try {
+            $documents = $documentRepository->findByCompany($company, Types::INVOICE_OUTGOING_TYPES);
+        } catch (Exception $e) {
+            $this->logger->error($e->getMessage(),$e->getTrace());
+            $this->addFlash('danger', "DOCUMENT_LOADING_ERROR");
+        }
 
         return $this->render('document/index.html.twig', [
             'documents' => $documents,
             'company' => $company,
+            'formFilter' => $formFilter,
         ]);
     }
 
@@ -83,10 +113,11 @@ class DocumentController extends AbstractController
             try {
                 $this->documentManager->saveNew($document);
                 $this->addFlash('success', 'INVOICE_STORED');
+
                 return $this->redirectToRoute('app_document_index', [], Response::HTTP_SEE_OTHER);
             } catch (Throwable $e) {
                 $this->addFlash('danger', 'INVOICE_NOT_STORED');
-                $this->logger->error($e->getMessage(),$e->getTrace());
+                $this->logger->error($e->getMessage(), $e->getTrace());
             }
         }
 
@@ -114,10 +145,11 @@ class DocumentController extends AbstractController
             try {
                 $this->documentManager->save($document);
                 $this->addFlash('success', 'INVOICE_STORED');
+
                 return $this->redirectToRoute('app_document_index', [], Response::HTTP_SEE_OTHER);
             } catch (Throwable $e) {
                 $this->addFlash('danger', 'INVOICE_NOT_STORED');
-                $this->logger->error($e->getMessage(),$e->getTrace());
+                $this->logger->error($e->getMessage(), $e->getTrace());
             }
 
             return $this->redirectToRoute('app_document_index', [], Response::HTTP_SEE_OTHER);

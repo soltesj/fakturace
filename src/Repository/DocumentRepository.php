@@ -41,9 +41,7 @@ class DocumentRepository extends ServiceEntityRepository
             ->andWhere('document.company = :company')
             ->setParameter('company', $company)
             ->andWhere('document.documentType in (:documentType)')
-            ->setParameter('documentType', $documentType)
-            ->andWhere('document.dateIssue >= (:dateIssueFrom)')
-            ->setParameter('dateIssueFrom', $from);
+            ->setParameter('documentType', $documentType);
         if($to!==null){
             $qb->andWhere('document.dateIssue <= (:dateIssueTo)')
                 ->setParameter('dateIssueTo', $to);

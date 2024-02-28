@@ -9,6 +9,31 @@
         </svg>
         Faktury - vydané
     </h1>
+
+    {{ form_start(formFilter) }}
+    <div class="row mb-5">
+        <div class="col-md-2">
+            {{ form_row(formFilter.q) }}
+        </div>
+        <div class="col-md-2">
+            {{ form_row(formFilter.state) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_row(formFilter.customer) }}
+        </div>
+        <div class="col-md-2">
+            {{ form_row(formFilter.dateFrom) }}
+        </div>
+        <div class="col-md-2">
+            {{ form_row(formFilter.dateTo) }}
+        </div>
+        <div class="col-md-1">
+            <div class="form-floating">
+                <button class="btn btn-info mt-2">{{ 'FILTER' }}</button>
+            </div>
+        </div>
+    </div>
+    {{ form_end(formFilter) }}
     <div class=" mb-3">
         <a href="{{ path('app_document_new') }}" class="text-decoration-none">
             <svg width="16" height="16" class="bi me-1">
