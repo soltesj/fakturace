@@ -24,6 +24,7 @@ doctrine:
         filters:
             document_dateFrom: App\Doctrine\DocumentDateFrom
             document_dateTo: App\Doctrine\DocumentDateTo
+            document_search: App\Doctrine\DocumentSearch
 
 when@test:
     doctrine:

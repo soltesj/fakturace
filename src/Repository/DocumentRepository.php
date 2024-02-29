@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Document;
-use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
@@ -31,21 +30,12 @@ class DocumentRepository extends ServiceEntityRepository
         $company,
         $documentType = [],
         $order = 'DESC',
-        ?DateTime $from = null,
-        ?DateTime $to = null
     ): ?array {
-        if ($from === null) {
-            $from = new DateTime((new DateTime())->format('Y').'-01-01 00:00:00');
-        }
         $qb = $this->createQueryBuilder('document')
             ->andWhere('document.company = :company')
             ->setParameter('company', $company)
             ->andWhere('document.documentType in (:documentType)')
             ->setParameter('documentType', $documentType);
-        if($to!==null){
-            $qb->andWhere('document.dateIssue <= (:dateIssueTo)')
-                ->setParameter('dateIssueTo', $to);
-        }
         $qb->orderBy('document.dateIssue', $order)
             ->orderBy('document.id', $order);
 

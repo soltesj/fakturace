@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Document\DocumentFilterFormService;
 use App\Document\DocumentManager;
 use App\Document\DocumentNumber;
 use App\Document\Types;
@@ -19,6 +20,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,33 +53,27 @@ class DocumentController extends AbstractController
     public function index(
         Request $request,
         DocumentRepository $documentRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        DocumentFilterFormService $filterFormService
     ): Response {
         $documents = [];
-        $dateFrom = (new DateTime())->format('Y').'-01-01';
         $company = $this->getCompany();
         $formFilter = $this->createForm(DocumentFilterType::class);
         $formFilter->handleRequest($request);
         if ($formFilter->isSubmitted()) {
-            $data = $formFilter->getData();
-            if ($data['dateFrom'] instanceof DateTime) {
-                $dateFrom = $data['dateFrom']->format('Y-m-d');
-            }
-            if ($data['dateTo'] instanceof DateTime) {
-                $dateTo = $data['dateTo']->format('Y-m-d');
-                $entityManager->getFilters()
-                    ->enable('document_dateTo')
-                    ->setParameter('dateTo', $dateTo);
-            }
+            $filterFormService->handleFrom($formFilter, $entityManager);
+        }else{
+            $dateFrom = (new DateTime())->format('Y').'-01-01';
+            $entityManager->getFilters()
+                ->enable('document_dateFrom')
+                ->setParameter('dateFrom', $dateFrom);
         }
 
-        $entityManager->getFilters()
-            ->enable('document_dateFrom')
-            ->setParameter('dateFrom', $dateFrom);
+
         try {
             $documents = $documentRepository->findByCompany($company, Types::INVOICE_OUTGOING_TYPES);
         } catch (Exception $e) {
-            $this->logger->error($e->getMessage(),$e->getTrace());
+            $this->logger->error($e->getMessage(), $e->getTrace());
             $this->addFlash('danger', "DOCUMENT_LOADING_ERROR");
         }
 
