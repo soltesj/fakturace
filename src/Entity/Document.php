@@ -33,7 +33,7 @@ class Document
     #[ORM\ManyToOne]
     private ?User $user = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(fetch: 'EXTRA_LAZY', inversedBy: 'documents')]
     private ?Customer $customer = null;
 
     #[ORM\ManyToOne]

@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\CustomerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
@@ -12,7 +14,7 @@ class Customer
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    protected int $id;
+    protected ?int $id = null;
 
     #[ORM\ManyToOne]
     private Company $company;
@@ -20,44 +22,52 @@ class Customer
     #[ORM\ManyToOne]
     private Country $country;
 
+    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'customer', fetch: 'EXTRA_LAZY')]
+    private Collection $documents;
+
     #[ORM\Column(name: 'display', type: Types::BOOLEAN, nullable: false)]
-    private bool $display;
+    private bool $display = true;
 
     #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
-    private string $name;
+    private ?string $name = null;
 
     #[ORM\Column(name: 'contact', type: Types::STRING, length: 255, nullable: true)]
-    private string $contact;
+    private ?string $contact = null;
 
     #[ORM\Column(name: 'street', type: Types::STRING, length: 255, nullable: false)]
-    private string $street;
+    private ?string $street = null;
 
     #[ORM\Column(name: 'house_number', type: Types::STRING, length: 25, nullable: true)]
-    private string $houseNumber;
+    private ?string $houseNumber = null;
 
     #[ORM\Column(name: 'town', type: Types::STRING, length: 255, nullable: true)]
-    private string $town;
+    private ?string $town = null;
 
     #[ORM\Column(name: 'zipcode', type: Types::STRING, length: 10, nullable: true)]
-    private string $zipcode;
+    private ?string $zipcode = null;
 
     #[ORM\Column(name: 'ic', type: Types::STRING, length: 20, nullable: true)]
-    private string $ic;
+    private ?string $ic = null;
 
     #[ORM\Column(name: 'dic', type: Types::STRING, length: 20, nullable: true)]
-    private string $dic;
+    private ?string $dic = null;
 
     #[ORM\Column(name: 'phone', type: Types::STRING, length: 25, nullable: true)]
-    private string $phone;
+    private ?string $phone = null;
 
     #[ORM\Column(name: 'email', type: Types::STRING, length: 255, nullable: true)]
-    private string $email;
+    private ?string $email = null;
 
     #[ORM\Column(name: 'web', type: Types::STRING, length: 255, nullable: true)]
-    private string $web;
+    private ?string $web = null;
 
     #[ORM\Column(name: 'bank_account', type: Types::STRING, length: 40, nullable: true)]
-    private string $bankAccount;
+    private ?string $bankAccount = null;
+
+    public function __construct()
+    {
+        $this->documents = new ArrayCollection();
+    }
 
     public function getId(): int
     {
@@ -215,6 +225,36 @@ class Customer
     public function setCountry(?Country $country): static
     {
         $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Document>
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    public function addDocument(Document $document): static
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents->add($document);
+            $document->setCustomer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(Document $document): static
+    {
+        if ($this->documents->removeElement($document)) {
+            // set the owning side to null (unless already changed)
+            if ($document->getCustomer() === $this) {
+                $document->setCustomer(null);
+            }
+        }
 
         return $this;
     }

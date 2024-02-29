@@ -32,11 +32,13 @@ class DocumentRepository extends ServiceEntityRepository
         $order = 'DESC',
     ): ?array {
         $qb = $this->createQueryBuilder('document')
+            ->addSelect('customer')
+            ->innerJoin('document.customer','customer')
             ->andWhere('document.company = :company')
             ->setParameter('company', $company)
             ->andWhere('document.documentType in (:documentType)')
-            ->setParameter('documentType', $documentType);
-        $qb->orderBy('document.dateIssue', $order)
+            ->setParameter('documentType', $documentType)
+            ->orderBy('document.dateIssue', $order)
             ->orderBy('document.id', $order);
 
         return $qb->getQuery()->getResult();
