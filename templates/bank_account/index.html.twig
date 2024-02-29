@@ -30,7 +30,7 @@
         <tbody>
         {% for bank_account in bank_accounts %}
             <tr>
-                <td><a href="{{ path('app_bank_account_edit', {'id': bank_account.id}) }}">{{ bank_account.name }}</a>
+                <td><a href="{{ path('app_bank_account_edit', {'id': bank_account.id}) }}" class="text-decoration-none">{{ bank_account.name }}</a>
                 </td>
                 <td>{{ bank_account.shortName }}</td>
                 <td>{{ bank_account.accountNumber }}</td>
