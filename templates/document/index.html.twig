@@ -4,7 +4,7 @@
 
 {% block body %}
     <h1 class="mb-5">
-        <a href="{{ path('app_dash_board') }}" class="text-decoration-none"><svg class="bi me-3 mb-1" width="30" height="30">
+        <a href="{{ path('app_dash_board',{'company': company.id}) }}" class="text-decoration-none"><svg class="bi me-3 mb-1" width="30" height="30">
             <use href="#arrow-left-circle"/>
         </svg></a>
         Faktury - vydané
@@ -35,7 +35,7 @@
     </div>
     {{ form_end(formFilter) }}
     <div class=" mb-3">
-        <a href="{{ path('app_document_new') }}" class="text-decoration-none">
+        <a href="{{ path('app_document_new', {'company': company.id}) }}" class="text-decoration-none">
             <svg width="16" height="16" class="bi me-1">
                 <use href="#plus-circle-fill"/>
             </svg>
@@ -66,7 +66,7 @@
         <tbody>
         {% for document in documents %}
             <tr>
-                <td><a href="{{ path('app_document_edit', {'id': document.id}) }}" class="text-decoration-none">{{ document.documentNumber }}</a></td>
+                <td><a href="{{ path('app_document_edit', {'company': company.id, 'id': document.id}) }}" class="text-decoration-none">{{ document.documentNumber }}</a></td>
                 <td>{{ document.customer.name|default(null) ? document.customer.name|default(null) : document.customerName|default(null) }}</td>
                 <td>{{ document.dateIssue ? document.dateIssue|date('Y-m-d') : '' }}</td>
                 <td>{{ document.dateDue ? document.dateDue|date('Y-m-d') : '' }}</td>

@@ -21,7 +21,7 @@
 </head>
 <body>
 {% include 'svg-symbols.html.twig' %}
-{% if app.user %}
+{% if app.user and company|default(null) %}
     {% include 'header-user.html.twig' %}
 {% else %}
     {% include 'header.html.twig' %}

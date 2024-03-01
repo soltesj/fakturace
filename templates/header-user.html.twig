@@ -1,7 +1,7 @@
 <header class="p-3 mb-3 border-bottom text-bg-dark">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark" aria-label="Fourth navbar example">
         <div class="container-lg">
-            <a href="{{ path('app_dash_board') }}"
+            <a href="{{ path('app_dash_board',{'company': company.id}) }}"
                class="navbar-brand text-decoration-none text-white">
                 <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
                     <use href="#bootstrap"/>
@@ -15,7 +15,7 @@
             <div class="collapse navbar-collapse" id="navbarsExample04">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item">
-                        <a href="{{ path('app_dash_board') }}"
+                        <a href="{{ path('app_dash_board',{'company': company.id}) }}"
                            class="nav-link {% if app.current_route=='app_dash_board' %}text-secondary{% else %} text-white{% endif %}">
                             <svg class="bi d-md-block me-2 mx-md-auto" width="20" height="20">
                                 <use href="#speedometer2"/>
@@ -24,7 +24,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ path('app_document_index') }}" class="nav-link text-white">
+                        <a href="{{ path('app_document_index', {'company': company.id}) }}"
+                           class="nav-link {% if app.current_route in ['app_document_index','app_document_new','app_document_edit'] %}text-secondary{% else %} text-white{% endif %}">
                             <svg class="bi d-md-block me-2 mx-md-auto mb-md-1" width="20" height="20">
                                 <use href="#table"/>
                             </svg>
@@ -48,8 +49,8 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ path('app_customer_index') }}"
-                           class="nav-link {% if app.current_route=='app_customer_index' %}text-secondary{% else %} text-white{% endif %}">
+                        <a href="{{ path('app_customer_index',{'company': company.id}) }}"
+                           class="nav-link {% if app.current_route in ['app_customer_index','app_customer_new','app_customer_edit'] %}text-secondary{% else %} text-white{% endif %}">
                             <svg class="bi d-md-block me-2 mx-md-auto  mb-md-1" width="20" height="20">
                                 <use href="#people-circle"/>
                             </svg>
@@ -57,7 +58,9 @@
                         </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a href="#" class="nav-link text-white dropdown-toggle" data-bs-toggle="dropdown"
+                        <a href="#"
+                           class="nav-link dropdown-toggle {% if app.current_route in ['app_company_edit','app_bank_account_index','app_bank_account_new','app_bank_account_edit'] %}text-secondary{% else %} text-white{% endif %}"
+                           data-bs-toggle="dropdown"
                            aria-expanded="false">
                             <svg class="bi d-md-block me-2 mx-md-auto  mb-md-1" width="20" height="20">
                                 <use href="#gear"/>
@@ -65,11 +68,13 @@
                             Nastavení
                         </a>
                         <ul class="dropdown-menu">
-                            <li class="nav-item"><a class="dropdown-item" href="{{ path('app_company_edit') }}">Firemní
+                            <li class="nav-item"><a
+                                        class="dropdown-item {% if app.current_route in ['app_company_edit'] %}text-secondary{% else %} text-white{% endif %}"
+                                        href="{{ path('app_company_edit', {'company': company.id}) }}">Firemní
                                     údaje</a>
                             </li>
-                            <li class="nav-item"><a class="dropdown-item"
-                                                    href="{{ path('app_bank_account_index') }}">Bankovní
+                            <li class="nav-item"><a class="dropdown-item {% if app.current_route in ['app_bank_account_index','app_bank_account_new','app_bank_account_edit'] %}text-secondary{% else %} text-white{% endif %}"
+                                                    href="{{ path('app_bank_account_index', {'company':company.id}) }}">Bankovní
                                     účty</a></li>
                             <li class="nav-item"><a class="dropdown-item" href="#">Format čísel dokladu</a></li>
                         </ul>
@@ -85,12 +90,14 @@
                             {{ company.name }}
                         </a>
                         <ul class="dropdown-menu">
-                            <li class="nav-item"><a class="dropdown-item" href="#">Switch company</a></li>
-                            <li class="nav-item">
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li class="nav-item"><a class="dropdown-item" href="#">Switch company</a>
-                            </li>
+                            {% for company in app.user.companies %}
+                                <li class="nav-item"><a class="dropdown-item" href="{{ path('app_dash_board', {'company': company.id}) }}">{{ company.name }}</a></li>
+                                {% if not loop.last %}
+                                <li class="nav-item">
+                                    <hr class="dropdown-divider">
+                                </li>
+                                {% endif %}
+                            {% endfor %}
                         </ul>
                     </li>
                 </ul>
@@ -109,7 +116,8 @@
                             </div>
                         </a>
                         <ul class="dropdown-menu">
-                            <li class="nav-item"><a class="dropdown-item" href="{{ path('app_user_edit') }}">Osobní
+                            <li class="nav-item"><a class="dropdown-item"
+                                                    href="{{ path('app_user_edit', {'company': company.id}) }}">Osobní
                                     údaje</a></li>
                             <li class="nav-item">
                                 <hr class="dropdown-divider">

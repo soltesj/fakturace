@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Company;
 use App\Entity\Customer;
+use App\Entity\User;
 use App\Form\CustomerType;
 use App\Repository\CompanyRepository;
 use App\Repository\CustomerRepository;
@@ -10,32 +12,30 @@ use App\Service\CompanyTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
-#[Route('/customer')]
 class CustomerController extends AbstractController
 {
     use CompanyTrait;
 
-    private SessionInterface $session;
-
     public function __construct(
-        private RequestStack $requestStack,
-        private CompanyRepository $companyRepository,
-        private CustomerRepository $customerRepository
+        private readonly CompanyRepository $companyRepository,
+        private readonly CustomerRepository $customerRepository
     ) {
-        $this->session = $requestStack->getSession();
     }
 
-    #[Route('/', name: 'app_customer_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    #[Route('/{company}/customer/', name: 'app_customer_index', methods: ['GET'])]
+    public function index(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
-        $company = $this->getCompany();
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user->getCompanies()->contains($company)) {
+            $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
+            return $this->getCorrectCompanyUrl($request, $user);
+        }
         $customers = $this->customerRepository->findByCompany($company);
 
         return $this->render('customer/index.html.twig', [
@@ -44,10 +44,15 @@ class CustomerController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_customer_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/{company}/customer/new', name: 'app_customer_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
-        $company = $this->getCompany();
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user->getCompanies()->contains($company)) {
+            $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
+            return $this->getCorrectCompanyUrl($request, $user);
+        }
         $customer = new Customer();
         $customer->setCompany($company);
         $customer->setCountry($company->getCountry());
@@ -59,7 +64,7 @@ class CustomerController extends AbstractController
             $entityManager->flush();
             $this->addFlash('info', 'Zmeny byli ulozeny');
 
-            return $this->redirectToRoute('app_customer_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_customer_index', ['company'=>$company->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('customer/new.html.twig', [
@@ -69,22 +74,23 @@ class CustomerController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_customer_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Customer $customer, EntityManagerInterface $entityManager): Response
+    #[Route('/{company}/customer/{id}/edit', name: 'app_customer_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Company $company, Customer $customer, EntityManagerInterface $entityManager): Response
     {
-        $company = $this->getCompany();
-        if ($customer->getCompany() !== $company) {
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user->getCompanies()->contains($company)) {
             $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
-
-            return $this->redirectToRoute('app_customer_index');
+            return $this->getCorrectCompanyUrl($request, $user);
         }
+
         $form = $this->createForm(CustomerType::class, $customer);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
             $this->addFlash('info', 'Zmeny byli ulozeny');
 
-            return $this->redirectToRoute('app_customer_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_customer_index', ['company'=>$company->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('customer/edit.html.twig', [
@@ -94,19 +100,19 @@ class CustomerController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_customer_delete', methods: ['GET'])]
-    public function delete(Request $request, Customer $customer, EntityManagerInterface $entityManager): Response
+    #[Route('/{company}/customer/{id}/delete', name: 'app_customer_delete', methods: ['GET'])]
+    public function delete(Request $request, Company $company, Customer $customer, EntityManagerInterface $entityManager): Response
     {
-        $company = $this->getCompany();
-        if ($customer->getCompany() !== $company) {
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user->getCompanies()->contains($company)) {
             $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
-
-            return $this->redirectToRoute('app_customer_index');
+            return $this->getCorrectCompanyUrl($request, $user);
         }
         $customer->setDisplay(false);
         $entityManager->flush();
         $this->addFlash('info', "Zakaznik {$customer->getName()} byl odstranen");
 
-        return $this->redirectToRoute('app_customer_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_customer_index', ['company'=>$company->getId()], Response::HTTP_SEE_OTHER);
     }
 }

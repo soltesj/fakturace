@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\BankAccount;
+use App\Entity\Company;
+use App\Entity\User;
 use App\Form\BankAccountType;
 use App\Repository\BankAccountRepository;
 use App\Repository\CompanyRepository;
@@ -10,29 +12,31 @@ use App\Service\CompanyTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/bank-account')]
 class BankAccountController extends AbstractController
 {
     use CompanyTrait;
 
-    private SessionInterface $session;
-
     public function __construct(
-        private RequestStack $requestStack,
-        private CompanyRepository $companyRepository,
+        private readonly CompanyRepository $companyRepository,
     ) {
-        $this->session = $requestStack->getSession();
     }
 
-    #[Route('/', name: 'app_bank_account_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager, BankAccountRepository $accountRepository): Response
-    {
-        $company = $this->getCompany();
+    #[Route('/{company}/bank-account/', name: 'app_bank_account_index', methods: ['GET'])]
+    public function index(
+        Request $request,
+        Company $company,
+        BankAccountRepository $accountRepository
+    ): Response {
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user->getCompanies()->contains($company)) {
+            $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
+
+            return $this->getCorrectCompanyUrl($request, $user);
+        }
         $bankAccounts = $accountRepository->findByCompany($company);
 
         return $this->render('bank_account/index.html.twig', [
@@ -41,10 +45,16 @@ class BankAccountController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_bank_account_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/{company}/bank-account/new', name: 'app_bank_account_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
-        $company = $this->getCompany();
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user->getCompanies()->contains($company)) {
+            $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
+
+            return $this->getCorrectCompanyUrl($request, $user);
+        }
         $bankAccount = new BankAccount();
         $bankAccount->setCompany($company);
         $form = $this->createForm(BankAccountType::class, $bankAccount);
@@ -54,7 +64,8 @@ class BankAccountController extends AbstractController
             $entityManager->flush();
             $this->addFlash('info', 'Zmeny byli ulozeny');
 
-            return $this->redirectToRoute('app_bank_account_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_bank_account_index', ['company' => $company->getId()],
+                Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('bank_account/new.html.twig', [
@@ -64,14 +75,19 @@ class BankAccountController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_bank_account_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, BankAccount $bankAccount, EntityManagerInterface $entityManager): Response
-    {
-        $company = $this->getCompany();
-        if ($bankAccount->getCompany() !== $company) {
+    #[Route('/{company}/bank-account/{id}/edit', name: 'app_bank_account_edit', methods: ['GET', 'POST'])]
+    public function edit(
+        Request $request,
+        Company $company,
+        BankAccount $bankAccount,
+        EntityManagerInterface $entityManager
+    ): Response {
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user->getCompanies()->contains($company)) {
             $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
 
-            return $this->redirectToRoute('app_bank_account_index');
+            return $this->getCorrectCompanyUrl($request, $user);
         }
         $form = $this->createForm(BankAccountType::class, $bankAccount);
         $form->handleRequest($request);
@@ -79,7 +95,8 @@ class BankAccountController extends AbstractController
             $entityManager->flush();
             $this->addFlash('info', 'Zmeny byli ulozeny');
 
-            return $this->redirectToRoute('app_bank_account_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_bank_account_index', ['company' => $company->getId()],
+                Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('bank_account/edit.html.twig', [
@@ -89,19 +106,25 @@ class BankAccountController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_bank_account_delete', methods: ['GET'])]
-    public function delete(Request $request, BankAccount $bankAccount, EntityManagerInterface $entityManager): Response
-    {
-        $company = $this->getCompany();
-        if ($bankAccount->getCompany() !== $company) {
+    #[Route('/{company}/bank-account/{id}', name: 'app_bank_account_delete', methods: ['GET'])]
+    public function delete(
+        Request $request,
+        Company $company,
+        BankAccount $bankAccount,
+        EntityManagerInterface $entityManager
+    ): Response {
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user->getCompanies()->contains($company)) {
             $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
 
-            return $this->redirectToRoute('app_bank_account_index');
+            return $this->getCorrectCompanyUrl($request, $user);
         }
         $entityManager->remove($bankAccount);
         $entityManager->flush();
         $this->addFlash('info', 'Zmeny byli ulozeny');
 
-        return $this->redirectToRoute('app_bank_account_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_bank_account_index', ['company' => $company->getId()],
+            Response::HTTP_SEE_OTHER);
     }
 }

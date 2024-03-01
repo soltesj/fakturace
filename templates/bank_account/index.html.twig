@@ -4,16 +4,20 @@
 
 {% block body %}
     <h1 class="mb-5">
-        <a href="{{ path('app_dash_board') }}" class="text-decoration-none"><svg class="bi me-3 mb-1" width="30" height="30">
-            <use href="#arrow-left-circle"/>
-            </svg></a>
+        <a href="{{ path('app_dash_board',{'company': company.id}) }}" class="text-decoration-none">
+            <svg class="bi me-3 mb-1" width="30" height="30">
+                <use href="#arrow-left-circle"/>
+            </svg>
+        </a>
         Bank Account
     </h1>
-    <a href="{{ path('app_bank_account_new') }}" class="text-decoration-none">
-        <svg width="16" height="16" class="bi me-1">
-            <use href="#plus-circle-fill"/>
-        </svg>
-        NOVÝ</a>
+    <div class="row mb-3">
+        <a href="{{ path('app_bank_account_new',{'company':company.id}) }}" class="text-decoration-none">
+            <svg width="16" height="16" class="bi me-1">
+                <use href="#plus-circle-fill"/>
+            </svg>
+            NOVÝ</a>
+    </div>
     <table class="table mt-3">
         <thead>
         <tr>
@@ -30,7 +34,8 @@
         <tbody>
         {% for bank_account in bank_accounts %}
             <tr>
-                <td><a href="{{ path('app_bank_account_edit', {'id': bank_account.id}) }}" class="text-decoration-none">{{ bank_account.name }}</a>
+                <td><a href="{{ path('app_bank_account_edit', {'company':company.id,'id': bank_account.id}) }}"
+                       class="text-decoration-none">{{ bank_account.name }}</a>
                 </td>
                 <td>{{ bank_account.shortName }}</td>
                 <td>{{ bank_account.accountNumber }}</td>
@@ -39,10 +44,12 @@
                 <td>{{ bank_account.bic }}</td>
                 <td>{{ bank_account.sequence }}</td>
                 <td>
-                    <a href="{{ path('app_bank_account_delete', {'id': bank_account.id}) }}" class="text-secondary icon-link-hover">
+                    <a href="{{ path('app_bank_account_delete', {'company':company.id,'id': bank_account.id}) }}"
+                       class="text-secondary icon-link-hover">
                         <svg class="bi d-block mx-auto" width="20" height="20">
                             <use href="#dash-circle-fill"/>
-                        </svg></a>
+                        </svg>
+                    </a>
                 </td>
             </tr>
         {% else %}

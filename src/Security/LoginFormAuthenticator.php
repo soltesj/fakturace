@@ -58,7 +58,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         $user = $token->getUser();
         $company = $user->getCompanies()[0];
         $this->session->set('company',$company);
-        return new RedirectResponse($this->urlGenerator->generate('app_dash_board'));
+        return new RedirectResponse($this->urlGenerator->generate('app_dash_board',['company'=>$user->getCompanies()[0]->getId()]));
     }
 
     protected function getLoginUrl(Request $request): string

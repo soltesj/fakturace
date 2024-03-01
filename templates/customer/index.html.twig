@@ -4,18 +4,20 @@
 
 {% block body %}
     <h1 class="mb-5">
-        <a href="{{ path('app_dash_board') }}" class="text-decoration-none">
+        <a href="{{ path('app_dash_board', {'company': company.id}) }}" class="text-decoration-none">
             <svg class="bi me-3 mb-1" width="30" height="30">
                 <use href="#arrow-left-circle"/>
             </svg>
         </a>
         Adresář
     </h1>
-    <a href="{{ path('app_customer_new') }}" class="text-decoration-none">
-        <svg width="16" height="16" class="bi me-1">
-            <use href="#plus-circle-fill"/>
-        </svg>
-        NOVÝ</a>
+    <div class="row mb-3">
+        <a href="{{ path('app_customer_new', {'company': company.id}) }}" class="text-decoration-none">
+            <svg width="16" height="16" class="bi me-1">
+                <use href="#plus-circle-fill"/>
+            </svg>
+            NOVÝ</a>
+    </div>
     <table class="table table-striped table-hover">
         <thead>
         <tr>
@@ -31,7 +33,7 @@
         {% for customer in customers %}
             <tr>
                 <td>
-                    <a href="{{ path('app_customer_edit', {'id': customer.id}) }}"
+                    <a href="{{ path('app_customer_edit', {'id': customer.id, 'company':company.id}) }}"
                        class="text-decoration-none">{{ customer.name }}</a>
                 </td>
                 <td>{{ customer.town }}</td>
@@ -39,7 +41,7 @@
                 <td>{{ customer.ic }}</td>
                 <td>{{ customer.dic }}</td>
                 <td>
-                    <a href="{{ path('app_customer_delete', {'id': customer.id}) }}"
+                    <a href="{{ path('app_customer_delete', {'company':company.id, 'id': customer.id}) }}"
                        class="text-secondary icon-link-hover">
                         <svg class="bi d-block mx-auto" width="20" height="20">
                             <use href="#dash-circle-fill"/>
