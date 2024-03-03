@@ -18,6 +18,7 @@ use App\Repository\DocumentRepository;
 use App\Repository\VatLevelRepository;
 use App\Service\CompanyTrait;
 use DateTime;
+use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -55,6 +56,9 @@ class DocumentController extends AbstractController
         DocumentFilterFormService $filterFormService
     ): Response {
         $documents = [];
+        $dateFrom = (new DateTime())->format('Y').'-01-01';
+        $dateTo = null;
+        $query = null;
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
@@ -66,15 +70,21 @@ class DocumentController extends AbstractController
         $formFilter->handleRequest($request);
         if ($formFilter->isSubmitted()) {
             $filterFormService->handleFrom($formFilter, $entityManager);
-        } else {
-            $dateFrom = (new DateTime())->format('Y').'-01-01';
-            $entityManager->getFilters()
-                ->enable('document_dateFrom')
-                ->setParameter('dateFrom', $dateFrom);
+            $data = $formFilter->getData();
+            if ($data['q'] !== null) {
+                $query = $data['q'];
+            }
+            if ($data['dateFrom'] !== null) {
+                $dateFrom = $data['dateFrom'];
+            }
+            if ($data['dateTo'] !== null) {
+                $dateTo = $data['dateTo'];
+            }
         }
         try {
-            $documents = $documentRepository->findByCompany($company, Types::INVOICE_OUTGOING_TYPES);
-        } catch (Exception $e) {
+            $documents = $documentRepository->list($company, Types::INVOICE_OUTGOING_TYPES, $dateFrom, $dateTo, $query);
+//            dump($documents);
+        } catch (Exception|DBALException $e) {
             $this->logger->error($e->getMessage(), $e->getTrace());
             $this->addFlash('danger', "DOCUMENT_LOADING_ERROR");
         }
@@ -116,7 +126,8 @@ class DocumentController extends AbstractController
                 $this->documentManager->saveNew($document);
                 $this->addFlash('success', 'INVOICE_STORED');
 
-                return $this->redirectToRoute('app_document_index', ['company' => $company->getId()], Response::HTTP_SEE_OTHER);
+                return $this->redirectToRoute('app_document_index', ['company' => $company->getId()],
+                    Response::HTTP_SEE_OTHER);
             } catch (Throwable $e) {
                 $this->addFlash('danger', 'INVOICE_NOT_STORED');
                 $this->logger->error($e->getMessage(), $e->getTrace());
@@ -153,13 +164,15 @@ class DocumentController extends AbstractController
                 $this->documentManager->save($document);
                 $this->addFlash('success', 'INVOICE_STORED');
 
-                return $this->redirectToRoute('app_document_index', ['company' => $company->getId()], Response::HTTP_SEE_OTHER);
+                return $this->redirectToRoute('app_document_index', ['company' => $company->getId()],
+                    Response::HTTP_SEE_OTHER);
             } catch (Throwable $e) {
                 $this->addFlash('danger', 'INVOICE_NOT_STORED');
                 $this->logger->error($e->getMessage(), $e->getTrace());
             }
 
-            return $this->redirectToRoute('app_document_index', ['company' => $company->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_document_index', ['company' => $company->getId()],
+                Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('document/edit.html.twig', [

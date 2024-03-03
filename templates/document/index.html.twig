@@ -60,6 +60,7 @@
             <th>DatePay</th>
             <th>PriceNoVat</th>
             <th>PriceTotal</th>
+            <td>ToPay</td>
             <th>actions</th>
         </tr>
         </thead>
@@ -67,11 +68,12 @@
         {% for document in documents %}
             <tr>
                 <td><a href="{{ path('app_document_edit', {'company': company.id, 'id': document.id}) }}" class="text-decoration-none">{{ document.documentNumber }}</a></td>
-                <td>{{ document.customer.name|default(null) ? document.customer.name|default(null) : document.customerName|default(null) }}</td>
+                <td>{{ document.customerName }}</td>
                 <td>{{ document.dateIssue ? document.dateIssue|date('Y-m-d') : '' }}</td>
                 <td>{{ document.dateDue ? document.dateDue|date('Y-m-d') : '' }}</td>
-                <td>{{ document.priceNoVat }}</td>
-                <td>{{ document.priceTotal }}</td>
+                <td>{{ document.price }}</td>
+                <td>{{ document.priceWithVat }}</td>
+                <td>{{ document.toPay }}</td>
                 <td></td>
             </tr>
         {% else %}
