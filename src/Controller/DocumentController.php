@@ -81,6 +81,7 @@ class DocumentController extends AbstractController
         if ($formFilter->isSubmitted() && $formFilter->isValid()) {
             $filterFormService->handleFrom($formFilter, $entityManager);
             $data = $formFilter->getData();
+            dump($data);
             if ($data['q'] !== null) {
                 $query = $data['q'];
             }
