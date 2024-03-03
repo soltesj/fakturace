@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Document\DocumentToPay;
 use App\Document\Types;
 use App\Entity\Company;
+use App\Entity\Customer;
 use App\Entity\Document;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -56,8 +57,11 @@ class DocumentRepository extends ServiceEntityRepository
         array $documentTypes,
         ?DateTime $dateFrom = null,
         ?DateTime $dateTo = null,
-        ?string $query = null
+        ?string $query = null,
+        ?Customer $customer = null,
+        ?string $state = null
     ): array {
+        $documents = [];
         $incomeOutcomeTypes = Types::TYPE_MAP[$documentTypes[0]];
         $conn = $this->getEntityManager()->getConnection();
         $sql = '
@@ -87,8 +91,25 @@ class DocumentRepository extends ServiceEntityRepository
         if ($dateTo) {
             $sql .= ' AND document.date_issue >= ?';
         }
+        if ($customer) {
+            $sql .= ' AND document.customer_id = ?';
+        }
         if ($query) {
             $sql .= ' AND document.tag like ?';
+        }
+
+        switch ($state) {
+            case 'PAID':
+                $sql .= ' HAVING toPay = 0';
+                break;
+            case 'OVERDUE':
+                $sql .= ' HAVING toPay > 0 AND document.date_due < NOW()';
+                break;
+            case  'ALL':
+                break;
+            default :
+                $sql .= ' HAVING toPay > 0';
+                break;
         }
         $sql .= ' ORDER BY date_issue DESC, document_number DESC';
         $stmt = $conn->prepare($sql);
@@ -110,12 +131,17 @@ class DocumentRepository extends ServiceEntityRepository
             $stmt->bindValue($valIndex, $dateTo->format('Y-m-d'));
             $valIndex++;
         }
+        if ($customer) {
+            $stmt->bindValue($valIndex, $customer->getId());
+            $valIndex++;
+        }
         if ($query) {
             $stmt->bindValue($valIndex, '%'.$query.'%');
             $valIndex++;
         }
         //dd($stmt);
         $result = $stmt->executeQuery();
+//        dd($result);
         foreach ($result->fetchAllAssociative() as $document) {
             $documents[] = new DocumentToPay(...$document);
         }

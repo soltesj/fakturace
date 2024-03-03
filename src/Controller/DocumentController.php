@@ -58,7 +58,9 @@ class DocumentController extends AbstractController
         $documents = [];
         $dateFrom = (new DateTime())->format('Y').'-01-01';
         $dateTo = null;
+        $customer = null;
         $query = null;
+        $state = null;
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
@@ -80,9 +82,22 @@ class DocumentController extends AbstractController
             if ($data['dateTo'] !== null) {
                 $dateTo = $data['dateTo'];
             }
+            if ($data['customer'] !== null) {
+                $customer = $data['customer'];
+            }
+            if ($data['state'] !== null) {
+                $state = $data['state'];
+            }
         }
         try {
-            $documents = $documentRepository->list($company, Types::INVOICE_OUTGOING_TYPES, $dateFrom, $dateTo, $query);
+            $documents = $documentRepository->list(
+                $company,
+                Types::INVOICE_OUTGOING_TYPES,
+                $dateFrom,
+                $dateTo,
+                $query,
+                $customer,
+                $state);
 //            dump($documents);
         } catch (Exception|DBALException $e) {
             $this->logger->error($e->getMessage(), $e->getTrace());

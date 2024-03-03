@@ -12,7 +12,7 @@ class DocumentFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        //dump($options);
+       // dd($options['data']);
         $builder->setMethod('GET')
             ->add('q', TextType::class, [
             'label' => 'search',
