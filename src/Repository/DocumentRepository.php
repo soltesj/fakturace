@@ -89,7 +89,7 @@ class DocumentRepository extends ServiceEntityRepository
             $sql .= ' AND document.date_issue >= ?';
         }
         if ($dateTo) {
-            $sql .= ' AND document.date_issue >= ?';
+            $sql .= ' AND document.date_issue <= ?';
         }
         if ($customer) {
             $sql .= ' AND document.customer_id = ?';
