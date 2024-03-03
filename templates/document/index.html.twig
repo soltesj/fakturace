@@ -74,7 +74,17 @@
                 <td>{{ document.price }}</td>
                 <td>{{ document.priceWithVat }}</td>
                 <td>{{ document.toPay }}</td>
-                <td></td>
+                <td>
+                    <svg width="20" height="20" class="bi me-1">
+                        <use href="#envelope-arrow-up-fill"/>
+                    </svg>
+                    <svg width="18" height="18" class="bi me-1">
+                        <use href="#filetype-pdf"/>
+                    </svg>
+                    <svg width="18" height="18" class="bi">
+                        <use href="#check-circle-fill"/>
+                    </svg>
+                </td>
             </tr>
         {% else %}
             <tr>
