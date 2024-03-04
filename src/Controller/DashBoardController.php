@@ -8,15 +8,16 @@ use App\Repository\CompanyRepository;
 use App\Service\CompanyTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_USER')]
 class DashBoardController extends AbstractController
 {
     use CompanyTrait;
 
-    public function __construct(private RequestStack $requestStack, private CompanyRepository $companyRepository)
+    public function __construct(private readonly CompanyRepository $companyRepository)
     {
     }
 
@@ -26,7 +27,7 @@ class DashBoardController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
-            $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
+            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
             return $this->getCorrectCompanyUrl($request, $user);
         }
 

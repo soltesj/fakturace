@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
@@ -32,7 +32,7 @@ class CompanyController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
-            $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
+            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
 
             return $this->getCorrectCompanyUrl($request, $user);
         }
@@ -40,7 +40,7 @@ class CompanyController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            $this->addFlash('info', 'Zmeny byli ulozeny');
+            $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
             return $this->redirectToRoute('app_company_edit', ['company' => $company->getId()],
                 Response::HTTP_SEE_OTHER);
@@ -48,7 +48,7 @@ class CompanyController extends AbstractController
 
         return $this->render('company/edit.html.twig', [
             'company' => $company,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 }

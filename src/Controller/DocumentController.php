@@ -62,7 +62,7 @@ class DocumentController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
-            $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
+            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
 
             return $this->getCorrectCompanyUrl($request, $user);
         }
@@ -95,7 +95,7 @@ class DocumentController extends AbstractController
         return $this->render('document/index.html.twig', [
             'documents' => $documents,
             'company' => $company,
-            'formFilter' => $formFilter,
+            'formFilter' => $formFilter->createView(),
         ]);
     }
 
@@ -105,7 +105,7 @@ class DocumentController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
-            $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
+            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
 
             return $this->getCorrectCompanyUrl($request, $user);
         }
@@ -138,7 +138,7 @@ class DocumentController extends AbstractController
 
         return $this->render('document/new.html.twig', [
             'document' => $document,
-            'form' => $form,
+            'form' => $form->createView(),
             'company' => $company,
             'vats' => $vats,
         ]);
@@ -153,7 +153,7 @@ class DocumentController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
-            $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
+            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
 
             return $this->getCorrectCompanyUrl($request, $user);
         }
@@ -178,7 +178,7 @@ class DocumentController extends AbstractController
 
         return $this->render('document/edit.html.twig', [
             'document' => $document,
-            'form' => $form,
+            'form' => $form->createView(),
             'company' => $company,
             'vats' => $vats,
         ]);
@@ -194,7 +194,7 @@ class DocumentController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
-            $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
+            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
 
             return $this->getCorrectCompanyUrl($request, $user);
         }

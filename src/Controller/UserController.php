@@ -12,7 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
@@ -33,20 +33,20 @@ class UserController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
-            $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
+            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
             return $this->getCorrectCompanyUrl($request, $user);
         }
         $form = $this->createForm(UserEditFormType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            $this->addFlash('info', 'Zmeny byli ulozeny');
+            $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
             return $this->redirectToRoute('app_user_edit', ['company'=>$company->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('user/index.html.twig', [
-            'form' => $form,
+            'form' => $form->createView(),
             'company' => $company,
         ]);
     }

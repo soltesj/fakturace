@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
@@ -33,7 +33,7 @@ class CustomerController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
-            $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
+            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
             return $this->getCorrectCompanyUrl($request, $user);
         }
         $customers = $this->customerRepository->findByCompany($company);
@@ -50,7 +50,7 @@ class CustomerController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
-            $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
+            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
             return $this->getCorrectCompanyUrl($request, $user);
         }
         $customer = new Customer();
@@ -62,14 +62,14 @@ class CustomerController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($customer);
             $entityManager->flush();
-            $this->addFlash('info', 'Zmeny byli ulozeny');
+            $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
             return $this->redirectToRoute('app_customer_index', ['company'=>$company->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('customer/new.html.twig', [
             'customer' => $customer,
-            'form' => $form,
+            'form' => $form->createView(),
             'company' => $company,
         ]);
     }
@@ -80,7 +80,7 @@ class CustomerController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
-            $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
+            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
             return $this->getCorrectCompanyUrl($request, $user);
         }
 
@@ -88,14 +88,14 @@ class CustomerController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            $this->addFlash('info', 'Zmeny byli ulozeny');
+            $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
             return $this->redirectToRoute('app_customer_index', ['company'=>$company->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('customer/edit.html.twig', [
             'customer' => $customer,
-            'form' => $form,
+            'form' => $form->createView(),
             'company' => $company,
         ]);
     }
@@ -106,7 +106,7 @@ class CustomerController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
-            $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
+            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
             return $this->getCorrectCompanyUrl($request, $user);
         }
         $customer->setDisplay(false);

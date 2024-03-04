@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class BankAccountController extends AbstractController
 {
@@ -33,7 +33,7 @@ class BankAccountController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
-            $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
+            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
 
             return $this->getCorrectCompanyUrl($request, $user);
         }
@@ -51,7 +51,7 @@ class BankAccountController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
-            $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
+            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
 
             return $this->getCorrectCompanyUrl($request, $user);
         }
@@ -62,7 +62,7 @@ class BankAccountController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($bankAccount);
             $entityManager->flush();
-            $this->addFlash('info', 'Zmeny byli ulozeny');
+            $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
             return $this->redirectToRoute('app_bank_account_index', ['company' => $company->getId()],
                 Response::HTTP_SEE_OTHER);
@@ -70,7 +70,7 @@ class BankAccountController extends AbstractController
 
         return $this->render('bank_account/new.html.twig', [
             'bank_account' => $bankAccount,
-            'form' => $form,
+            'form' => $form->createView(),
             'company' => $company,
         ]);
     }
@@ -85,7 +85,7 @@ class BankAccountController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
-            $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
+            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
 
             return $this->getCorrectCompanyUrl($request, $user);
         }
@@ -93,7 +93,7 @@ class BankAccountController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            $this->addFlash('info', 'Zmeny byli ulozeny');
+            $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
             return $this->redirectToRoute('app_bank_account_index', ['company' => $company->getId()],
                 Response::HTTP_SEE_OTHER);
@@ -116,13 +116,13 @@ class BankAccountController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
-            $this->addFlash('warning', 'Neopravneny pokus o zmenu adresy');
+            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
 
             return $this->getCorrectCompanyUrl($request, $user);
         }
         $entityManager->remove($bankAccount);
         $entityManager->flush();
-        $this->addFlash('info', 'Zmeny byli ulozeny');
+        $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
         return $this->redirectToRoute('app_bank_account_index', ['company' => $company->getId()],
             Response::HTTP_SEE_OTHER);
