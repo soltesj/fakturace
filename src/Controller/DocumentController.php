@@ -24,7 +24,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Throwable;
@@ -34,14 +33,9 @@ class DocumentController extends AbstractController
 {
     use CompanyTrait;
 
-    private SessionInterface $session;
-
     public function __construct(
-        private readonly CompanyRepository $companyRepository,
         private readonly VatLevelRepository $vatLevelRepository,
         private readonly DocumentManager $documentManager,
-        private readonly DocumentNumber $documentNumber,
-        private readonly DocumentNumbersRepository $documentNumbersRepository,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -119,7 +113,7 @@ class DocumentController extends AbstractController
         $document->setDateDue(new DateTime('+14 days'));
         $document->setDocumentNumber($documentNumberPlaceholder);
         $document->addDocumentItem($documentItem);
-        $document->setUser($this->getUser());
+        $document->setUser($user);
         $document->setDescription('Fakturujeme Vám služby dle Vaší objednávky:');
         $form = $this->createForm(DocumentFormType::class, $document);
         $form->handleRequest($request);

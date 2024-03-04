@@ -4,6 +4,7 @@ namespace App\Document;
 
 use App\Entity\Company;
 use App\Entity\Customer;
+use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -85,6 +86,12 @@ class DocumentFilterFormService
             ])
             ->getForm();
     }
+
+    /**
+     * @param array<string,string|int|null> $data
+     * @param DateTimeInterface $dateFrom
+     * @return array<string|int|DateTime|Customer|null>
+     */
     public function  handleFrom(array $data, DateTimeInterface $dateFrom): array
     {
         if ($data['dateFrom'] !== null) {

@@ -6,6 +6,7 @@ use App\Entity\Country;
 use App\Entity\VatLevel;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -23,7 +24,11 @@ class VatLevelRepository extends ServiceEntityRepository
         parent::__construct($registry, VatLevel::class);
     }
 
-    public function getValidVatByCountry(Country $country)
+    /**
+     * @param Country $country
+     * @return array<int,VatLevel>
+     */
+    public function getValidVatByCountry(Country $country): array
     {
         return $this->createQueryBuilder('vat_level')
             ->andWhere('vat_level.country = :country')
@@ -35,19 +40,21 @@ class VatLevelRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getValidVatByCountryPairedById(Country $country)
+    /**
+     * @return array<int,string>
+     * @throws Exception
+     */
+    public function getValidVatByCountryPairedById(Country $country): array
     {
         $dbal = $this->getEntityManager()->getConnection();
-
         $query = $this->createQueryBuilder('vat_level')
-            ->select('vat_level.id','vat_level.vatAmount')
+            ->select('vat_level.id', 'vat_level.vatAmount')
             ->andWhere('vat_level.country = :country')
             ->andWhere('vat_level.validTo is null or vat_level.validTo >= :now')
             ->orderBy('vat_level.vatAmount', 'DESC')
             ->getQuery();
 
-
-        return $dbal->executeQuery($query->getSQL(),[$country->getId(),(new DateTime())->format('Y-m-d')])
+        return $dbal->executeQuery($query->getSQL(), [$country->getId(), (new DateTime())->format('Y-m-d')])
             ->fetchAllKeyValue();
     }
 }

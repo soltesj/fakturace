@@ -64,9 +64,15 @@ class Company
     #[ORM\Column(name: 'email_invoice_message', type: Types::TEXT, length: 65535, nullable: true)]
     private ?string $emailInvoiceMessage = null;
 
+    /**
+     * @var Collection<int,User>
+     */
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'companies')]
     private Collection $users;
 
+    /**
+     * @var Collection<int,Currency>
+     */
     #[ORM\ManyToMany(targetEntity: Currency::class)]
     private Collection $currency;
 

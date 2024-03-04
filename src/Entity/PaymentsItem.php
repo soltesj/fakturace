@@ -12,55 +12,106 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class PaymentsItem
 {
-    /**
-     * @var int
-     */
-    #[ORM\Column(name: 'id', type: Types::INTEGER, nullable: false)]
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private int $id;
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    protected ?int $id = null;
 
-    /**
-     * @var int
-     */
-    #[ORM\Column(name: 'payments_id', type: Types::INTEGER, nullable: false)]
-    private int $paymentsId;
+    #[ORM\Column( type: Types::INTEGER, nullable: false)]
+    private ?int $paymentsId = null;
 
-    /**
-     * @var string
-     */
-    #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
-    private string $name;
+    #[ORM\Column( type: Types::STRING, length: 255, nullable: false)]
+    private ?string $name = null;
 
-    /**
-     * @var float
-     */
-    #[ORM\Column(name: 'quantity', type: Types::FLOAT, precision: 10, scale: 0, nullable: false)]
-    private float $quantity;
+    #[ORM\Column( type: Types::FLOAT, precision: 10, scale: 0, nullable: false)]
+    private ?float $quantity = null;
 
-    /**
-     * @var string
-     */
-    #[ORM\Column(name: 'unit', type: Types::STRING, length: 10, nullable: false)]
-    private string $unit;
+    #[ORM\Column( type: Types::STRING, length: 10, nullable: false)]
+    private ?string $unit = null;
 
-    /**
-     * @var float
-     */
-    #[ORM\Column(name: 'price', type: Types::FLOAT, precision: 10, scale: 0, nullable: false)]
-    private float $price;
+    #[ORM\Column( type: Types::FLOAT, precision: 10, scale: 0, nullable: false)]
+    private ?float $price = null;
 
-    /**
-     * @var bool
-     */
-    #[ORM\Column(name: 'vat', type: Types::BOOLEAN, nullable: false)]
-    private bool $vat;
+    #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
+    private ?bool $vat = null;
 
-    /**
-     * @var float
-     */
-    #[ORM\Column(name: 'discount', type: Types::FLOAT, precision: 10, scale: 0, nullable: false)]
-    private float $discount;
+    #[ORM\Column( type: Types::FLOAT, precision: 10, scale: 0, nullable: false)]
+    private ?float $discount = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getPaymentsId(): ?int
+    {
+        return $this->paymentsId;
+    }
+
+    public function setPaymentsId(?int $paymentsId): void
+    {
+        $this->paymentsId = $paymentsId;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getQuantity(): ?float
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(?float $quantity): void
+    {
+        $this->quantity = $quantity;
+    }
+
+    public function getUnit(): ?string
+    {
+        return $this->unit;
+    }
+
+    public function setUnit(?string $unit): void
+    {
+        $this->unit = $unit;
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->price;
+    }
+
+    public function setPrice(?float $price): void
+    {
+        $this->price = $price;
+    }
+
+    public function getVat(): ?bool
+    {
+        return $this->vat;
+    }
+
+    public function setVat(?bool $vat): void
+    {
+        $this->vat = $vat;
+    }
+
+    public function getDiscount(): ?float
+    {
+        return $this->discount;
+    }
+
+    public function setDiscount(?float $discount): void
+    {
+        $this->discount = $discount;
+    }
 
 
 }

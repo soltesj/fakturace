@@ -7,7 +7,6 @@ use App\Entity\Company;
 use App\Entity\User;
 use App\Form\BankAccountType;
 use App\Repository\BankAccountRepository;
-use App\Repository\CompanyRepository;
 use App\Service\CompanyTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,11 +17,6 @@ use Symfony\Component\Routing\Attribute\Route;
 class BankAccountController extends AbstractController
 {
     use CompanyTrait;
-
-    public function __construct(
-        private readonly CompanyRepository $companyRepository,
-    ) {
-    }
 
     #[Route('/{company}/bank-account/', name: 'app_bank_account_index', methods: ['GET'])]
     public function index(

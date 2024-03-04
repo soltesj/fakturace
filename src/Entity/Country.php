@@ -5,20 +5,15 @@ namespace App\Entity;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * Country
- */
 #[ORM\Table(name: 'country')]
 #[ORM\Entity]
 class Country
 {
-    /**
-     * @var int
-     */
-    #[ORM\Column(name: 'id', type: Types::INTEGER, nullable: false)]
+
+    #[ORM\Column( type: Types::INTEGER, nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private int $id;
+    protected ?int $id;
 
     /**
      * @var string

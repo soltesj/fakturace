@@ -22,6 +22,9 @@ class Customer
     #[ORM\ManyToOne]
     private Country $country;
 
+    /**
+     * @var Collection<int,Document>
+     */
     #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'customer', fetch: 'EXTRA_LAZY')]
     private Collection $documents;
 

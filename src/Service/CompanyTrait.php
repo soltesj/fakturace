@@ -9,16 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 trait CompanyTrait
 {
-    private function getCompany(): ?Company
-    {
-        $company = $this->session->get('company');
-        if ($company === null) {
-            return null;
-        }
-
-        return $this->companyRepository->find($company?->getId());
-    }
-
     public function getCorrectCompanyUrl(Request $request, User $user): RedirectResponse
     {
 

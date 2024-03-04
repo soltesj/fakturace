@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Company;
 use App\Entity\User;
 use App\Form\CompanyType;
-use App\Repository\CompanyRepository;
 use App\Service\CompanyTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,11 +18,6 @@ class CompanyController extends AbstractController
 {
 
     use CompanyTrait;
-
-    public function __construct(
-        private CompanyRepository $companyRepository,
-    ) {
-    }
 
 
     #[Route('/{company}/company/', name: 'app_company_edit', methods: ['GET', 'POST'])]

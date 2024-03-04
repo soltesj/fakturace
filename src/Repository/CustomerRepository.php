@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Company;
 use App\Entity\Customer;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -24,7 +25,7 @@ class CustomerRepository extends ServiceEntityRepository
     /**
      * @return Customer[] Returns an array of Customer objects
      */
-    public function findByCompany($company, $display = true, $order = 'ASC'): array
+    public function findByCompany(Company $company, bool $display = true, string $order = 'ASC'): array
     {
         $qb = $this->createQueryBuilder('customer')
             ->andWhere('customer.company = :company')

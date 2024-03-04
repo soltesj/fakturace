@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Company;
 use App\Entity\User;
-use App\Repository\CompanyRepository;
 use App\Service\CompanyTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,10 +15,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class DashBoardController extends AbstractController
 {
     use CompanyTrait;
-
-    public function __construct(private readonly CompanyRepository $companyRepository)
-    {
-    }
 
     #[Route('/{company}/dashboard', name: 'app_dash_board')]
     public function index(Request $request, Company $company): Response

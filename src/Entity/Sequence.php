@@ -12,31 +12,55 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class Sequence
 {
-    /**
-     * @var int
-     */
-    #[ORM\Column(name: 'id', type: Types::INTEGER, nullable: false)]
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private int $id;
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    protected ?int $id = null;
 
-    /**
-     * @var int
-     */
     #[ORM\Column(name: 'type', type: Types::INTEGER, nullable: false)]
-    private int $type;
+    private ?int $type = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'name', type: Types::STRING, length: 64, nullable: false)]
-    private string $name;
+    private ?string $name = null;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'abbreviation', type: Types::STRING, length: 32, nullable: false)]
-    private string $abbreviation;
+    private ?string $abbreviation = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getType(): ?int
+    {
+        return $this->type;
+    }
+
+    public function setType(int $type): void
+    {
+        $this->type = $type;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getAbbreviation(): ?string
+    {
+        return $this->abbreviation;
+    }
+
+    public function setAbbreviation(string $abbreviation): void
+    {
+        $this->abbreviation = $abbreviation;
+    }
+
 
 
 }

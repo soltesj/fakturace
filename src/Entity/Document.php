@@ -21,7 +21,10 @@ class Document
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'documents')]
     private ?self $document = null;
 
-    #[ORM\OneToMany(mappedBy: 'document', targetEntity: self::class)]
+    /**
+     * @var Collection<int,Document>
+     */
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'document')]
     private ?Collection $documents = null;
 
     #[ORM\ManyToOne]
@@ -75,6 +78,9 @@ class Document
     #[ORM\ManyToOne]
     private ?BankAccount $bankAccount = null;
 
+    /**
+     * @var Collection<int,DocumentItem>
+     */
     #[ORM\OneToMany(mappedBy: 'document', targetEntity: DocumentItem::class, cascade: ['persist', 'remove'])]
     private ?Collection $documentItems = null;
     #[ORM\Column(name: 'bank_routing', type: Types::STRING, length: 32, nullable: true)]

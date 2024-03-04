@@ -6,7 +6,6 @@ use App\Entity\Company;
 use App\Entity\Customer;
 use App\Entity\User;
 use App\Form\CustomerType;
-use App\Repository\CompanyRepository;
 use App\Repository\CustomerRepository;
 use App\Service\CompanyTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,7 +21,6 @@ class CustomerController extends AbstractController
     use CompanyTrait;
 
     public function __construct(
-        private readonly CompanyRepository $companyRepository,
         private readonly CustomerRepository $customerRepository
     ) {
     }

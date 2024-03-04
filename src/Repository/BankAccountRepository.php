@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\BankAccount;
+use App\Entity\Company;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,7 +22,10 @@ class BankAccountRepository extends ServiceEntityRepository
         parent::__construct($registry, BankAccount::class);
     }
 
-    public function findByCompany($company, $display = true, $order = 'ASC'): array
+    /**
+     * @return BankAccount[]
+     */
+    public function findByCompany(Company $company, bool $display = true, string $order = 'ASC'): array
     {
         $qb = $this->createQueryBuilder('bank_account')
             ->andWhere('bank_account.company = :company')

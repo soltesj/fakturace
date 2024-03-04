@@ -27,7 +27,7 @@ class DocumentManager
         $company = $document->getCompany();
         $documentTypeId = $document->getDocumentType()->getId();
         $document->setDocumentNumber($this->documentNumber->generate($company, $documentTypeId, $year));
-        $documentNumberFormat = $this->documentNumbersRepository->findByCompany($company, $documentTypeId, $year);
+        $documentNumberFormat = $this->documentNumbersRepository->findByCompany($company, $documentTypeId, (int)$year);
 
 
         if ($document->getVariableSymbol() === null) {

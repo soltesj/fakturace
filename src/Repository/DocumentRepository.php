@@ -28,13 +28,13 @@ class DocumentRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param int[] $documentType
      * @return ?Document[] Returns an array of Document objects
-     * @throws Exception
      */
     public function findByCompany(
-        $company,
-        $documentType = [],
-        $order = 'DESC',
+        Company $company,
+        array $documentType = [],
+        string $order = 'DESC',
     ): ?array {
         $qb = $this->createQueryBuilder('document')
             ->addSelect('customer')
@@ -50,6 +50,8 @@ class DocumentRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param array<int> $documentTypes
+     * @return DocumentToPay[]
      * @throws \Doctrine\DBAL\Exception
      */
     public function list(
