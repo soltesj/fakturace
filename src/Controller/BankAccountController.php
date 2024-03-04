@@ -18,7 +18,7 @@ class BankAccountController extends AbstractController
 {
     use CompanyTrait;
 
-    #[Route('/{company}/bank-account/', name: 'app_bank_account_index', methods: ['GET'])]
+    #[Route('/{_locale}/{company}/bank-account/', name: 'app_bank_account_index', methods: ['GET'])]
     public function index(
         Request $request,
         Company $company,
@@ -39,7 +39,7 @@ class BankAccountController extends AbstractController
         ]);
     }
 
-    #[Route('/{company}/bank-account/new', name: 'app_bank_account_new', methods: ['GET', 'POST'])]
+    #[Route('/{_locale}/{company}/bank-account/new', name: 'app_bank_account_new', methods: ['GET', 'POST'])]
     public function new(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
         /** @var User $user */
@@ -69,7 +69,7 @@ class BankAccountController extends AbstractController
         ]);
     }
 
-    #[Route('/{company}/bank-account/{id}/edit', name: 'app_bank_account_edit', methods: ['GET', 'POST'])]
+    #[Route('/{_locale}/{company}/bank-account/{id}/edit', name: 'app_bank_account_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
         Company $company,
@@ -100,7 +100,7 @@ class BankAccountController extends AbstractController
         ]);
     }
 
-    #[Route('/{company}/bank-account/{id}', name: 'app_bank_account_delete', methods: ['GET'])]
+    #[Route('/{_locale}/{company}/bank-account/{id}', name: 'app_bank_account_delete', methods: ['GET'])]
     public function delete(
         Request $request,
         Company $company,

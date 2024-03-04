@@ -18,7 +18,7 @@ class UserController extends AbstractController
 {
     use CompanyTrait;
 
-    #[Route('/{company}/user', name: 'app_user_edit', methods: ['GET', 'POST'])]
+    #[Route('/{_locale}/{company}/user', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function index(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
         /** @var User $user */

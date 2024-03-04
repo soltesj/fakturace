@@ -16,7 +16,7 @@ class DashBoardController extends AbstractController
 {
     use CompanyTrait;
 
-    #[Route('/{company}/dashboard', name: 'app_dash_board')]
+    #[Route('/{_locale}/{company}/dashboard', name: 'app_dash_board')]
     public function index(Request $request, Company $company): Response
     {
         /** @var User $user */

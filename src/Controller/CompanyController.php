@@ -20,7 +20,7 @@ class CompanyController extends AbstractController
     use CompanyTrait;
 
 
-    #[Route('/{company}/company/', name: 'app_company_edit', methods: ['GET', 'POST'])]
+    #[Route('/{_locale}/{company}/company/', name: 'app_company_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
         /** @var User $user */

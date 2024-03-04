@@ -40,7 +40,7 @@ class DocumentController extends AbstractController
     ) {
     }
 
-    #[Route('/{company}/document/', name: 'app_document_index', methods: ['GET'])]
+    #[Route('/{_locale}/{company}/document/', name: 'app_document_index', methods: ['GET'])]
     public function index(
         Request $request,
         Company $company,
@@ -93,7 +93,7 @@ class DocumentController extends AbstractController
         ]);
     }
 
-    #[Route('/{company}/document/new', name: 'app_document_new', methods: ['GET', 'POST'])]
+    #[Route('/{_locale}/{company}/document/new', name: 'app_document_new', methods: ['GET', 'POST'])]
     public function new(Request $request, Company $company, DocumentNumber $documentNumber): Response
     {
         /** @var User $user */
@@ -138,7 +138,7 @@ class DocumentController extends AbstractController
         ]);
     }
 
-    #[Route('/{company}/document/{id}/edit', name: 'app_document_edit', methods: ['GET', 'POST'])]
+    #[Route('/{_locale}/{company}/document/{id}/edit', name: 'app_document_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request,
         Company $company,
@@ -178,7 +178,7 @@ class DocumentController extends AbstractController
         ]);
     }
 
-    #[Route('/{company}/document/{id}', name: 'app_document_delete', methods: ['DELETE'])]
+    #[Route('/{_locale}/{company}/document/{id}', name: 'app_document_delete', methods: ['DELETE'])]
     public function delete(
         Request $request,
         Company $company,

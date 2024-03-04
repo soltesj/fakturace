@@ -25,7 +25,7 @@ class CustomerController extends AbstractController
     ) {
     }
 
-    #[Route('/{company}/customer/', name: 'app_customer_index', methods: ['GET'])]
+    #[Route('/{_locale}/{company}/customer/', name: 'app_customer_index', methods: ['GET'])]
     public function index(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
         /** @var User $user */
@@ -42,7 +42,7 @@ class CustomerController extends AbstractController
         ]);
     }
 
-    #[Route('/{company}/customer/new', name: 'app_customer_new', methods: ['GET', 'POST'])]
+    #[Route('/{_locale}/{company}/customer/new', name: 'app_customer_new', methods: ['GET', 'POST'])]
     public function new(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
         /** @var User $user */
@@ -72,7 +72,7 @@ class CustomerController extends AbstractController
         ]);
     }
 
-    #[Route('/{company}/customer/{id}/edit', name: 'app_customer_edit', methods: ['GET', 'POST'])]
+    #[Route('/{_locale}/{company}/customer/{id}/edit', name: 'app_customer_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Company $company, Customer $customer, EntityManagerInterface $entityManager): Response
     {
         /** @var User $user */
@@ -98,7 +98,7 @@ class CustomerController extends AbstractController
         ]);
     }
 
-    #[Route('/{company}/customer/{id}/delete', name: 'app_customer_delete', methods: ['GET'])]
+    #[Route('/{_locale}/{company}/customer/{id}/delete', name: 'app_customer_delete', methods: ['GET'])]
     public function delete(Request $request, Company $company, Customer $customer, EntityManagerInterface $entityManager): Response
     {
         /** @var User $user */
