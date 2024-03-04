@@ -6,3 +6,5 @@ parameters:
         - public/
         - src/
         - tests/
+    ignoreErrors:
+        - '#PHPDoc tag @implements contains generic type Symfony\\Component\\Security\\Core\\User\\PasswordUpgraderInterface<App\\Entity\\User> but interface Symfony\\Component\\Security\\Core\\User\\PasswordUpgraderInterface is not generic.#'
