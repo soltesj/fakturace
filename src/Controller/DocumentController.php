@@ -7,11 +7,9 @@ use App\Document\DocumentManager;
 use App\Document\DocumentNumber;
 use App\Document\Types;
 use App\Entity\Company;
-use App\Entity\Customer;
 use App\Entity\Document;
 use App\Entity\DocumentItem;
 use App\Entity\User;
-use App\Form\DocumentFilterType;
 use App\Form\DocumentFormType;
 use App\Repository\CompanyRepository;
 use App\Repository\DocumentNumbersRepository;
@@ -21,16 +19,9 @@ use App\Service\CompanyTrait;
 use DateTime;
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\QueryBuilder;
 use Exception;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -60,11 +51,10 @@ class DocumentController extends AbstractController
         Request $request,
         Company $company,
         DocumentRepository $documentRepository,
-        EntityManagerInterface $entityManager,
         DocumentFilterFormService $filterFormService,
     ): Response {
         $documents = [];
-        $dateFrom = new DateTime((new DateTime())->format('Y').'-01-01');
+        $dateFrom = new DateTime('first day of january');
         $dateTo = null;
         $customer = null;
         $query = null;
@@ -76,27 +66,11 @@ class DocumentController extends AbstractController
 
             return $this->getCorrectCompanyUrl($request, $user);
         }
-        $formFilter = $this->getFilterForm($company);
+
+        $formFilter = $filterFormService->createForm($company);
         $formFilter->handleRequest($request);
         if ($formFilter->isSubmitted() && $formFilter->isValid()) {
-            $filterFormService->handleFrom($formFilter, $entityManager);
-            $data = $formFilter->getData();
-            dump($data);
-            if ($data['q'] !== null) {
-                $query = $data['q'];
-            }
-            if ($data['dateFrom'] !== null) {
-                $dateFrom = $data['dateFrom'];
-            }
-            if ($data['dateTo'] !== null) {
-                $dateTo = $data['dateTo'];
-            }
-            if ($data['customer'] !== null) {
-                $customer = $data['customer'];
-            }
-            if ($data['state'] !== null) {
-                $state = $data['state'];
-            }
+            list($query, $dateFrom, $dateTo, $customer, $state) = $filterFormService->handleFrom($formFilter->getData(),$dateFrom);
         }
         try {
             $documents = $documentRepository->list(
@@ -107,7 +81,6 @@ class DocumentController extends AbstractController
                 $query,
                 $customer,
                 $state);
-//            dump($documents);
         } catch (Exception|DBALException $e) {
             $this->logger->error($e->getMessage(), $e->getTrace());
             $this->addFlash('danger', "DOCUMENT_LOADING_ERROR");
@@ -176,7 +149,6 @@ class DocumentController extends AbstractController
         Request $request,
         Company $company,
         Document $document,
-        EntityManagerInterface $entityManager
     ): Response {
         /** @var User $user */
         $user = $this->getUser();
@@ -232,75 +204,5 @@ class DocumentController extends AbstractController
         }
 
         return $this->redirectToRoute('app_document_index', ['company' => $company->getId()], Response::HTTP_SEE_OTHER);
-    }
-
-    /**
-     * @param Company $company
-     * @return FormInterface
-     */
-    public function getFilterForm(Company $company): FormInterface
-    {
-        return $this->createFormBuilder()->setMethod('GET')
-            ->add('q', TextType::class, [
-                'label' => 'search',
-                'required' => false,
-                'attr' => [
-                    'placeholder' => 'search',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating',
-                ],
-            ])
-            ->add('state', ChoiceType::class, [
-                'choices' => ['NO_PAID' => 'NO_PAID', 'PAID' => 'PAID', 'ALL' => 'ALL', 'OVERDUE' => 'OVERDUE'],
-                'data' => 'NO_PAID',
-                'label' => 'state',
-                'required' => true,
-                'attr' => [
-                    'placeholder' => 'state',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating',
-                ],
-            ])
-            ->add('customer', EntityType::class, [
-                'class' => Customer::class,
-                'choice_label' => 'name',
-                'label' => 'customer',
-                'required' => false,
-                'query_builder' => function (EntityRepository $er) use ($company): QueryBuilder {
-                    return $er->createQueryBuilder('customer')
-                        ->andWhere('customer.company = :company')
-                        ->setParameter('company', $company)
-                        ->orderBy('customer.name', 'ASC');
-                },
-                'attr' => [
-                    'placeholder' => 'customer',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating',
-                ],
-            ])
-            ->add('dateFrom', DateType::class, [
-                'label' => 'dateFrom',
-                'required' => false,
-                'attr' => [
-                    'placeholder' => 'dateFrom',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating',
-                ],
-            ])
-            ->add('dateTo', DateType::class, [
-                'label' => 'dateTo',
-                'required' => false,
-                'attr' => [
-                    'placeholder' => 'dateTo',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating',
-                ],
-            ])
-            ->getForm();
     }
 }

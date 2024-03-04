@@ -2,46 +2,95 @@
 
 namespace App\Document;
 
-use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Company;
+use App\Entity\Customer;
+use DateTimeInterface;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 
 class DocumentFilterFormService
 {
-    public function handleFrom(
-        FormInterface $formFilter,
-        EntityManagerInterface $entityManager,
-    ): void {
-        $data = $formFilter->getData();
-        $this->handleQuery($data['q'], $entityManager);
-        $this->handleDateFrom($data['dateFrom'], $entityManager);
-        $this->handleDateTo($data['dateTo'], $entityManager);
+    public function __construct(private FormFactoryInterface $formFactory)
+    {
     }
 
-    public function handleQuery(?string $q, EntityManagerInterface $entityManager): void
+    public function createForm(Company $company): FormInterface
     {
-        if ($q !== null) {
-            $entityManager->getFilters()
-                ->enable('document_search')
-                ->setParameter('query', '%'.$q.'%');
-        }
+        return $this->formFactory->createBuilder()->setMethod('GET')
+            ->add('q', TextType::class, [
+                'label' => 'search',
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'search',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating',
+                ],
+            ])
+            ->add('state', ChoiceType::class, [
+                'choices' => ['NO_PAID' => 'NO_PAID', 'PAID' => 'PAID', 'ALL' => 'ALL', 'OVERDUE' => 'OVERDUE'],
+                'data' => 'NO_PAID',
+                'label' => 'state',
+                'required' => true,
+                'attr' => [
+                    'placeholder' => 'state',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating',
+                ],
+            ])
+            ->add('customer', EntityType::class, [
+                'class' => Customer::class,
+                'choice_label' => 'name',
+                'label' => 'customer',
+                'required' => false,
+                'query_builder' => function (EntityRepository $er) use ($company): QueryBuilder {
+                    return $er->createQueryBuilder('customer')
+                        ->andWhere('customer.company = :company')
+                        ->setParameter('company', $company)
+                        ->orderBy('customer.name', 'ASC');
+                },
+                'attr' => [
+                    'placeholder' => 'customer',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating',
+                ],
+            ])
+            ->add('dateFrom', DateType::class, [
+                'label' => 'dateFrom',
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'dateFrom',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating',
+                ],
+            ])
+            ->add('dateTo', DateType::class, [
+                'label' => 'dateTo',
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'dateTo',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating',
+                ],
+            ])
+            ->getForm();
     }
-
-    public function handleDateFrom(?DateTime $dateFrom, EntityManagerInterface $entityManager): void
+    public function  handleFrom(array $data, DateTimeInterface $dateFrom): array
     {
-        if ($dateFrom !== null) {
-            $entityManager->getFilters()
-                ->enable('document_dateFrom')
-                ->setParameter('dateFrom', $dateFrom->format('Y-m-d'));
+        if ($data['dateFrom'] !== null) {
+            $dateFrom = $data['dateFrom'];
         }
-    }
 
-    public function handleDateTo(?DateTime $dateTo, EntityManagerInterface $entityManager): void
-    {
-        if ($dateTo !== null) {
-            $entityManager->getFilters()
-                ->enable('document_dateTo')
-                ->setParameter('dateTo', $dateTo->format('Y-m-d'));
-        }
+        return array($data['q'], $dateFrom, $data['dateTo'], $data['customer'], $data['state']);
     }
 }
