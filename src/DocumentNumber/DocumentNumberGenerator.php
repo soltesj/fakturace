@@ -1,19 +1,24 @@
 <?php
 
-namespace App\Document;
+namespace App\DocumentNumber;
 
 use App\Entity\Company;
+use App\Entity\DocumentType;
 use App\Repository\DocumentNumbersRepository;
 
-class DocumentNumber
+class DocumentNumberGenerator
 {
-    public function __construct(private DocumentNumbersRepository $documentNumbersRepository)
+    public function __construct(private readonly DocumentNumbersRepository $documentNumbersRepository)
     {
     }
 
-    public function generate(Company $company, int $documentTypeId, string $year): string
+    public function generate(Company $company, DocumentType $documentType, string $year): string
     {
-        $documentNumber = $this->documentNumbersRepository->findByCompany($company, $documentTypeId, (int)$year);
+        $documentNumber = $this->documentNumbersRepository->findOneByCompanyDocumentTypeYear(
+            $company,
+            $documentType,
+            (int)$year
+        );
         $numberFormat = $documentNumber->getNumberFormat();
         $nextNumber = $documentNumber->getNextNumber();
         $nextNumber++;
@@ -29,5 +34,16 @@ class DocumentNumber
         $numberChar = strlen($matches[0]); //echo $numberChar."<br>";
 
         return preg_replace("([0]+n$)", sprintf("%0".$numberChar."d", $nextNumber), $numberFormat);
+    }
+
+    /**
+     * @param array<DocumentType|int> $documentTypes
+     */
+    public function exist(Company $company, array $documentTypes, int $year): bool
+    {
+        $documentNumbers = $this->documentNumbersRepository
+            ->findByCompanyDocumentTypeYear($company, $documentTypes, $year);
+
+        return count($documentNumbers) === count($documentTypes);
     }
 }

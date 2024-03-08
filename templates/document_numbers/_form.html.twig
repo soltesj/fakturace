@@ -1,0 +1,7 @@
+{# {% form_theme form 'bootstrap_5_horizontal_layout.html.twig' %} #}
+{{ form_start(form) }}
+{{ form_row(form.numberFormat) }}
+{{ form_row(form.nextNumber) }}
+
+<button class="btn btn-success" type="submit">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

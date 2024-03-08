@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DocumentNumbers{% endblock %}
+
+{% block body %}
+    <h1>DocumentNumbers</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ document_number.id }}</td>
+            </tr>
+            <tr>
+                <th>Year</th>
+                <td>{{ document_number.year }}</td>
+            </tr>
+            <tr>
+                <th>NumberFormat</th>
+                <td>{{ document_number.numberFormat }}</td>
+            </tr>
+            <tr>
+                <th>NextNumber</th>
+                <td>{{ document_number.nextNumber }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_document_numbers_index') }}">back to list</a>
+
+    <a href="{{ path('app_document_numbers_edit', {'id': document_number.id}) }}">edit</a>
+{% endblock %}

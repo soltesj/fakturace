@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use DateTimeInterface;
+use App\Repository\DocumentNumbersRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: DocumentNumbersRepository::class)]
 class DocumentNumbers
 {
     #[ORM\Id]
@@ -15,19 +15,28 @@ class DocumentNumbers
     protected ?int $id = null;
 
     #[ORM\ManyToOne]
-    private ?Company $company = null;
+    private ?Company $company;
 
     #[ORM\ManyToOne]
-    private ?DocumentType $documentType = null;
+    private ?DocumentType $documentType;
 
-    #[ORM\Column( type: Types::INTEGER, nullable: true)]
-    private ?int $year = null;
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    private ?int $year;
 
     #[ORM\Column(type: Types::STRING, length: 15, nullable: true)]
     private ?string $numberFormat = null;
 
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
-    private ?int $nextNumber = null;
+    private int $nextNumber = 0;
+
+    public function __construct(Company $company, DocumentType $documentType, int $year,string $numberFormat)
+    {
+        $this->company = $company;
+        $this->documentType = $documentType;
+        $this->year = $year;
+        $this->numberFormat = $numberFormat;
+    }
+
 
     public function getId(): ?int
     {
@@ -87,5 +96,11 @@ class DocumentNumbers
         $this->documentType = $documentType;
 
         return $this;
+    }
+
+    public function __clone(): void
+    {
+        $this->id = null;
+        $this->nextNumber = 0;
     }
 }

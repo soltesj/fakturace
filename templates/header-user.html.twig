@@ -76,7 +76,7 @@
                             <li class="nav-item"><a class="dropdown-item {% if app.current_route in ['app_bank_account_index','app_bank_account_new','app_bank_account_edit'] %}text-secondary{% else %} text-white{% endif %}"
                                                     href="{{ path('app_bank_account_index', {'company':company.id}) }}">Bankovní
                                     účty</a></li>
-                            <li class="nav-item"><a class="dropdown-item" href="#">Format čísel dokladu</a></li>
+                            <li class="nav-item"><a class="dropdown-item" href="{{ path('app_document_numbers_index', {'company':company.id}) }}">Format čísel dokladu</a></li>
                         </ul>
                     </li>
                 </ul>

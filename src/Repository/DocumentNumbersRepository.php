@@ -25,17 +25,37 @@ class DocumentNumbersRepository extends ServiceEntityRepository
     }
 
 
-    public function findByCompany(Company $company, int $documentType, int $year): DocumentNumbers
-    {
+    public function findOneByCompanyDocumentTypeYear(
+        Company $company,
+        DocumentType $documentType,
+        int $year
+    ): DocumentNumbers {
         $qb = $this->createQueryBuilder('document_numbers')
             ->andWhere('document_numbers.company = :company')
             ->setParameter('company', $company);
         $qb->andWhere('document_numbers.documentType in (:documentType)')
             ->setParameter('documentType', $documentType);
-        $qb->andWhere('document_numbers.year in (:year)')
+        $qb->andWhere('document_numbers.year = :year')
             ->setParameter('year', $year);
 
         return $qb->getQuery()->getSingleResult();
+    }
+
+    /**
+     * @param array<DocumentType|int> $documentType
+     * @return DocumentNumbers[]
+     */
+    public function findByCompanyDocumentTypeYear(Company $company, array $documentType, int $year): array
+    {
+        return $this->createQueryBuilder('document_numbers')
+            ->andWhere('document_numbers.company = :company')
+            ->setParameter('company', $company)
+            ->andWhere('document_numbers.documentType in (:documentType)')
+            ->setParameter('documentType', $documentType)
+            ->andWhere('document_numbers.year = :year')
+            ->setParameter('year', $year)
+            ->getQuery()
+            ->getResult();
     }
 
 //    public function findOneBySomeField($value): ?Document

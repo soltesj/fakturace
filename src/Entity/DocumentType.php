@@ -2,20 +2,23 @@
 
 namespace App\Entity;
 
+use App\Repository\DocumentTypeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'document_type')]
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: DocumentTypeRepository::class)]
 class DocumentType
 {
-    #[ORM\Column(name: 'id', type: Types::INTEGER, nullable: false)]
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    protected ?int $id;
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    protected ?int $id = null;
 
-    #[ORM\Column(name: 'name', type: Types::STRING, length: 128, nullable: false)]
-    private ?string $name;
+    #[ORM\Column(type: Types::STRING, length: 128, nullable: false)]
+    private ?string $name = null;
+
+    #[ORM\Column(type: Types::STRING, length: 16, nullable: false)]
+    private ?string $defaultFormat = null;
 
     public function getId(): ?int
     {
@@ -32,6 +35,15 @@ class DocumentType
         $this->name = $name;
     }
 
+    public function getDefaultFormat(): ?string
+    {
+        return $this->defaultFormat;
+    }
+
+    public function setDefaultFormat(string $defaultFormat): void
+    {
+        $this->defaultFormat = $defaultFormat;
+    }
 
 
 }

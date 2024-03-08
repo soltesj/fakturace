@@ -2,18 +2,17 @@
 
 namespace App\Document;
 
-use App\Entity\Company;
+use App\DocumentNumber\DocumentNumberGenerator;
 use App\Entity\Document;
 use App\Repository\DocumentNumbersRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
 
 class DocumentManager
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private DocumentNumber $documentNumber,
+        private DocumentNumberGenerator $documentNumber,
         private DocumentNumbersRepository $documentNumbersRepository
     ) {
     }
@@ -25,9 +24,8 @@ class DocumentManager
     {
         $year = $document->getDateIssue()->format('Y');
         $company = $document->getCompany();
-        $documentTypeId = $document->getDocumentType()->getId();
-        $document->setDocumentNumber($this->documentNumber->generate($company, $documentTypeId, $year));
-        $documentNumberFormat = $this->documentNumbersRepository->findByCompany($company, $documentTypeId, (int)$year);
+        $document->setDocumentNumber($this->documentNumber->generate($company, $document->getDocumentType(), $year));
+        $documentNumberFormat = $this->documentNumbersRepository->findOneByCompanyDocumentTypeYear($company, $document->getDocumentType(), (int)$year);
 
 
         if ($document->getVariableSymbol() === null) {

@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Entity\Company;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;

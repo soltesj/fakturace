@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New {{ documentType.name }}{% endblock %}
+
+{% block body %}
+    <h1 class="mb-5"><a href="{{ path('app_document_numbers_index',{'company':company.id}) }}" class="text-decoration-none">
+            <svg class="bi me-3 mb-1" width="30" height="30">
+                <use href="#arrow-left-circle"/>
+            </svg>
+        </a>
+        Create new {{ documentType.name }}</h1>
+
+    {{ include('document_numbers/_form.html.twig') }}
+
+{% endblock %}

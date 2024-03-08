@@ -4,18 +4,18 @@ namespace App\Controller;
 
 use App\Document\DocumentFilterFormService;
 use App\Document\DocumentManager;
-use App\Document\DocumentNumber;
 use App\Document\Types;
+use App\DocumentNumber\DocumentNumberGenerator;
 use App\Entity\Company;
 use App\Entity\Document;
 use App\Entity\DocumentItem;
 use App\Entity\User;
 use App\Form\DocumentFormType;
-use App\Repository\CompanyRepository;
-use App\Repository\DocumentNumbersRepository;
 use App\Repository\DocumentRepository;
+use App\Repository\DocumentTypeRepository;
 use App\Repository\VatLevelRepository;
 use App\Service\CompanyTrait;
+use App\Service\Date;
 use DateTime;
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -36,6 +36,7 @@ class DocumentController extends AbstractController
     public function __construct(
         private readonly VatLevelRepository $vatLevelRepository,
         private readonly DocumentManager $documentManager,
+        private readonly DocumentNumberGenerator $documentNumber,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -48,7 +49,7 @@ class DocumentController extends AbstractController
         DocumentFilterFormService $filterFormService,
     ): Response {
         $documents = [];
-        $dateFrom = new DateTime('first day of january');
+        $dateFrom = Date::firstDayOfJanuary();
         $dateTo = null;
         $customer = null;
         $query = null;
@@ -60,11 +61,11 @@ class DocumentController extends AbstractController
 
             return $this->getCorrectCompanyUrl($request, $user);
         }
-
         $formFilter = $filterFormService->createForm($company);
         $formFilter->handleRequest($request);
         if ($formFilter->isSubmitted() && $formFilter->isValid()) {
-            list($query, $dateFrom, $dateTo, $customer, $state) = $filterFormService->handleFrom($formFilter->getData(),$dateFrom);
+            list($query, $dateFrom, $dateTo, $customer, $state) = $filterFormService->handleFrom($formFilter->getData(),
+                $dateFrom);
         }
         try {
             $documents = $documentRepository->list(
@@ -85,16 +86,22 @@ class DocumentController extends AbstractController
                 'company' => $company,
             ]);
         }
+        $documentNumberExist = $this->documentNumber->exist($company, Types::INVOICE_OUTGOING_TYPES,
+            (int)(new DateTime)->format('Y'));
+        if (!$documentNumberExist) {
+            $this->addFlash('danger', 'NO_DOCUMENT_NUMBER_EXIST');
+        }
 
         return $this->render('document/index.html.twig', [
             'documents' => $documents,
             'company' => $company,
             'formFilter' => $formFilter->createView(),
+            'documentNumberExist'=> $documentNumberExist,
         ]);
     }
 
     #[Route('/{_locale}/{company}/document/new', name: 'app_document_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, Company $company, DocumentNumber $documentNumber): Response
+    public function new(Request $request, Company $company, DocumentTypeRepository $documentTypeRepository): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -104,10 +111,12 @@ class DocumentController extends AbstractController
             return $this->getCorrectCompanyUrl($request, $user);
         }
         $vats = $this->vatLevelRepository->getValidVatByCountryPairedById($company->getCountry());
-        $documentNumberPlaceholder = $documentNumber->generate($company, Types::INVOICE_OUTGOING,
+        $documentType = $documentTypeRepository->find(Types::INVOICE_OUTGOING);
+        $documentNumberPlaceholder = $this->documentNumber->generate($company, $documentType,
             (new DateTime)->format('Y'));
         $documentItem = new DocumentItem();
         $document = new Document($company);
+        $document->setDocumentType($documentType);
         $document->setDateIssue(new DateTime());
         $document->setDateTaxable(new DateTime());
         $document->setDateDue(new DateTime('+14 days'));
