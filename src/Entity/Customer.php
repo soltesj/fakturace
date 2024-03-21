@@ -28,43 +28,43 @@ class Customer
     #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'customer', fetch: 'EXTRA_LAZY')]
     private Collection $documents;
 
-    #[ORM\Column(name: 'display', type: Types::BOOLEAN, nullable: false)]
+    #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     private bool $display = true;
 
-    #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: false)]
     private ?string $name = null;
 
-    #[ORM\Column(name: 'contact', type: Types::STRING, length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $contact = null;
 
-    #[ORM\Column(name: 'street', type: Types::STRING, length: 255, nullable: false)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: false)]
     private ?string $street = null;
 
-    #[ORM\Column(name: 'house_number', type: Types::STRING, length: 25, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 25, nullable: true)]
     private ?string $houseNumber = null;
 
-    #[ORM\Column(name: 'town', type: Types::STRING, length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $town = null;
 
-    #[ORM\Column(name: 'zipcode', type: Types::STRING, length: 10, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
     private ?string $zipcode = null;
 
-    #[ORM\Column(name: 'ic', type: Types::STRING, length: 20, nullable: true)]
-    private ?string $ic = null;
+    #[ORM\Column(type: Types::STRING, length: 20, nullable: true)]
+    private ?string $companyNumber = null;
 
-    #[ORM\Column(name: 'dic', type: Types::STRING, length: 20, nullable: true)]
-    private ?string $dic = null;
+    #[ORM\Column( type: Types::STRING, length: 20, nullable: true)]
+    private ?string $vatNumber = null;
 
-    #[ORM\Column(name: 'phone', type: Types::STRING, length: 25, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 25, nullable: true)]
     private ?string $phone = null;
 
-    #[ORM\Column(name: 'email', type: Types::STRING, length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $email = null;
 
-    #[ORM\Column(name: 'web', type: Types::STRING, length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $web = null;
 
-    #[ORM\Column(name: 'bank_account', type: Types::STRING, length: 40, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 40, nullable: true)]
     private ?string $bankAccount = null;
 
     public function __construct()
@@ -98,17 +98,17 @@ class Customer
         $this->name = $name;
     }
 
-    public function getContact(): string
+    public function getContact(): ?string
     {
         return $this->contact;
     }
 
-    public function setContact(string $contact): void
+    public function setContact(?string $contact): void
     {
         $this->contact = $contact;
     }
 
-    public function getStreet(): string
+    public function getStreet(): ?string
     {
         return $this->street;
     }
@@ -118,92 +118,92 @@ class Customer
         $this->street = $street;
     }
 
-    public function getHouseNumber(): string
+    public function getHouseNumber(): ?string
     {
         return $this->houseNumber;
     }
 
-    public function setHouseNumber(string $houseNumber): void
+    public function setHouseNumber(?string $houseNumber): void
     {
         $this->houseNumber = $houseNumber;
     }
 
-    public function getTown(): string
+    public function getTown(): ?string
     {
         return $this->town;
     }
 
-    public function setTown(string $town): void
+    public function setTown(?string $town): void
     {
         $this->town = $town;
     }
 
-    public function getZipcode(): string
+    public function getZipcode(): ?string
     {
         return $this->zipcode;
     }
 
-    public function setZipcode(string $zipcode): void
+    public function setZipcode(?string $zipcode): void
     {
         $this->zipcode = $zipcode;
     }
 
-    public function getIc(): string
+    public function getCompanyNumber(): ?string
     {
-        return $this->ic;
+        return $this->companyNumber;
     }
 
-    public function setIc(string $ic): void
+    public function setCompanyNumber(?string $companyNumber): void
     {
-        $this->ic = $ic;
+        $this->companyNumber = $companyNumber;
     }
 
-    public function getDic(): string
+    public function getVatNumber(): ?string
     {
-        return $this->dic;
+        return $this->vatNumber;
     }
 
-    public function setDic(string $dic): void
+    public function setVatNumber(?string $vatNumber): void
     {
-        $this->dic = $dic;
+        $this->vatNumber = $vatNumber;
     }
 
-    public function getPhone(): string
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
 
-    public function setPhone(string $phone): void
+    public function setPhone(?string $phone): void
     {
         $this->phone = $phone;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function setEmail(string $email): void
+    public function setEmail(?string $email): void
     {
         $this->email = $email;
     }
 
-    public function getWeb(): string
+    public function getWeb(): ?string
     {
         return $this->web;
     }
 
-    public function setWeb(string $web): void
+    public function setWeb(?string $web): void
     {
         $this->web = $web;
     }
 
-    public function getBankAccount(): string
+    public function getBankAccount(): ?string
     {
         return $this->bankAccount;
     }
 
-    public function setBankAccount(string $bankAccount): void
+    public function setBankAccount(?string $bankAccount): void
     {
         $this->bankAccount = $bankAccount;
     }
