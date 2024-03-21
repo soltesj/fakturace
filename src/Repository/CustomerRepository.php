@@ -25,14 +25,14 @@ class CustomerRepository extends ServiceEntityRepository
     /**
      * @return Customer[] Returns an array of Customer objects
      */
-    public function findByCompany(Company $company, bool $display = true, string $order = 'ASC'): array
+    public function findByCompany(Company $company, int $statusId = 1, string $order = 'ASC'): array
     {
         $qb = $this->createQueryBuilder('customer')
             ->andWhere('customer.company = :company')
             ->setParameter('company', $company)
-            ->andWhere('customer.display = :display')
-            ->setParameter('display', $display);
-        $qb->orderBy('customer.id', $order);
+            ->andWhere('customer.status = :status')
+            ->setParameter('status', $statusId);
+        $qb->orderBy('customer.name', $order);
 
         return $qb->getQuery()->getResult();
     }

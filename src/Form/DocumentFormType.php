@@ -9,6 +9,7 @@ use App\Entity\Customer;
 use App\Entity\Document;
 use App\Entity\DocumentType;
 use App\Entity\PaymentType;
+use App\Status\StatusValues;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -134,8 +135,9 @@ class DocumentFormType extends AbstractType
                 'query_builder' => function (EntityRepository $er) use ($company): QueryBuilder {
                     return $er->createQueryBuilder('customer')
                         ->andWhere('customer.company = :company')
-                        ->setParameter('company',
-                            $company)
+                        ->setParameter('company', $company)
+                        ->andWhere('customer.status = :status')
+                        ->setParameter('status', StatusValues::STATUS_ACTIVE)
                         ->orderBy('customer.name', 'ASC');
                 },
                 'label' => 'customer',

@@ -7,7 +7,9 @@ use App\Entity\Customer;
 use App\Entity\User;
 use App\Form\CustomerType;
 use App\Repository\CustomerRepository;
+use App\Repository\StatusRepository;
 use App\Service\CompanyTrait;
+use App\Status\StatusValues;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +23,8 @@ class CustomerController extends AbstractController
     use CompanyTrait;
 
     public function __construct(
-        private readonly CustomerRepository $customerRepository
+        private readonly CustomerRepository $customerRepository,
+        private StatusRepository $statusRepository
     ) {
     }
 
@@ -32,6 +35,7 @@ class CustomerController extends AbstractController
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
             $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
+
             return $this->getCorrectCompanyUrl($request, $user);
         }
         $customers = $this->customerRepository->findByCompany($company);
@@ -49,12 +53,13 @@ class CustomerController extends AbstractController
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
             $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
+
             return $this->getCorrectCompanyUrl($request, $user);
         }
         $customer = new Customer();
         $customer->setCompany($company);
         $customer->setCountry($company->getCountry());
-        $customer->setDisplay(true);
+        $customer->setStatus($this->statusRepository->find(StatusValues::STATUS_ACTIVE));
         $form = $this->createForm(CustomerType::class, $customer);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -62,7 +67,8 @@ class CustomerController extends AbstractController
             $entityManager->flush();
             $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
-            return $this->redirectToRoute('app_customer_index', ['company'=>$company->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_customer_index', ['company' => $company->getId()],
+                Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('customer/new.html.twig', [
@@ -73,22 +79,38 @@ class CustomerController extends AbstractController
     }
 
     #[Route('/{_locale}/{company}/customer/{id}/edit', name: 'app_customer_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Company $company, Customer $customer, EntityManagerInterface $entityManager): Response
-    {
+    public function edit(
+        Request $request,
+        Company $company,
+        Customer $customer,
+        EntityManagerInterface $entityManager
+    ): Response {
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
             $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
+
             return $this->getCorrectCompanyUrl($request, $user);
         }
-
-        $form = $this->createForm(CustomerType::class, $customer);
+        if (count($customer->getDocuments())) {
+            $customerNew = clone $customer;
+            $customerNew->setStatus($this->statusRepository->find(StatusValues::STATUS_ACTIVE));
+            $customer->setStatus($this->statusRepository->find(StatusValues::STATUS_ARCHIVED));
+        } else {
+            $customerNew = $customer;
+        }
+        $form = $this->createForm(CustomerType::class, $customerNew);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($customerNew);
             $entityManager->flush();
             $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
-            return $this->redirectToRoute('app_customer_index', ['company'=>$company->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_customer_index', ['company' => $company->getId()],
+                Response::HTTP_SEE_OTHER);
+        }
+        foreach ($customer->getDocuments() as $document) {
+            dump($document);
         }
 
         return $this->render('customer/edit.html.twig', [
@@ -99,18 +121,27 @@ class CustomerController extends AbstractController
     }
 
     #[Route('/{_locale}/{company}/customer/{id}/delete', name: 'app_customer_delete', methods: ['GET'])]
-    public function delete(Request $request, Company $company, Customer $customer, EntityManagerInterface $entityManager): Response
-    {
+    public function delete(
+        Request $request,
+        Company $company,
+        Customer $customer,
+        EntityManagerInterface $entityManager
+    ): Response {
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
             $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
+
             return $this->getCorrectCompanyUrl($request, $user);
         }
-        $customer->setDisplay(false);
+        if (count($customer->getDocuments())) {
+            $customer->setStatus($this->statusRepository->find(StatusValues::STATUS_ARCHIVED));
+        } else {
+            $customer->setStatus($this->statusRepository->find(StatusValues::STATUS_DELETED));
+        }
         $entityManager->flush();
         $this->addFlash('info', "Zakaznik {$customer->getName()} byl odstranen");
 
-        return $this->redirectToRoute('app_customer_index', ['company'=>$company->getId()], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_customer_index', ['company' => $company->getId()], Response::HTTP_SEE_OTHER);
     }
 }

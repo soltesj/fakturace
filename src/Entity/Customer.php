@@ -28,9 +28,6 @@ class Customer
     #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'customer', fetch: 'EXTRA_LAZY')]
     private Collection $documents;
 
-    #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
-    private bool $display = true;
-
     #[ORM\Column(type: Types::STRING, length: 255, nullable: false)]
     private ?string $name = null;
 
@@ -67,25 +64,22 @@ class Customer
     #[ORM\Column(type: Types::STRING, length: 40, nullable: true)]
     private ?string $bankAccount = null;
 
+    #[ORM\ManyToOne]
+    private ?Status $status = null;
+
     public function __construct()
     {
         $this->documents = new ArrayCollection();
     }
 
+    public function __clone(): void
+    {
+        $this->id = null;
+    }
+
     public function getId(): int
     {
         return $this->id;
-    }
-
-
-    public function isDisplay(): bool
-    {
-        return $this->display;
-    }
-
-    public function setDisplay(bool $display): void
-    {
-        $this->display = $display;
     }
 
     public function getName(): string
@@ -258,6 +252,18 @@ class Customer
                 $document->setCustomer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }
