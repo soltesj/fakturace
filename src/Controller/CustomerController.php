@@ -24,7 +24,7 @@ class CustomerController extends AbstractController
 
     public function __construct(
         private readonly CustomerRepository $customerRepository,
-        private StatusRepository $statusRepository
+        private readonly StatusRepository $statusRepository
     ) {
     }
 

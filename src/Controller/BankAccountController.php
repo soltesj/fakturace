@@ -7,7 +7,9 @@ use App\Entity\Company;
 use App\Entity\User;
 use App\Form\BankAccountType;
 use App\Repository\BankAccountRepository;
+use App\Repository\StatusRepository;
 use App\Service\CompanyTrait;
+use App\Status\StatusValues;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +19,10 @@ use Symfony\Component\Routing\Attribute\Route;
 class BankAccountController extends AbstractController
 {
     use CompanyTrait;
+
+    public function __construct(private readonly StatusRepository $statusRepository)
+    {
+    }
 
     #[Route('/{_locale}/{company}/bank-account/', name: 'app_bank_account_index', methods: ['GET'])]
     public function index(
@@ -51,6 +57,7 @@ class BankAccountController extends AbstractController
         }
         $bankAccount = new BankAccount();
         $bankAccount->setCompany($company);
+        $bankAccount->setStatus($this->statusRepository->find(StatusValues::STATUS_ACTIVE));
         $form = $this->createForm(BankAccountType::class, $bankAccount);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -83,9 +90,17 @@ class BankAccountController extends AbstractController
 
             return $this->getCorrectCompanyUrl($request, $user);
         }
-        $form = $this->createForm(BankAccountType::class, $bankAccount);
+        if (count($bankAccount->getDocuments())) {
+            $bankAccountNew = clone $bankAccount;
+            $bankAccountNew->setStatus($this->statusRepository->find(StatusValues::STATUS_ACTIVE));
+            $bankAccount->setStatus($this->statusRepository->find(StatusValues::STATUS_ARCHIVED));
+        } else {
+            $bankAccountNew = $bankAccount;
+        }
+        $form = $this->createForm(BankAccountType::class, $bankAccountNew);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($bankAccountNew);
             $entityManager->flush();
             $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
@@ -114,7 +129,11 @@ class BankAccountController extends AbstractController
 
             return $this->getCorrectCompanyUrl($request, $user);
         }
-        $entityManager->remove($bankAccount);
+        if (count($bankAccount->getDocuments())) {
+            $bankAccount->setStatus($this->statusRepository->find(StatusValues::STATUS_ARCHIVED));
+        } else {
+            $bankAccount->setStatus($this->statusRepository->find(StatusValues::STATUS_DELETED));
+        }
         $entityManager->flush();
         $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 

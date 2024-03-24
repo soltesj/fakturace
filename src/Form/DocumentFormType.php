@@ -116,8 +116,9 @@ class DocumentFormType extends AbstractType
                 'query_builder' => function (EntityRepository $er) use ($company): QueryBuilder {
                     return $er->createQueryBuilder('bank_account')
                         ->andWhere('bank_account.company = :company')
-                        ->setParameter('company',
-                            $company)
+                        ->setParameter('company', $company)
+                        ->andWhere('bank_account.status = :status')
+                        ->setParameter('status', StatusValues::STATUS_ACTIVE)
                         ->orderBy('bank_account.sequence', 'ASC');
                 },
                 'choice_label' => 'name',

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\BankAccount;
 use App\Entity\Company;
+use App\Status\StatusValues;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -25,13 +26,13 @@ class BankAccountRepository extends ServiceEntityRepository
     /**
      * @return BankAccount[]
      */
-    public function findByCompany(Company $company, bool $display = true, string $order = 'ASC'): array
+    public function findByCompany(Company $company, int $statusId = StatusValues::STATUS_ACTIVE, string $order = 'ASC'): array
     {
         $qb = $this->createQueryBuilder('bank_account')
             ->andWhere('bank_account.company = :company')
-            ->setParameter('company', $company);
-//            ->andWhere('bank_account.display = :display')
-//            ->setParameter('display', $display);
+            ->setParameter('company', $company)
+            ->andWhere('bank_account.status = :status')
+            ->setParameter('status', $statusId);
         $qb->orderBy('bank_account.sequence', $order);
 
         return $qb->getQuery()->getResult();

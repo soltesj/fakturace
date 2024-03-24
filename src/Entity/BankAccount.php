@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -15,6 +17,12 @@ class BankAccount
 
     #[ORM\ManyToOne]
     private ?Company $company = null;
+
+    #[ORM\ManyToOne]
+    private ?Status $status = null;
+
+    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'bankAccount', fetch: 'EXTRA_LAZY')]
+    private Collection $documents;
 
     #[ORM\Column(name: 'sequence', type: Types::SMALLINT, nullable: false)]
     private ?int $sequence;
@@ -42,6 +50,11 @@ class BankAccount
 
     #[ORM\Column( length: 32, nullable: true)]
     private ?string $routingNumber = null;
+
+    public function __construct()
+    {
+        $this->documents = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -146,6 +159,48 @@ class BankAccount
     public function setCompany(?Company $company): static
     {
         $this->company = $company;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Document>
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    public function addDocument(Document $document): static
+    {
+        if (!$this->documents->contains($document)) {
+            $this->documents->add($document);
+            $document->setBankAccount($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocument(Document $document): static
+    {
+        if ($this->documents->removeElement($document)) {
+            // set the owning side to null (unless already changed)
+            if ($document->getBankAccount() === $this) {
+                $document->setBankAccount(null);
+            }
+        }
 
         return $this;
     }
