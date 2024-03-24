@@ -3,9 +3,8 @@
 ## Todo
 - [x] make migration for Vat values
 - [x] remove private invoice type and related things
-- [ ] document numbers management
+- [x] document numbers management
 - [ ] default texts (email, invoice description, ...) management
-- [ ] delete all customer data from document
 - [ ] Fix the problem with document prices (low vat, high vat, no vat) probably the best solution will be to make separate table for that
 - [ ] refactor the document customer => remove all customer column and create customers in the customer table with relations
 - [ ] refactor the document bank account => remove all bank account column and create bank account in the bank account table with relations
