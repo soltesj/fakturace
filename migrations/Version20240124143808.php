@@ -19,15 +19,13 @@ final class Version20240124143808 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE bankAccount ADD id INT AUTO_INCREMENT NOT NULL, DROP IDbankAccount, ADD PRIMARY KEY (id)');
+        $this->addSql('ALTER TABLE bankAccount CHANGE IDbankAccount id INT NOT NULL');
+        $this->addSql('alter table bankAccount modify id int auto_increment');
+        $this->addSql('alter table bankAccount auto_increment = 1');
     }
 
     public function down(Schema $schema): void
     {
-        // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE bankAccount MODIFY id INT NOT NULL');
-        $this->addSql('DROP INDEX `primary` ON bankAccount');
-        $this->addSql('ALTER TABLE bankAccount ADD IDbankAccount INT NOT NULL, DROP id');
+
     }
 }
