@@ -7,10 +7,12 @@ use App\Document\DocumentManager;
 use App\Document\Types;
 use App\DocumentNumber\DocumentNumberGenerator;
 use App\Entity\Company;
+use App\Entity\Customer;
 use App\Entity\Document;
 use App\Entity\DocumentItem;
 use App\Entity\User;
 use App\Form\DocumentFormType;
+use App\Repository\DocumentPriceTypeRepository;
 use App\Repository\DocumentRepository;
 use App\Repository\DocumentTypeRepository;
 use App\Repository\VatLevelRepository;
@@ -43,6 +45,7 @@ class DocumentController extends AbstractController
         private readonly VatLevelRepository $vatLevelRepository,
         private readonly DocumentManager $documentManager,
         private readonly DocumentNumberGenerator $documentNumber,
+        private readonly DocumentPriceTypeRepository $documentPriceTypeRepository,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -70,6 +73,13 @@ class DocumentController extends AbstractController
         $formFilter = $filterFormService->createForm($company);
         $formFilter->handleRequest($request);
         if ($formFilter->isSubmitted() && $formFilter->isValid()) {
+            /**
+             * @var string|null $query
+             * @var DateTime $dateFrom
+             * @var DateTime $dateTo
+             * @var Customer|null $customer
+             * @var string|null $state
+             * */
             list($query, $dateFrom, $dateTo, $customer, $state) = $filterFormService->handleFrom($formFilter->getData(),
                 $dateFrom);
         }
@@ -130,6 +140,7 @@ class DocumentController extends AbstractController
         $document->addDocumentItem($documentItem);
         $document->setUser($user);
         $document->setDescription('Fakturujeme Vám služby dle Vaší objednávky:');
+
         $form = $this->createForm(DocumentFormType::class, $document);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -137,10 +148,11 @@ class DocumentController extends AbstractController
                 $this->documentManager->saveNew($document);
                 $this->addFlash('success', 'INVOICE_STORED');
 
-                return $this->redirectToRoute('app_document_index', ['company' => $company->getId()],
-                    Response::HTTP_SEE_OTHER);
+//                return $this->redirectToRoute('app_document_index', ['company' => $company->getId()],
+//                    Response::HTTP_SEE_OTHER);
             } catch (Throwable $e) {
                 $this->addFlash('danger', 'INVOICE_NOT_STORED');
+                dump($e->getMessage());
                 $this->logger->error($e->getMessage(), $e->getTrace());
             }
         }
@@ -207,7 +219,12 @@ class DocumentController extends AbstractController
 
             return $this->getCorrectCompanyUrl($request, $user);
         }
-        if ($this->isCsrfTokenValid('delete'.$document->getId(), $request->request->get('_token'))) {
+        if ($request->request->get('_token') !== null) {
+            $token = (string)$request->request->get('_token');
+        } else {
+            $token = null;
+        }
+        if ($this->isCsrfTokenValid('delete'.$document->getId(), $token)) {
             $entityManager->remove($document);
             $entityManager->flush();
         }
@@ -221,7 +238,7 @@ class DocumentController extends AbstractController
         Company $company,
         Document $document,
         Environment $environment
-    ) {
+    ): Response {
         /** @var User $user */
         $user = $this->getUser();
         if (!$user->getCompanies()->contains($company)) {
@@ -231,14 +248,13 @@ class DocumentController extends AbstractController
         }
         $vats = $this->vatLevelRepository->getValidVatByCountryPairedById($company->getCountry());
         $renderer = new ImageRenderer(
-            new RendererStyle(200,0),
+            new RendererStyle(200, 0),
             new ImagickImageBackEnd()
         );
         $writer = new Writer($renderer);
         $msg = "PLATBA FAKTURY {$document->getDocumentNumber()} QR KODEM";
         $qrCode = $writer->writeString("SPD*1.0*ACC:{$document->getBankAccount()->getIban()}*AM:{$document->getPriceTotal()}*CC:{$document->getCurrency()->getCurrencyCode()}*MSG:$msg*X-VS:{$document->getVariableSymbol()}");
-        $qrCodeBase64 ='data:image/png;base64,' . base64_encode($qrCode);
-
+        $qrCodeBase64 = 'data:image/png;base64,'.base64_encode($qrCode);
         $language['a_meta_charset'] = 'UTF-8';
         $language['a_meta_dir'] = 'ltr';
         $language['a_meta_language'] = 'cs';
@@ -262,9 +278,6 @@ class DocumentController extends AbstractController
         $pdf->writeHTML($html, true, false, true, false, '');
         $fileName = "{$document->getDocumentNumber()}.pdf";
         $pdf->Output($fileName, 'D');
-
-
-
 
         return $this->render('document/show.html.twig', [
             'image' => $qrCodeBase64,

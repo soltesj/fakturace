@@ -9,7 +9,10 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <div {{ react_component('Hello', { 'fullName': controller_name }) }}>
+        Loading... <i class="fas fa-cog fa-spin fa-3x"></i>
+    </div>
+
 
     This friendly message is coming from:
     <ul>

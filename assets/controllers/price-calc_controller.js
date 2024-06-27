@@ -63,14 +63,14 @@ export default class extends Controller {
         this.priceTotalVatTarget.innerHTML = Math.round(this.priceTotalWithVat)
 
 
-        if (this.priceTotalWithoutVat[9]) {
-            this.priceWithoutHighVatTarget.value = Math.round((this.priceTotalWithoutVat[9] + Number.EPSILON) * 100) / 100
-        }
-        if (this.priceTotalWithoutVat[12]) {
-            this.priceWithoutLowVatTarget.value = Math.round((this.priceTotalWithoutVat[12] + Number.EPSILON) * 100) / 100
-        }
-
-        this.priceTotalWithoutVatTarget.value = Math.round((sumWithoutVat + Number.EPSILON) * 100) / 100
-        this.priceTotalWithVatTarget.value = Math.round(this.priceTotalWithVat)
+        // if (this.priceTotalWithoutVat[9]) {
+        //     this.priceWithoutHighVatTarget.value = Math.round((this.priceTotalWithoutVat[9] + Number.EPSILON) * 100) / 100
+        // }
+        // if (this.priceTotalWithoutVat[12]) {
+        //     this.priceWithoutLowVatTarget.value = Math.round((this.priceTotalWithoutVat[12] + Number.EPSILON) * 100) / 100
+        // }
+        //
+        // this.priceTotalWithoutVatTarget.value = Math.round((sumWithoutVat + Number.EPSILON) * 100) / 100
+        // this.priceTotalWithVatTarget.value = Math.round(this.priceTotalWithVat)
     }
 }

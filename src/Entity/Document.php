@@ -79,10 +79,17 @@ class Document
     private ?BankAccount $bankAccount = null;
 
     /**
-     * @var Collection<int,DocumentItem>
+     * @var Collection<int,DocumentItem>|null
      */
-    #[ORM\OneToMany(mappedBy: 'document', targetEntity: DocumentItem::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: DocumentItem::class, mappedBy: 'document', cascade: ['persist', 'remove'])]
     private ?Collection $documentItems = null;
+
+    /**
+     * @var Collection<int,DocumentPrice>
+     */
+    #[ORM\OneToMany( targetEntity: DocumentPrice::class, mappedBy: 'document', cascade: ['persist', 'remove'])]
+    private Collection $documentPrices;
+
     #[ORM\Column(name: 'bank_routing', type: Types::STRING, length: 32, nullable: true)]
     private ?string $bankRouting = null;
 
@@ -157,6 +164,7 @@ class Document
         $this->documents = new ArrayCollection();
         $this->documentItems = new ArrayCollection();
         $this->company = $company;
+        $this->documentPrices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -639,6 +647,36 @@ class Document
             // set the owning side to null (unless already changed)
             if ($documentItem->getDocument() === $this) {
                 $documentItem->setDocument(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DocumentPrice>
+     */
+    public function getDocumentPrices(): Collection
+    {
+        return $this->documentPrices;
+    }
+
+    public function addDocumentPrice(DocumentPrice $documentPrice): static
+    {
+        if (!$this->documentPrices->contains($documentPrice)) {
+            $this->documentPrices->add($documentPrice);
+            $documentPrice->setDocument($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDocumentPrice(DocumentPrice $documentPrice): static
+    {
+        if ($this->documentPrices->removeElement($documentPrice)) {
+            // set the owning side to null (unless already changed)
+            if ($documentPrice->getDocument() === $this) {
+                $documentPrice->setDocument(null);
             }
         }
 

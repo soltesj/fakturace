@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Country;
 use App\Entity\VatLevel;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
@@ -28,13 +29,17 @@ class VatLevelRepository extends ServiceEntityRepository
      * @param Country $country
      * @return array<int,VatLevel>
      */
-    public function getValidVatByCountry(Country $country): array
+    public function getValidVatByCountry(Country $country, ?DateTimeInterface $date = null): array
     {
+        if ($date === null) {
+            $date = new DateTime();
+        }
+
         return $this->createQueryBuilder('vat_level')
             ->andWhere('vat_level.country = :country')
             ->setParameter('country', $country)
             ->andWhere('vat_level.validTo is null or vat_level.validTo >= :now')
-            ->setParameter('now', new DateTime())
+            ->setParameter('now', $date)
             ->orderBy('vat_level.vatAmount', 'DESC')
             ->getQuery()
             ->getResult();

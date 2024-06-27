@@ -92,12 +92,21 @@ class DocumentFilterFormService
      * @param DateTimeInterface $dateFrom
      * @return array<string|int|DateTime|Customer|null>
      */
-    public function  handleFrom(array $data, DateTimeInterface $dateFrom): array
+    public function handleFrom(array $data, DateTimeInterface $dateFrom): array
     {
         if ($data['dateFrom'] !== null) {
+            /** @var DateTimeInterface $dateFrom */
             $dateFrom = $data['dateFrom'];
         }
+        /** @var DateTimeInterface $dateTo */
+        $dateTo = $data['dateTo']??null;
+        /** @var string|null $state */
+        $state = $data['state'] ?? null;
+        /** @var Customer|null $customer */
+        $customer = $data['customer'] ?? null;
+        /** @var string|null $q */
+        $q = $data['q'] ?? null;
 
-        return array($data['q'], $dateFrom, $data['dateTo'], $data['customer'], $data['state']);
+        return array($q, $dateFrom, $dateTo, $customer, $state);
     }
 }

@@ -21,6 +21,9 @@ class BankAccount
     #[ORM\ManyToOne]
     private ?Status $status = null;
 
+    /**
+     * @var Collection<int,Document>
+     */
     #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'bankAccount', fetch: 'EXTRA_LAZY')]
     private Collection $documents;
 
