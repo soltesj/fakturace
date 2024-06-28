@@ -8,6 +8,4 @@
         Edit Document
     </h1>
     {{ include('document/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('app_document_index',{'company': company.id}) }}">back to list</a>
 {% endblock %}
