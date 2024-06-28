@@ -59,7 +59,7 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a href="#"
-                           class="nav-link dropdown-toggle {% if app.current_route in ['app_company_edit','app_bank_account_index','app_bank_account_new','app_bank_account_edit'] %}text-secondary{% else %} text-white{% endif %}"
+                           class="nav-link dropdown-toggle {% if app.current_route in ['app_company_edit','app_bank_account_index','app_bank_account_new','app_bank_account_edit','app_currency_edit'] %}text-secondary{% else %} text-white{% endif %}"
                            data-bs-toggle="dropdown"
                            aria-expanded="false">
                             <svg class="bi d-md-block me-2 mx-md-auto  mb-md-1" width="20" height="20">
@@ -68,15 +68,22 @@
                             Nastavení
                         </a>
                         <ul class="dropdown-menu">
-                            <li class="nav-item"><a
-                                        class="dropdown-item {% if app.current_route in ['app_company_edit'] %}text-secondary{% else %} text-white{% endif %}"
-                                        href="{{ path('app_company_edit', {'company': company.id}) }}">Firemní
-                                    údaje</a>
+                            <li class="nav-item">
+                                <a class="dropdown-item {% if app.current_route in ['app_company_edit'] %}text-secondary{% else %} text-white{% endif %}"
+                                   href="{{ path('app_company_edit', {'company': company.id}) }}">Firemní údaje</a>
                             </li>
-                            <li class="nav-item"><a class="dropdown-item {% if app.current_route in ['app_bank_account_index','app_bank_account_new','app_bank_account_edit'] %}text-secondary{% else %} text-white{% endif %}"
-                                                    href="{{ path('app_bank_account_index', {'company':company.id}) }}">Bankovní
-                                    účty</a></li>
-                            <li class="nav-item"><a class="dropdown-item" href="{{ path('app_document_numbers_index', {'company':company.id}) }}">Format čísel dokladu</a></li>
+                            <li class="nav-item">
+                                <a class="dropdown-item {% if app.current_route in ['app_bank_account_index','app_bank_account_new','app_bank_account_edit'] %}text-secondary{% else %} text-white{% endif %}"
+                                   href="{{ path('app_bank_account_index', {'company':company.id}) }}">Bankovní účty</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="dropdown-item {% if app.current_route in ['app_document_numbers_index'] %}text-secondary{% else %} text-white{% endif %}"
+                                   href="{{ path('app_document_numbers_index', {'company':company.id}) }}">Format
+                                    čísel dokladu</a>
+                            </li>
+                            <li class="nav-item {% if app.current_route in ['app_currency_edit'] %}text-secondary{% else %} text-white{% endif %}">
+                                <a class="dropdown-item" href="{{ path('app_currency_edit', {'company':company.id}) }}">Měny</a>
+                            </li>
                         </ul>
                     </li>
                 </ul>
@@ -91,11 +98,13 @@
                         </a>
                         <ul class="dropdown-menu">
                             {% for company in app.user.companies %}
-                                <li class="nav-item"><a class="dropdown-item" href="{{ path('app_dash_board', {'company': company.id}) }}">{{ company.name }}</a></li>
-                                {% if not loop.last %}
-                                <li class="nav-item">
-                                    <hr class="dropdown-divider">
+                                <li class="nav-item"><a class="dropdown-item"
+                                                        href="{{ path('app_dash_board', {'company': company.id}) }}">{{ company.name }}</a>
                                 </li>
+                                {% if not loop.last %}
+                                    <li class="nav-item">
+                                        <hr class="dropdown-divider">
+                                    </li>
                                 {% endif %}
                             {% endfor %}
                         </ul>
