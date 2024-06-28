@@ -11,8 +11,8 @@
 {#    {% form_theme registrationForm 'bootstrap_5_horizontal_layout.html.twig' %}#}
     {{ form_start(registrationForm) }}
     <div class="row mb-5">
-        <div class="col-md-6">{{ form_row(registrationForm.user) }}</div>
-        <div class="col-md-6">{{ form_row(registrationForm.company) }}</div>
+        <div class="col-md-6 mb-3">{{ form_row(registrationForm.user) }}</div>
+        <div class="col-md-6 mb-3">{{ form_row(registrationForm.company) }}</div>
         {{ form_row(registrationForm.agreeTerms) }}
 
         <button type="submit" class="btn btn-success">Register</button>

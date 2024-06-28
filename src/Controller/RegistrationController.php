@@ -41,16 +41,19 @@ class RegistrationController extends AbstractController
     ): Response {
         $user = new User();
         $company = new Company();
+        $company->setMaturityDays(14);
         $items = ['user' => $user, 'company' => $company];
-        $form = $this->createFormBuilder($items)->add('user', UserFormType::class)->add('company',
-            CompanyFormType::class)->add('agreeTerms', CheckboxType::class, [
-            'mapped' => false,
-            'constraints' => [
-                new IsTrue([
-                    'message' => 'You should agree to our terms.',
-                ]),
-            ],
-        ])->getForm();
+        $form = $this->createFormBuilder($items)
+            ->add('user', UserFormType::class)
+            ->add('company', CompanyFormType::class)
+            ->add('agreeTerms', CheckboxType::class, [
+                'mapped' => false,
+                'constraints' => [
+                    new IsTrue([
+                        'message' => 'You should agree to our terms.',
+                    ]),
+                ],
+            ])->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
