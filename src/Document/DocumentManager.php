@@ -3,27 +3,27 @@
 namespace App\Document;
 
 use App\DocumentNumber\DocumentNumberGenerator;
+use App\DocumentPrice\Types as PriceTypes;
 use App\Entity\Document;
 use App\Entity\DocumentPrice;
 use App\Repository\DocumentNumbersRepository;
 use App\Repository\DocumentPriceTypeRepository;
-use App\Repository\VatLevelRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
+use Throwable;
 
-class DocumentManager
+readonly class DocumentManager
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly DocumentNumberGenerator $documentNumber,
-        private readonly DocumentNumbersRepository $documentNumbersRepository,
-        private readonly DocumentPriceTypeRepository $documentPriceTypeRepository,
-        private readonly VatLevelRepository $vatLevelRepository
+        private EntityManagerInterface $entityManager,
+        private DocumentNumberGenerator $documentNumber,
+        private DocumentNumbersRepository $documentNumbersRepository,
+        private DocumentPriceTypeRepository $documentPriceTypeRepository,
     ) {
     }
 
     /**
-     * @throws UniqueConstraintViolationException
+     * @throws UniqueConstraintViolationException|Throwable
      */
     public function saveNew(Document $document): void
     {
@@ -56,7 +56,7 @@ class DocumentManager
 
         foreach ($vatPrices as $vatPrice) {
             $documentPricePartial = new DocumentPrice();
-            $documentPricePartial->setPriceType($this->documentPriceTypeRepository->find(2));
+            $documentPricePartial->setPriceType($this->documentPriceTypeRepository->find(PriceTypes::PARTIAL_PRICE));
             $documentPricePartial->setVatLevel($vatPrice['vat']);
             $documentPricePartial->setAmount($vatPrice['amount']);
             $documentPricePartial->setVatAmount($vatPrice['vatAmount']);
@@ -65,19 +65,15 @@ class DocumentManager
 
         }
         $documentPricePartial = new DocumentPrice();
-        $documentPricePartial->setPriceType($this->documentPriceTypeRepository->find(1));
+        $documentPricePartial->setPriceType($this->documentPriceTypeRepository->find(PriceTypes::TOTAL_PRICE));
         $documentPricePartial->setAmount($priceTotal);
         $document->addDocumentPrice($documentPricePartial);
 
-        dump($document);
-        dump($document->getDocumentPrices());
-        dump($document->getDocumentItems());
-        dump($vatPrices);
-//        $this->save($document);
+        $this->save($document);
     }
 
     /**
-     * @throws UniqueConstraintViolationException
+     * @throws UniqueConstraintViolationException | Throwable
      */
     public function save(Document $document): void
     {
@@ -86,7 +82,7 @@ class DocumentManager
             $this->entityManager->persist($document);
             $this->entityManager->flush();
             $this->entityManager->commit();
-        } catch (UniqueConstraintViolationException $e) {
+        } catch (Throwable $e) {
             $this->entityManager->rollback();
             throw $e;
         }

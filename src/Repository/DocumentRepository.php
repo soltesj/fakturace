@@ -4,13 +4,13 @@ namespace App\Repository;
 
 use App\Document\DocumentToPay;
 use App\Document\Types;
+use App\DocumentPrice\Types as PriceTypes;
 use App\Entity\Company;
 use App\Entity\Customer;
 use App\Entity\Document;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Exception;
 
 /**
  * @extends ServiceEntityRepository<Document>
@@ -73,20 +73,29 @@ class DocumentRepository extends ServiceEntityRepository
                    customer.name AS customerName,
                    document.date_issue AS dateIssue,
                    document.date_due AS dateDue,
-                   document.price_no_vat as price,
-                   document.price_total as priceWithVat,
-                   (document.price_total - (SELECT COALESCE(SUM(d.price_total),0) 
+                   (SELECT COALESCE(SUM(document_price.amount),0) 
+                                            FROM document_price 
+                                            WHERE 
+                                                document_price.document_id = document.id
+                                            AND document_price.price_type_id = '.PriceTypes::PARTIAL_PRICE.') as price,
+                   (SELECT COALESCE(document_price.amount,0) 
+                                            FROM document_price 
+                                            WHERE 
+                                                document_price.document_id = document.id
+                                            AND document_price.price_type_id = '.PriceTypes::TOTAL_PRICE.') as priceWithVat,
+                   (document_price.amount - (SELECT COALESCE(SUM(d.price_total),0) 
                                             FROM document AS d 
                                             WHERE 
                                                 d.document_id = document.id 
-                                              AND d.document_type_id in ('.mb_substr(str_repeat('?,',
+                                              AND d.document_type_id IN ('.mb_substr(str_repeat('?,',
                 count($incomeOutcomeTypes)), 0, -1).')
                                             
-                                            )) as toPay
+                                            )) AS toPay
             FROM document
-                     LEFT JOIN customer on document.customer_id = customer.id
+                     LEFT JOIN customer ON document.customer_id = customer.id
+                     LEFT JOIN document_price ON document_price.document_id = document.id AND document_price.price_type_id = '.PriceTypes::TOTAL_PRICE.'
             WHERE document.company_id = ?
-            AND document.document_type_id in ('.mb_substr(str_repeat('?,', count($documentTypes)), 0, -1).')';
+            AND document.document_type_id IN ('.mb_substr(str_repeat('?,', count($documentTypes)), 0, -1).')';
         if ($dateFrom) {
             $sql .= ' AND document.date_issue >= ?';
         }

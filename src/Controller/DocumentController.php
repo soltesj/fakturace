@@ -148,11 +148,10 @@ class DocumentController extends AbstractController
                 $this->documentManager->saveNew($document);
                 $this->addFlash('success', 'INVOICE_STORED');
 
-//                return $this->redirectToRoute('app_document_index', ['company' => $company->getId()],
-//                    Response::HTTP_SEE_OTHER);
+                return $this->redirectToRoute('app_document_index', ['company' => $company->getId()],
+                    Response::HTTP_SEE_OTHER);
             } catch (Throwable $e) {
                 $this->addFlash('danger', 'INVOICE_NOT_STORED');
-                dump($e->getMessage());
                 $this->logger->error($e->getMessage(), $e->getTrace());
             }
         }
@@ -272,17 +271,15 @@ class DocumentController extends AbstractController
         $pdf->AddPage();
         $html = $environment->render('document/show.html.twig', [
             'document' => $document,
-            'image' => $qrCodeBase64,
-            'vats' => $vats,
+            'qrCodeBase64' => $qrCodeBase64,
         ]);
         $pdf->writeHTML($html, true, false, true, false, '');
         $fileName = "{$document->getDocumentNumber()}.pdf";
         $pdf->Output($fileName, 'D');
 
         return $this->render('document/show.html.twig', [
-            'image' => $qrCodeBase64,
+            'qrCodeBase64' => $qrCodeBase64,
             'document' => $document,
-//            'vats' => $vats,
         ]);
     }
 }
