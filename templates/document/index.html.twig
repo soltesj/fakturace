@@ -14,6 +14,7 @@
 
     <div {{ stimulus_controller('documents/filter',{}) }}>
         {{ form_start(formFilter) }}
+        {{ form_errors(formFilter) }}
         <div class="row mb-5">
             <div class="col-md-2">
                 {{ form_row(formFilter.q, {'attr':{

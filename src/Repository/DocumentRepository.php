@@ -63,6 +63,7 @@ class DocumentRepository extends ServiceEntityRepository
         ?Customer $customer = null,
         ?string $state = null
     ): array {
+        dump($dateFrom);
         $documents = [];
         $incomeOutcomeTypes = Types::TYPE_MAP[$documentTypes[0]];
         $conn = $this->getEntityManager()->getConnection();
@@ -70,7 +71,7 @@ class DocumentRepository extends ServiceEntityRepository
             SELECT
                    document.id,
                    document.document_number AS documentNumber,
-                   customer.name AS customerName,
+                   COALESCE(customer.name,\'\') AS customerName,
                    document.date_issue AS dateIssue,
                    document.date_due AS dateDue,
                    (SELECT COALESCE(SUM(document_price.amount),0) 
