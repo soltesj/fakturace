@@ -17,8 +17,8 @@ class DocumentToPay
         string $dateIssue,
         string $dateDue,
         private readonly string $price,
-        private readonly string $priceWithVat,
-        private readonly string $toPay
+        private readonly ?string $priceWithVat,
+        private readonly ?string $toPay
     ) {
         $this->dateIssue = new DateTimeImmutable($dateIssue);
         $this->dateDue = new DateTimeImmutable($dateDue);
@@ -49,17 +49,17 @@ class DocumentToPay
         return $this->dateDue;
     }
 
-    public function getPriceWithVat(): string
+    public function getPriceWithVat(): ?string
     {
         return $this->priceWithVat;
     }
 
-    public function getPrice(): string
+    public function getPrice(): ?string
     {
         return $this->price;
     }
 
-    public function getToPay(): string
+    public function getToPay(): ?string
     {
         return $this->toPay;
     }

@@ -10,6 +10,7 @@ use App\Entity\Customer;
 use App\Entity\Document;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -51,8 +52,7 @@ class DocumentRepository extends ServiceEntityRepository
 
     /**
      * @param array<int> $documentTypes
-     * @return DocumentToPay[]
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     public function list(
         Company $company,
@@ -62,11 +62,57 @@ class DocumentRepository extends ServiceEntityRepository
         ?string $query = null,
         ?Customer $customer = null,
         ?string $state = null
-    ): array {
-        dump($dateFrom);
+    ): array{
         $documents = [];
         $incomeOutcomeTypes = Types::TYPE_MAP[$documentTypes[0]];
         $conn = $this->getEntityManager()->getConnection();
+        $sql = $this->getDocumentToPaySql($incomeOutcomeTypes, $documentTypes, $dateFrom, $dateTo, $customer, $query,
+            $state);
+        $stmt = $conn->prepare($sql);
+        foreach ($incomeOutcomeTypes as $index => $incomeOutcomeType) {
+            $stmt->bindValue($index + 1, $incomeOutcomeType);
+        }
+        $valIndex = count($incomeOutcomeTypes) + 1;
+        $stmt->bindValue($valIndex, $company->getId());
+        $valIndex++;
+        foreach ($documentTypes as $index => $documentType) {
+            $stmt->bindValue($index + $valIndex, $documentType);
+        }
+        $valIndex = $valIndex + count($documentTypes);
+        if ($dateFrom) {
+            $stmt->bindValue($valIndex, $dateFrom->format('Y-m-d'));
+            $valIndex++;
+        }
+        if ($dateTo) {
+            $stmt->bindValue($valIndex, $dateTo->format('Y-m-d'));
+            $valIndex++;
+        }
+        if ($customer) {
+            $stmt->bindValue($valIndex, $customer->getId());
+            $valIndex++;
+        }
+        if ($query) {
+            $stmt->bindValue($valIndex, '%'.$query.'%');
+            $valIndex++;
+        }
+        //dd($stmt);
+        $result = $stmt->executeQuery();
+
+        return $result->fetchAllAssociative();
+    }
+
+    /**
+     * @param array<int> $documentTypes
+     */
+    public function getDocumentToPaySql(
+        $incomeOutcomeTypes,
+        array $documentTypes,
+        ?DateTime $dateFrom,
+        ?DateTime $dateTo,
+        ?Customer $customer,
+        ?string $query,
+        ?string $state
+    ): string {
         $sql = '
             SELECT
                    document.id,
@@ -109,7 +155,6 @@ class DocumentRepository extends ServiceEntityRepository
         if ($query) {
             $sql .= ' AND document.tag like ?';
         }
-
         switch ($state) {
             case 'PAID':
                 $sql .= ' HAVING toPay = 0';
@@ -124,51 +169,7 @@ class DocumentRepository extends ServiceEntityRepository
                 break;
         }
         $sql .= ' ORDER BY date_issue DESC, document_number DESC';
-        $stmt = $conn->prepare($sql);
-        foreach ($incomeOutcomeTypes as $index => $incomeOutcomeType) {
-            $stmt->bindValue($index + 1, $incomeOutcomeType);
-        }
-        $valIndex = count($incomeOutcomeTypes) + 1;
-        $stmt->bindValue($valIndex, $company->getId());
-        $valIndex++;
-        foreach ($documentTypes as $index => $documentType) {
-            $stmt->bindValue($index + $valIndex, $documentType);
-        }
-        $valIndex = $valIndex + count($documentTypes);
-        if ($dateFrom) {
-            $stmt->bindValue($valIndex, $dateFrom->format('Y-m-d'));
-            $valIndex++;
-        }
-        if ($dateTo) {
-            $stmt->bindValue($valIndex, $dateTo->format('Y-m-d'));
-            $valIndex++;
-        }
-        if ($customer) {
-            $stmt->bindValue($valIndex, $customer->getId());
-            $valIndex++;
-        }
-        if ($query) {
-            $stmt->bindValue($valIndex, '%'.$query.'%');
-            $valIndex++;
-        }
-        //dd($stmt);
-        $result = $stmt->executeQuery();
-//        dd($result);
-        foreach ($result->fetchAllAssociative() as $document) {
-            $documents[] = new DocumentToPay(...$document);
-        }
 
-        return $documents;
+        return $sql;
     }
-
-
-//    public function findOneBySomeField($value): ?Document
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

@@ -13,11 +13,11 @@ use App\Entity\DocumentItem;
 use App\Entity\User;
 use App\Form\DocumentFormType;
 use App\Repository\DocumentPriceTypeRepository;
-use App\Repository\DocumentRepository;
 use App\Repository\DocumentTypeRepository;
 use App\Repository\VatLevelRepository;
 use App\Service\CompanyTrait;
 use App\Service\Date;
+use App\Service\DocumentService;
 use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
@@ -30,7 +30,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use TCPDF;
 use Throwable;
@@ -54,7 +54,7 @@ class DocumentController extends AbstractController
     public function index(
         Request $request,
         Company $company,
-        DocumentRepository $documentRepository,
+        DocumentService $documentService,
         DocumentFilterFormService $filterFormService,
     ): Response {
         $documents = [];
@@ -84,7 +84,7 @@ class DocumentController extends AbstractController
                 $dateFrom);
         }
         try {
-            $documents = $documentRepository->list(
+            $documents = $documentService->getDocumentToPay(
                 $company,
                 Types::INVOICE_OUTGOING_TYPES,
                 $dateFrom,
