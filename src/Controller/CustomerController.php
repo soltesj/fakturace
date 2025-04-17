@@ -8,7 +8,6 @@ use App\Entity\User;
 use App\Form\CustomerType;
 use App\Repository\CustomerRepository;
 use App\Repository\StatusRepository;
-use App\Service\CompanyTrait;
 use App\Status\StatusValues;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,15 +15,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Company\CompanyService;
+use App\Service\AuthorizationService;
 
 #[IsGranted('ROLE_USER')]
 class CustomerController extends AbstractController
 {
-    use CompanyTrait;
 
     public function __construct(
         private readonly CustomerRepository $customerRepository,
-        private readonly StatusRepository $statusRepository
+        private readonly StatusRepository $statusRepository,
+        private readonly CompanyService $companyService,
+        private readonly AuthorizationService $authorizationService,
     ) {
     }
 
@@ -33,10 +35,10 @@ class CustomerController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        if (!$user->getCompanies()->contains($company)) {
+        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
+        if ($redirect) {
             $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-
-            return $this->getCorrectCompanyUrl($request, $user);
+            return $redirect;
         }
         $customers = $this->customerRepository->findByCompany($company);
 
@@ -51,10 +53,10 @@ class CustomerController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        if (!$user->getCompanies()->contains($company)) {
+        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
+        if ($redirect) {
             $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-
-            return $this->getCorrectCompanyUrl($request, $user);
+            return $redirect;
         }
         $customer = new Customer();
         $customer->setCompany($company);
@@ -87,10 +89,10 @@ class CustomerController extends AbstractController
     ): Response {
         /** @var User $user */
         $user = $this->getUser();
-        if (!$user->getCompanies()->contains($company)) {
+        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
+        if ($redirect) {
             $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-
-            return $this->getCorrectCompanyUrl($request, $user);
+            return $redirect;
         }
         if (count($customer->getDocuments())) {
             $customerNew = clone $customer;
@@ -129,10 +131,10 @@ class CustomerController extends AbstractController
     ): Response {
         /** @var User $user */
         $user = $this->getUser();
-        if (!$user->getCompanies()->contains($company)) {
+        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
+        if ($redirect) {
             $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-
-            return $this->getCorrectCompanyUrl($request, $user);
+            return $redirect;
         }
         if (count($customer->getDocuments())) {
             $customer->setStatus($this->statusRepository->find(StatusValues::STATUS_ARCHIVED));

@@ -2,10 +2,11 @@
 
 namespace App\Controller;
 
+use App\Company\CompanyService;
+use App\Service\AuthorizationService;
 use App\Entity\Company;
 use App\Entity\User;
 use App\Form\UserEditFormType;
-use App\Service\CompanyTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,16 +17,22 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 class UserController extends AbstractController
 {
-    use CompanyTrait;
+    public function __construct(
+        private readonly CompanyService $companyService,
+        private readonly AuthorizationService $authorizationService,
+    ) {
+    }
+
 
     #[Route('/{_locale}/{company}/user', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function index(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
         /** @var User $user */
         $user = $this->getUser();
-        if (!$user->getCompanies()->contains($company)) {
+        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
+        if ($redirect) {
             $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-            return $this->getCorrectCompanyUrl($request, $user);
+            return $redirect;
         }
         $form = $this->createForm(UserEditFormType::class, $user);
         $form->handleRequest($request);

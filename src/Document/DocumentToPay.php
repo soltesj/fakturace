@@ -2,7 +2,6 @@
 
 namespace App\Document;
 
-use DateTime;
 use DateTimeImmutable;
 
 class DocumentToPay

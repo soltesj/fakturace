@@ -2,14 +2,14 @@
 
 namespace App\Controller;
 
-use App\Service\CompanyTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Company\CompanyService;
+use App\Service\AuthorizationService;
 
 class DefaultController extends AbstractController
 {
-    use CompanyTrait;
 
     #[Route('/', name: 'app_home')]
     public function index(): Response

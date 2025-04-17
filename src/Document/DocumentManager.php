@@ -27,47 +27,11 @@ readonly class DocumentManager
      */
     public function saveNew(Document $document): void
     {
-        $vatPrices =[];
-        $priceTotal = 0;
-        $year = $document->getDateIssue()->format('Y');
-        $company = $document->getCompany();
-        $document->setDocumentNumber($this->documentNumber->generate($company, $document->getDocumentType(), $year));
-        $documentNumberFormat = $this->documentNumbersRepository->findOneByCompanyDocumentTypeYear($company,
-            $document->getDocumentType(), (int)$year);
-        if ($document->getVariableSymbol() === null) {
-            $document->setVariableSymbol($document->getDocumentNumber());
-        }
-        $documentNumberFormat->setNextNumber($documentNumberFormat->getNextNumber() + 1);
-        foreach ($document->getDocumentItems() as $documentItem) {
-            if (!array_key_exists($documentItem->getVat()->getId(), $vatPrices)) {
-                $vatPrices[$documentItem->getVat()->getId()] = [
-                    'vat' => $documentItem->getVat(),
-                    'amount' => 0,
-                    'vatAmount' => 0,
-                ];
-            }
-            $amount = $documentItem->getPrice() * $documentItem->getQuantity();
-            $vatAmount = $amount * ($documentItem->getVat()->getVatAmount() / 100);
-            $vatPrices[$documentItem->getVat()->getId()]['amount'] += $amount;
-            $vatPrices[$documentItem->getVat()->getId()]['vatAmount'] += $vatAmount;
+        $this->generateDocumentNumber($document);
 
-            $priceTotal += $amount + $vatAmount;
-        }
+        [$vatPrices, $priceTotal] = $this->calculateVatPrices($document);
 
-        foreach ($vatPrices as $vatPrice) {
-            $documentPricePartial = new DocumentPrice();
-            $documentPricePartial->setPriceType($this->documentPriceTypeRepository->find(PriceTypes::PARTIAL_PRICE));
-            $documentPricePartial->setVatLevel($vatPrice['vat']);
-            $documentPricePartial->setAmount($vatPrice['amount']);
-            $documentPricePartial->setVatAmount($vatPrice['vatAmount']);
-            $document->addDocumentPrice($documentPricePartial);
-
-
-        }
-        $documentPricePartial = new DocumentPrice();
-        $documentPricePartial->setPriceType($this->documentPriceTypeRepository->find(PriceTypes::TOTAL_PRICE));
-        $documentPricePartial->setAmount($priceTotal);
-        $document->addDocumentPrice($documentPricePartial);
+        $this->createDocumentPrices($document, $vatPrices, $priceTotal);
 
         $this->save($document);
     }
@@ -86,5 +50,70 @@ readonly class DocumentManager
             $this->entityManager->rollback();
             throw $e;
         }
+    }
+
+    private function calculateVatPrices(Document $document): array
+    {
+        $vatPrices = [];
+        $priceTotal = 0;
+
+        foreach ($document->getDocumentItems() as $documentItem) {
+            $vatId = $documentItem->getVat()->getId();
+            if (!array_key_exists($vatId, $vatPrices)) {
+                $vatPrices[$vatId] = [
+                    'vat' => $documentItem->getVat(),
+                    'amount' => 0,
+                    'vatAmount' => 0,
+                ];
+            }
+
+            $amount = $documentItem->getPrice() * $documentItem->getQuantity();
+            $vatAmount = $amount * ($documentItem->getVat()->getVatAmount() / 100);
+            $vatPrices[$vatId]['amount'] += $amount;
+            $vatPrices[$vatId]['vatAmount'] += $vatAmount;
+
+            $priceTotal += $amount + $vatAmount;
+        }
+
+        return [$vatPrices, $priceTotal];
+    }
+
+    private function generateDocumentNumber(Document $document): void
+    {
+        $year = $document->getDateIssue()->format('Y');
+        $company = $document->getCompany();
+
+        $document->setDocumentNumber(
+            $this->documentNumber->generate($company, $document->getDocumentType(), $year)
+        );
+
+        $documentNumberFormat = $this->documentNumbersRepository->findOneByCompanyDocumentTypeYear(
+            $company,
+            $document->getDocumentType(),
+            (int)$year
+        );
+
+        if ($document->getVariableSymbol() === null) {
+            $document->setVariableSymbol($document->getDocumentNumber());
+        }
+
+        $documentNumberFormat->setNextNumber($documentNumberFormat->getNextNumber() + 1);
+    }
+
+    private function createDocumentPrices(Document $document, array $vatPrices, float $priceTotal): void
+    {
+        foreach ($vatPrices as $vatPrice) {
+            $documentPricePartial = new DocumentPrice();
+            $documentPricePartial->setPriceType($this->documentPriceTypeRepository->find(PriceTypes::PARTIAL_PRICE));
+            $documentPricePartial->setVatLevel($vatPrice['vat']);
+            $documentPricePartial->setAmount($vatPrice['amount']);
+            $documentPricePartial->setVatAmount($vatPrice['vatAmount']);
+            $document->addDocumentPrice($documentPricePartial);
+        }
+
+        $documentPriceTotal = new DocumentPrice();
+        $documentPriceTotal->setPriceType($this->documentPriceTypeRepository->find(PriceTypes::TOTAL_PRICE));
+        $documentPriceTotal->setAmount($priceTotal);
+        $document->addDocumentPrice($documentPriceTotal);
     }
 }

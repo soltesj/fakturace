@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use App\Company\CompanyService;
+use App\Document\DocumentFactory;
+use App\Service\AuthorizationService;
 use App\Document\DocumentFilterFormService;
 use App\Document\DocumentManager;
+use App\Document\PdfService;
 use App\Document\Types;
 use App\DocumentNumber\DocumentNumberGenerator;
 use App\Entity\Company;
@@ -15,13 +19,9 @@ use App\Form\DocumentFormType;
 use App\Repository\DocumentPriceTypeRepository;
 use App\Repository\DocumentTypeRepository;
 use App\Repository\VatLevelRepository;
-use App\Service\CompanyTrait;
 use App\Service\Date;
 use App\Service\DocumentService;
-use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
-use BaconQrCode\Renderer\ImageRenderer;
-use BaconQrCode\Renderer\RendererStyle\RendererStyle;
-use BaconQrCode\Writer;
+use App\Service\VatService;
 use DateTime;
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,21 +32,23 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use TCPDF;
 use Throwable;
-use Twig\Environment;
 
 #[IsGranted('ROLE_USER')]
 class DocumentController extends AbstractController
 {
-    use CompanyTrait;
 
     public function __construct(
         private readonly VatLevelRepository $vatLevelRepository,
         private readonly DocumentManager $documentManager,
         private readonly DocumentNumberGenerator $documentNumber,
         private readonly DocumentPriceTypeRepository $documentPriceTypeRepository,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly DocumentService $documentService,
+        private readonly CompanyService $companyService,
+        private readonly AuthorizationService $authorizationService,
+        private readonly VatService $vatService,
+        private readonly DocumentFactory $documentFactory,
     ) {
     }
 
@@ -65,11 +67,12 @@ class DocumentController extends AbstractController
         $state = null;
         /** @var User $user */
         $user = $this->getUser();
-        if (!$user->getCompanies()->contains($company)) {
+        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
+        if ($redirect) {
             $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-
-            return $this->getCorrectCompanyUrl($request, $user);
+            return $redirect;
         }
+
         $formFilter = $filterFormService->createForm($company);
         $formFilter->handleRequest($request);
         if ($formFilter->isSubmitted() && $formFilter->isValid()) {
@@ -121,26 +124,30 @@ class DocumentController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        if (!$user->getCompanies()->contains($company)) {
+        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
+        if ($redirect) {
             $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-
-            return $this->getCorrectCompanyUrl($request, $user);
+            return $redirect;
         }
-        $vats = $this->vatLevelRepository->getValidVatByCountryPairedById($company->getCountry());
-        $documentType = $documentTypeRepository->find(Types::INVOICE_OUTGOING);
-        $documentNumberPlaceholder = $this->documentNumber->generate($company, $documentType,
-            (new DateTime)->format('Y'));
-        $documentItem = new DocumentItem();
-        $document = new Document($company);
-        $document->setDocumentType($documentType);
-        $document->setDateIssue(new DateTime());
-        $document->setDateTaxable(new DateTime());
-        $document->setDateDue(new DateTime('+14 days'));
-        $document->setDocumentNumber($documentNumberPlaceholder);
-        $document->addDocumentItem($documentItem);
-        $document->setUser($user);
-        $document->setDescription('Fakturujeme Vám služby dle Vaší objednávky:');
 
+         $vats = $this->vatService->getValidVatsByCompany($company);
+
+        // $documentType = $documentTypeRepository->find(Types::INVOICE_OUTGOING);
+        // $documentNumberPlaceholder = $this->documentNumber->generate($company, $documentType,
+        //     (new DateTime)->format('Y'));
+        // $documentItem = new DocumentItem();
+        // $document = new Document($company);
+        // $document->setDocumentType($documentType);
+        // $document->setDateIssue(new DateTime());
+        // $document->setDateTaxable(new DateTime());
+        // $document->setDateDue(new DateTime('+14 days'));
+        // $document->setDocumentNumber($documentNumberPlaceholder);
+        // $document->addDocumentItem($documentItem);
+        // $document->setUser($user);
+        // $document->setDescription('Fakturujeme Vám služby dle Vaší objednávky:');
+
+
+        $document = $this->documentFactory->createInvoiceOutgoing($company, $user);
         $form = $this->createForm(DocumentFormType::class, $document);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -172,12 +179,12 @@ class DocumentController extends AbstractController
     ): Response {
         /** @var User $user */
         $user = $this->getUser();
-        if (!$user->getCompanies()->contains($company)) {
+        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
+        if ($redirect) {
             $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-
-            return $this->getCorrectCompanyUrl($request, $user);
+            return $redirect;
         }
-        $vats = $this->vatLevelRepository->getValidVatByCountryPairedById($company->getCountry());
+        $vats = $this->vatService->getValidVatsByCompany($company);
         $form = $this->createForm(DocumentFormType::class, $document);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -204,82 +211,28 @@ class DocumentController extends AbstractController
         ]);
     }
 
-    #[Route('/{_locale}/{company}/document/{id}', name: 'app_document_delete', methods: ['DELETE'])]
-    public function delete(
+
+    #[Route('/{_locale}/{company}/document/{id}/pdf', name: 'app_document_print', methods: ['GET'])]
+    public function toPdf(
         Request $request,
         Company $company,
         Document $document,
-        EntityManagerInterface $entityManager
-    ): Response {
+        PdfService $pdfService,
+    ){
+        
         /** @var User $user */
         $user = $this->getUser();
-        if (!$user->getCompanies()->contains($company)) {
+        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
+        if ($redirect) {
             $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-
-            return $this->getCorrectCompanyUrl($request, $user);
-        }
-        if ($request->request->get('_token') !== null) {
-            $token = (string)$request->request->get('_token');
-        } else {
-            $token = null;
-        }
-        if ($this->isCsrfTokenValid('delete'.$document->getId(), $token)) {
-            $entityManager->remove($document);
-            $entityManager->flush();
+            return $redirect;
         }
 
-        return $this->redirectToRoute('app_document_index', ['company' => $company->getId()], Response::HTTP_SEE_OTHER);
-    }
+        $vats = $this->vatService->getValidVatsByCompany($company);
 
-    #[Route('/{_locale}/{company}/document/{id}/print', name: 'app_document_print', methods: ['GET'])]
-    public function print(
-        Request $request,
-        Company $company,
-        Document $document,
-        Environment $environment
-    ): Response {
-        /** @var User $user */
-        $user = $this->getUser();
-        if (!$user->getCompanies()->contains($company)) {
-            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
 
-            return $this->getCorrectCompanyUrl($request, $user);
-        }
-        $vats = $this->vatLevelRepository->getValidVatByCountryPairedById($company->getCountry());
-        $renderer = new ImageRenderer(
-            new RendererStyle(200, 0),
-            new ImagickImageBackEnd()
-        );
-        $writer = new Writer($renderer);
-        $msg = "PLATBA FAKTURY {$document->getDocumentNumber()} QR KODEM";
-        $qrCode = $writer->writeString("SPD*1.0*ACC:{$document->getBankAccount()->getIban()}*AM:{$document->getPriceTotal()}*CC:{$document->getCurrency()->getCurrencyCode()}*MSG:$msg*X-VS:{$document->getVariableSymbol()}");
-        $qrCodeBase64 = 'data:image/png;base64,'.base64_encode($qrCode);
-        $language['a_meta_charset'] = 'UTF-8';
-        $language['a_meta_dir'] = 'ltr';
-        $language['a_meta_language'] = 'cs';
-        $language['w_page'] = 'stránka';
-        $pdf = new TCPDF();
-        $pdf->setLanguageArray($language);
-        $pdf->setFont('opensans');
-        $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor("{$user->getName()} {$user->getSurname()}");
-        $pdf->SetTitle("{$document->getDocumentType()->getName()} {$document->getDocumentNumber()}");
-        $pdf->SetSubject("{$document->getDocumentType()->getName()} {$document->getDocumentNumber()}");
-        $pdf->SetKeywords("{$document->getDocumentType()->getName()} {$document->getDocumentNumber()}");
-        $pdf->setPrintHeader(false);
-        $pdf->setPrintFooter(false);
-        $pdf->AddPage();
-        $html = $environment->render('document/show.html.twig', [
-            'document' => $document,
-            'qrCodeBase64' => $qrCodeBase64,
-        ]);
-        $pdf->writeHTML($html, true, false, true, false, '');
+        $pdf = $pdfService->generateDocumentPdf($document, "{$user->getName()} {$user->getSurname()}");
         $fileName = "{$document->getDocumentNumber()}.pdf";
-        $pdf->Output($fileName, 'D');
-
-        return $this->render('document/show.html.twig', [
-            'qrCodeBase64' => $qrCodeBase64,
-            'document' => $document,
-        ]);
+        $pdf->Output($fileName, 'D');    
     }
 }

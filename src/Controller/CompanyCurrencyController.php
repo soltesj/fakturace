@@ -5,10 +5,7 @@ namespace App\Controller;
 use App\Entity\Company;
 use App\Entity\Currency;
 use App\Entity\User;
-use App\Form\CompanyType;
 use App\Repository\CurrencyRepository;
-use App\Service\CompanyTrait;
-use App\Status\StatusValues;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,16 +14,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Throwable;
+use App\Company\CompanyService;
+use App\Service\AuthorizationService;
 
 #[IsGranted('ROLE_USER')]
 class CompanyCurrencyController extends AbstractController
 {
 
-    use CompanyTrait;
-
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly LoggerInterface $logger,
+        private readonly CompanyService $companyService,
+        private readonly AuthorizationService $authorizationService,
     ) {
     }
 
@@ -35,10 +34,10 @@ class CompanyCurrencyController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        if (!$user->getCompanies()->contains($company)) {
+        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
+        if ($redirect) {
             $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-
-            return $this->getCorrectCompanyUrl($request, $user);
+            return $redirect;
         }
         $currencies = $currencyRepository->findBy([],['currencyCode' => 'ASC']);
 
@@ -54,10 +53,10 @@ class CompanyCurrencyController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        if (!$user->getCompanies()->contains($company)) {
+        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
+        if ($redirect) {
             $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-
-            return $this->getCorrectCompanyUrl($request, $user);
+            return $redirect;
         }
 
             try {
@@ -79,10 +78,10 @@ class CompanyCurrencyController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        if (!$user->getCompanies()->contains($company)) {
+        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
+        if ($redirect) {
             $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-
-            return $this->getCorrectCompanyUrl($request, $user);
+            return $redirect;
         }
         if (count($company->getCurrency()) > 1) {
             try {

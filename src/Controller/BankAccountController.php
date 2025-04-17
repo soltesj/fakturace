@@ -8,21 +8,23 @@ use App\Entity\User;
 use App\Form\BankAccountType;
 use App\Repository\BankAccountRepository;
 use App\Repository\StatusRepository;
-use App\Service\CompanyTrait;
 use App\Status\StatusValues;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Company\CompanyService;
+use App\Service\AuthorizationService;
 
 class BankAccountController extends AbstractController
 {
-    use CompanyTrait;
 
-    public function __construct(private readonly StatusRepository $statusRepository)
-    {
-    }
+    public function __construct(
+        private readonly StatusRepository $statusRepository,
+        private readonly CompanyService $companyService,
+        private readonly AuthorizationService $authorizationService,
+    ) {}
 
     #[Route('/{_locale}/{company}/bank-account/', name: 'app_bank_account_index', methods: ['GET'])]
     public function index(
@@ -32,10 +34,10 @@ class BankAccountController extends AbstractController
     ): Response {
         /** @var User $user */
         $user = $this->getUser();
-        if (!$user->getCompanies()->contains($company)) {
+        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
+        if ($redirect) {
             $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-
-            return $this->getCorrectCompanyUrl($request, $user);
+            return $redirect;
         }
         $bankAccounts = $accountRepository->findByCompany($company);
 
@@ -50,10 +52,10 @@ class BankAccountController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        if (!$user->getCompanies()->contains($company)) {
+        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
+        if ($redirect) {
             $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-
-            return $this->getCorrectCompanyUrl($request, $user);
+            return $redirect;
         }
         $bankAccount = new BankAccount();
         $bankAccount->setCompany($company);
@@ -65,8 +67,11 @@ class BankAccountController extends AbstractController
             $entityManager->flush();
             $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
-            return $this->redirectToRoute('app_bank_account_index', ['company' => $company->getId()],
-                Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute(
+                'app_bank_account_index',
+                ['company' => $company->getId()],
+                Response::HTTP_SEE_OTHER
+            );
         }
 
         return $this->render('bank_account/new.html.twig', [
@@ -85,10 +90,10 @@ class BankAccountController extends AbstractController
     ): Response {
         /** @var User $user */
         $user = $this->getUser();
-        if (!$user->getCompanies()->contains($company)) {
+        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
+        if ($redirect) {
             $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-
-            return $this->getCorrectCompanyUrl($request, $user);
+            return $redirect;
         }
         if (count($bankAccount->getDocuments())) {
             $bankAccountNew = clone $bankAccount;
@@ -104,8 +109,11 @@ class BankAccountController extends AbstractController
             $entityManager->flush();
             $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
-            return $this->redirectToRoute('app_bank_account_index', ['company' => $company->getId()],
-                Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute(
+                'app_bank_account_index',
+                ['company' => $company->getId()],
+                Response::HTTP_SEE_OTHER
+            );
         }
 
         return $this->render('bank_account/edit.html.twig', [
@@ -124,10 +132,10 @@ class BankAccountController extends AbstractController
     ): Response {
         /** @var User $user */
         $user = $this->getUser();
-        if (!$user->getCompanies()->contains($company)) {
+        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
+        if ($redirect) {
             $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-
-            return $this->getCorrectCompanyUrl($request, $user);
+            return $redirect;
         }
         if (count($bankAccount->getDocuments())) {
             $bankAccount->setStatus($this->statusRepository->find(StatusValues::STATUS_ARCHIVED));
@@ -137,7 +145,10 @@ class BankAccountController extends AbstractController
         $entityManager->flush();
         $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
-        return $this->redirectToRoute('app_bank_account_index', ['company' => $company->getId()],
-            Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute(
+            'app_bank_account_index',
+            ['company' => $company->getId()],
+            Response::HTTP_SEE_OTHER
+        );
     }
 }

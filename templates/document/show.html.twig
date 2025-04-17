@@ -96,7 +96,8 @@
             </table>
         </td>
         <td><img src="{{ qrCodeBase64 }}" width="60" height="60" alt="{{ 'QR_PAIMENT'|trans }}"></td>
-        {% set countryCode = document.customer.country.sname?document.company.country.sname %}
+        {% set countryCode = 'cs_CZ' %}
+        {# FIXME::document.customer.country.sname?document.company.country.sname #}
 {#        {{ dump( document.dateIssue) }}#}
 
        <td><p>Datum vystavení: {{ document.dateIssue|format_datetime('short', 'none', locale=countryCode) }}
