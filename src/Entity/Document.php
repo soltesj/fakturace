@@ -75,7 +75,7 @@ class Document
     #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
     private ?string $specificSymbol = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy:"documents")]
     private ?BankAccount $bankAccount = null;
 
     /**
