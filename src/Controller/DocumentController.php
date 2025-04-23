@@ -13,7 +13,6 @@ use App\DocumentNumber\DocumentNumberGenerator;
 use App\Entity\Company;
 use App\Entity\Customer;
 use App\Entity\Document;
-use App\Entity\DocumentItem;
 use App\Entity\User;
 use App\Form\DocumentFormType;
 use App\Repository\DocumentPriceTypeRepository;
@@ -24,7 +23,6 @@ use App\Service\DocumentService;
 use App\Service\VatService;
 use DateTime;
 use Doctrine\DBAL\Exception as DBALException;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -49,8 +47,7 @@ class DocumentController extends AbstractController
         private readonly AuthorizationService $authorizationService,
         private readonly VatService $vatService,
         private readonly DocumentFactory $documentFactory,
-    ) {
-    }
+    ) {}
 
     #[Route('/{_locale}/{company}/document/', name: 'app_document_index', methods: ['GET'])]
     public function index(
@@ -83,8 +80,10 @@ class DocumentController extends AbstractController
              * @var Customer|null $customer
              * @var string|null $state
              * */
-            list($query, $dateFrom, $dateTo, $customer, $state) = $filterFormService->handleFrom($formFilter->getData(),
-                $dateFrom);
+            list($query, $dateFrom, $dateTo, $customer, $state) = $filterFormService->handleFrom(
+                $formFilter->getData(),
+                $dateFrom
+            );
         }
         try {
             $documents = $documentService->getDocumentToPay(
@@ -94,8 +93,9 @@ class DocumentController extends AbstractController
                 $dateTo,
                 $query,
                 $customer,
-                $state);
-        } catch (Exception|DBALException $e) {
+                $state
+            );
+        } catch (Exception | DBALException $e) {
             $this->logger->error($e->getMessage(), $e->getTrace());
             $this->addFlash('danger', "DOCUMENT_LOADING_ERROR");
         }
@@ -105,8 +105,11 @@ class DocumentController extends AbstractController
                 'company' => $company,
             ]);
         }
-        $documentNumberExist = $this->documentNumber->exist($company, Types::INVOICE_OUTGOING_TYPES,
-            (int)(new DateTime)->format('Y'));
+        $documentNumberExist = $this->documentNumber->exist(
+            $company,
+            Types::INVOICE_OUTGOING_TYPES,
+            (int)(new DateTime)->format('Y')
+        );
         if (!$documentNumberExist) {
             $this->addFlash('danger', 'NO_DOCUMENT_NUMBER_EXIST');
         }
@@ -130,21 +133,7 @@ class DocumentController extends AbstractController
             return $redirect;
         }
 
-         $vats = $this->vatService->getValidVatsByCompany($company);
-
-        // $documentType = $documentTypeRepository->find(Types::INVOICE_OUTGOING);
-        // $documentNumberPlaceholder = $this->documentNumber->generate($company, $documentType,
-        //     (new DateTime)->format('Y'));
-        // $documentItem = new DocumentItem();
-        // $document = new Document($company);
-        // $document->setDocumentType($documentType);
-        // $document->setDateIssue(new DateTime());
-        // $document->setDateTaxable(new DateTime());
-        // $document->setDateDue(new DateTime('+14 days'));
-        // $document->setDocumentNumber($documentNumberPlaceholder);
-        // $document->addDocumentItem($documentItem);
-        // $document->setUser($user);
-        // $document->setDescription('Fakturujeme Vám služby dle Vaší objednávky:');
+        $vats = $this->vatService->getValidVatsByCompany($company);
 
 
         $document = $this->documentFactory->createInvoiceOutgoing($company, $user);
@@ -155,8 +144,11 @@ class DocumentController extends AbstractController
                 $this->documentManager->saveNew($document);
                 $this->addFlash('success', 'INVOICE_STORED');
 
-                return $this->redirectToRoute('app_document_index', ['company' => $company->getId()],
-                    Response::HTTP_SEE_OTHER);
+                return $this->redirectToRoute(
+                    'app_document_index',
+                    ['company' => $company->getId()],
+                    Response::HTTP_SEE_OTHER
+                );
             } catch (Throwable $e) {
                 $this->addFlash('danger', 'INVOICE_NOT_STORED');
                 $this->logger->error($e->getMessage(), $e->getTrace());
@@ -192,15 +184,21 @@ class DocumentController extends AbstractController
                 $this->documentManager->save($document);
                 $this->addFlash('success', 'INVOICE_STORED');
 
-                return $this->redirectToRoute('app_document_index', ['company' => $company->getId()],
-                    Response::HTTP_SEE_OTHER);
+                return $this->redirectToRoute(
+                    'app_document_index',
+                    ['company' => $company->getId()],
+                    Response::HTTP_SEE_OTHER
+                );
             } catch (Throwable $e) {
                 $this->addFlash('danger', 'INVOICE_NOT_STORED');
                 $this->logger->error($e->getMessage(), $e->getTrace());
             }
 
-            return $this->redirectToRoute('app_document_index', ['company' => $company->getId()],
-                Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute(
+                'app_document_index',
+                ['company' => $company->getId()],
+                Response::HTTP_SEE_OTHER
+            );
         }
 
         return $this->render('document/edit.html.twig', [
@@ -218,8 +216,7 @@ class DocumentController extends AbstractController
         Company $company,
         Document $document,
         PdfService $pdfService,
-    ){
-        
+    ) {
         /** @var User $user */
         $user = $this->getUser();
         $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
@@ -233,6 +230,7 @@ class DocumentController extends AbstractController
 
         $pdf = $pdfService->generateDocumentPdf($document, "{$user->getName()} {$user->getSurname()}");
         $fileName = "{$document->getDocumentNumber()}.pdf";
-        $pdf->Output($fileName, 'D');    
+
+        $pdf->Output($fileName, 'D');
     }
 }

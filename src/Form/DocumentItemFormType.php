@@ -17,15 +17,22 @@ class DocumentItemFormType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('name')->add('quantity')->add('unit')->add('price')
+        $builder
+            ->add('name')
+            ->add('quantity')
+            ->add('unit')
+            ->add('price')
             ->add('vat', EntityType::class, [
                 'class' => VatLevel::class,
                 'query_builder' => function (EntityRepository $er): QueryBuilder {
-                    return $er->createQueryBuilder('vat_level')->andWhere('vat_level.validTo is null or vat_level.validTo >= :now')->setParameter('now',
-                            new DateTime())->orderBy('vat_level.vatAmount', 'DESC');
-
+                    return $er->createQueryBuilder('vat_level')->andWhere('vat_level.validTo is null or vat_level.validTo >= :now')->setParameter(
+                        'now',
+                        new DateTime()
+                    )->orderBy('vat_level.vatAmount', 'DESC');
                 },
-                'choice_label' => 'vatAmount',])->add('priceWithVat');
+                'choice_label' => 'vatAmount',
+            ])
+            ->add('priceWithVat');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -37,7 +37,7 @@ class PdfService
         $pdf->setPrintFooter(false);
         $pdf->AddPage();
 
-        $html = $this->twig->render('document/show.html.twig', [
+        $html = $this->twig->render('document/pdf.html.twig', [
             'document' => $document,
             'qrCodeBase64' => $qrCodeBase64,
         ]);

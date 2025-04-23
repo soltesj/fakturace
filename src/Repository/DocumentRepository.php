@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Document\DocumentToPay;
 use App\Document\Types;
 use App\DocumentPrice\Types as PriceTypes;
 use App\Entity\Company;

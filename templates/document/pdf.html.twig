@@ -1,0 +1,243 @@
+<style>
+	* {
+		font-size: 8px;
+	}
+	td {
+		font-size: 8px;
+	}
+
+	h1 {
+		font-size: large;
+	}
+
+	.pb-5 {
+		padding-bottom: 50px;
+	}
+
+	.pb-3 {
+		padding-bottom: 30px;
+	}
+
+	.pb-2 {
+		padding-bottom: 20px;
+	}
+
+	.fw-bold {
+		font-weight: bold;
+	}
+
+	.text-end {
+		text-align: right;
+	}
+
+	table {
+		width: 100%
+	}
+
+	th {
+		background-color: rgb(220, 220, 220);
+	}
+</style>
+
+
+<table class="pb-2">
+	<tr>
+		<td></td>
+		<td>
+			<p>
+				<strong>{{ document.company.name }}</strong>
+				<br>{{ document.company.street }}
+				{{ document.company.buildingNumber }}
+				,
+				{{ document.company.zipcode }}
+				{{ document.company.city }}
+				<br>IC:
+				{{ document.company.ic }}
+				<br>DIC:
+				{{ document.company.dic }}</p>
+		</td>
+		<td>
+			<p>&nbsp;
+				<br>Telefon:
+				{{ document.company.phone }}
+				<br>E-mail:
+				{{ document.company.email }}
+				<br>www:
+				{{ document.company.website }}</p>
+		</td>
+	</tr>
+</table>
+<table class="pb-2">
+	<tr>
+		<td width="60%">
+			<h1>Faktura - daňový doklad<br>číslo :
+				{{ document.documentNumber }}</h1>
+		</td>
+		<td width="40%">
+			<p>Odběratel:<br>{{ document.customer.name }}<br>{{ document.customer.street }}
+				<br>{{ document.customer.zipcode }}{{ document.customer.town }}<br>{{ document.customer.country.name }}
+				<br>IČ: 08220387 DIČ: CZ699002719</p>
+		</td>
+	</tr>
+</table>
+<table class="pb-2">
+	<tr>
+		<td>
+			<table>
+				<tr>
+					<td>Číslo účtu:</td>
+					<td class="fw-bold">{{ document.bankAccount.accountNumber }}
+						/{{ document.bankAccount.bankCode }}</td>
+				</tr>
+				<tr>
+					<td>IBAN:</td>
+					<td class="fw-bold">{{ document.bankAccount.iban }}</td>
+				</tr>
+				<tr>
+					<td>SWIFT:</td>
+					<td class="fw-bold">{{ document.bankAccount.bic }}</td>
+				</tr>
+				<tr>
+					<td>Variabilní symbol:</td>
+					<td class="fw-bold">{{ document.variableSymbol }}</td>
+				</tr>
+				<tr>
+					<td>Forma úhrady:</td>
+					<td class="fw-bold">{{ document.paymentType.name }}</td>
+				</tr>
+			</table>
+		</td>
+		<td><img src="{{ qrCodeBase64 }}" width="60" height="60" alt="{{ 'QR_PAIMENT'|trans }}"></td>
+		{% set countryCode = 'cs_CZ' %}
+		{# FIXME::document.customer.country.sname?document.company.country.sname #}
+		{#        {{ dump( document.dateIssue) }}#}
+
+			<td><p>
+				Datum vystavení:
+				{{ document.dateIssue|format_datetime('short', 'none', locale=countryCode) }}<br>
+				Datum
+				                splatnosti:
+				{{ document.dateTaxable|format_datetime('short', 'none', locale=countryCode) }}<br>
+				Datum zdanitelného
+				                plnění:
+			{{ document.dateDue|format_datetime('short', 'none', locale=countryCode) }}
+		</p>
+	</td>
+</tr>
+</table><p class="pb-2"> {{ document.description }}</p>
+<div class=" pb-3">
+	<table class="table" cellpadding="3">
+		<thead class="table-secondary">
+			<tr>
+				<th class="">Položka</th>
+				<th class="text-end">Množství</th>
+				<th class="text-end">Jed. cena</th>
+				<th class="text-end">DPH</th>
+				<th class="text-end">Celkem bez DPH</th>
+				<th class="text-end">Celkem s DPH</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in document.documentItems %}
+				{% set vat = item.vat.vatAmount /100 + 1 %}
+				<tr>
+					<td>
+						<p>{{ item.name }}</p>
+					</td>
+					<td class="text-end">
+						<p>{{ item.quantity }}
+							{{ item.unit }}</p>
+					</td>
+					<td class="text-end">
+						<p>{{ item.price }}</p>
+					</td>
+					<td class="text-end">
+						<p>{{ item.vat.vatAmount }}</p>
+					</td>
+					<td class="text-end">
+						<p>{{ (item.price * item.quantity)|number_format }}</p>
+					</td>
+					<td class="text-end">
+						<p>{{ (item.price * item.quantity * vat)|number_format }}</p>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+<div style="padding:0 0 0 50px">
+	<table>
+		<tr>
+			<td>&nbsp;</td>
+			<td class="text-end">
+				<p>Základ</p>
+			</td>
+			<td class="text-end">
+				<p>DPH</p>
+			</td>
+			<td class="text-end">
+				<p>Celkem</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>Nulová sazba</p>
+			</td>
+			<td class="text-end">
+				<p>{{ document.priceNoVat|default(0)|number_format(2,',',' ') }}</p>
+			</td>
+			<td class="text-end">
+				<p>0,00</p>
+			</td>
+			<td class="text-end">
+				<p>0,00</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>Snížená sazba</p>
+			</td>
+			<td class="text-end">
+				<p>{{ document.priceWithoutLowVat|default(0)|number_format(2,',',' ')  }}</p>
+			</td>
+			<td class="text-end">
+				<p>0,00</p>
+			</td>
+			<td class="text-end">
+				<p>0,00</p>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p>Základní sazba</p>
+			</td>
+			<td class="text-end">
+				<p>{{ document.priceWithoutHighVat|default(0)|number_format(2,',',' ')  }}</p>
+			</td>
+			<td class="text-end">
+				<p>0,00</p>
+			</td>
+			<td class="text-end">
+				<p>0,00</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3">
+				<p>
+					<strong>CELKEM K ÚHRADĚ</strong>
+				</p>
+			</td>
+			<td class="text-end">
+				<p>
+					<strong>{{ document.priceTotal|number_format(2,',',' ') }}
+						{{ document.currency.currencyCode }}</strong>
+				</p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4" class="text-end">
+				<p>Konečná částka je včetně zaokrouhlení.</p>
+			</td>
+		</tr>
+	</table>
+</div>
