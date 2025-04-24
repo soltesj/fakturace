@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Company;
 use App\Entity\Customer;
-use App\Entity\User;
 use App\Form\CustomerType;
 use App\Repository\CustomerRepository;
 use App\Repository\StatusRepository;
@@ -15,8 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use App\Company\CompanyService;
-use App\Service\AuthorizationService;
 
 #[IsGranted('ROLE_USER')]
 class CustomerController extends AbstractController
@@ -25,21 +22,12 @@ class CustomerController extends AbstractController
     public function __construct(
         private readonly CustomerRepository $customerRepository,
         private readonly StatusRepository $statusRepository,
-        private readonly CompanyService $companyService,
-        private readonly AuthorizationService $authorizationService,
     ) {
     }
 
     #[Route('/{_locale}/{company}/customer/', name: 'app_customer_index', methods: ['GET'])]
-    public function index(Request $request, Company $company, EntityManagerInterface $entityManager): Response
+    public function index(Company $company): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
-        if ($redirect) {
-            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-            return $redirect;
-        }
         $customers = $this->customerRepository->findByCompany($company);
 
         return $this->render('customer/index.html.twig', [
@@ -51,13 +39,6 @@ class CustomerController extends AbstractController
     #[Route('/{_locale}/{company}/customer/new', name: 'app_customer_new', methods: ['GET', 'POST'])]
     public function new(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
-        if ($redirect) {
-            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-            return $redirect;
-        }
         $customer = new Customer();
         $customer->setCompany($company);
         $customer->setCountry($company->getCountry());
@@ -87,13 +68,6 @@ class CustomerController extends AbstractController
         Customer $customer,
         EntityManagerInterface $entityManager
     ): Response {
-        /** @var User $user */
-        $user = $this->getUser();
-        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
-        if ($redirect) {
-            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-            return $redirect;
-        }
         if (count($customer->getDocuments())) {
             $customerNew = clone $customer;
             $customerNew->setStatus($this->statusRepository->find(StatusValues::STATUS_ACTIVE));
@@ -124,18 +98,10 @@ class CustomerController extends AbstractController
 
     #[Route('/{_locale}/{company}/customer/{id}/delete', name: 'app_customer_delete', methods: ['GET'])]
     public function delete(
-        Request $request,
         Company $company,
         Customer $customer,
         EntityManagerInterface $entityManager
     ): Response {
-        /** @var User $user */
-        $user = $this->getUser();
-        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
-        if ($redirect) {
-            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-            return $redirect;
-        }
         if (count($customer->getDocuments())) {
             $customer->setStatus($this->statusRepository->find(StatusValues::STATUS_ARCHIVED));
         } else {

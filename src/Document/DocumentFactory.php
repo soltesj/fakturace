@@ -16,7 +16,7 @@ use DateTime;
 class DocumentFactory
 {
     public function __construct(
-        private DocumentTypeRepository $documentTypeRepository,
+        private readonly DocumentTypeRepository $documentTypeRepository,
         private readonly DocumentNumberGenerator $documentNumber,
     ) {}
 

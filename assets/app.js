@@ -2,7 +2,7 @@ import './bootstrap.js';
 import { Dropdown } from 'bootstrap';
 import { registerReactControllerComponents } from '@symfony/ux-react';
 
-registerReactControllerComponents(require.context('./react/controllers', true, /\.(j|t)sx?$/));
+registerReactControllerComponents(require.context('./react/controllers', true, /\.[jt]sx?$/));
 document.querySelectorAll('[data-bs-toggle="dropdown"]')
     .forEach(dropdown => {
         new Dropdown (dropdown)

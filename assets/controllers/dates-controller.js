@@ -6,7 +6,7 @@ export default class extends Controller {
         maturityDays: Number,
     }
 
-    changeDate(event) {
+    changeDate() {
         let date = new Date(Date.parse(this.dateIssueTarget.value))
         date.setDate(date.getDate() + this.maturityDaysValue);
         this.dateTaxableTarget.value = date.toISOString().slice(0, 10)

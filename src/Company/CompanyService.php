@@ -2,24 +2,23 @@
 
 namespace App\Company;
 
-use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class CompanyService
+readonly class CompanyService
 {
 
     public function __construct(
-        private readonly UrlGeneratorInterface $urlGenerator,
+        private UrlGeneratorInterface $urlGenerator,
     ) {}
 
-    public function getCorrectCompanyUrl(Request $request, User $user): string
+    public function getCorrectCompanyUrl(Request $request, UserInterface $user): string
     {
         $route = $request->get('_route');
         $routeParams = $request->get('_route_params');
         $routeParams['company'] = $user->getCompanies()->first()->getId();
 
         return $this->urlGenerator->generate($route, $routeParams);
-        //return new RedirectResponse($this->urlGenerator->generate($route,$routeParams), 302);
     }
 }

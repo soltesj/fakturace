@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use App\Company\CompanyService;
 use App\Document\DocumentFactory;
-use App\Service\AuthorizationService;
 use App\Document\DocumentFilterFormService;
 use App\Document\DocumentManager;
 use App\Document\PdfService;
@@ -15,9 +13,6 @@ use App\Entity\Customer;
 use App\Entity\Document;
 use App\Entity\User;
 use App\Form\DocumentFormType;
-use App\Repository\DocumentPriceTypeRepository;
-use App\Repository\DocumentTypeRepository;
-use App\Repository\VatLevelRepository;
 use App\Service\Date;
 use App\Service\DocumentService;
 use App\Service\VatService;
@@ -37,23 +32,19 @@ class DocumentController extends AbstractController
 {
 
     public function __construct(
-        private readonly VatLevelRepository $vatLevelRepository,
         private readonly DocumentManager $documentManager,
         private readonly DocumentNumberGenerator $documentNumber,
-        private readonly DocumentPriceTypeRepository $documentPriceTypeRepository,
         private readonly LoggerInterface $logger,
-        private readonly DocumentService $documentService,
-        private readonly CompanyService $companyService,
-        private readonly AuthorizationService $authorizationService,
         private readonly VatService $vatService,
         private readonly DocumentFactory $documentFactory,
-    ) {}
+        private readonly DocumentService $documentService,
+    ) {
+    }
 
     #[Route('/{_locale}/{company}/document/', name: 'app_document_index', methods: ['GET'])]
     public function index(
         Request $request,
         Company $company,
-        DocumentService $documentService,
         DocumentFilterFormService $filterFormService,
     ): Response {
         $documents = [];
@@ -62,14 +53,6 @@ class DocumentController extends AbstractController
         $customer = null;
         $query = null;
         $state = null;
-        /** @var User $user */
-        $user = $this->getUser();
-        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
-        if ($redirect) {
-            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-            return $redirect;
-        }
-
         $formFilter = $filterFormService->createForm($company);
         $formFilter->handleRequest($request);
         if ($formFilter->isSubmitted() && $formFilter->isValid()) {
@@ -86,7 +69,7 @@ class DocumentController extends AbstractController
             );
         }
         try {
-            $documents = $documentService->getDocumentToPay(
+            $documents = $this->documentService->getDocumentToPay(
                 $company,
                 Types::INVOICE_OUTGOING_TYPES,
                 $dateFrom,
@@ -95,11 +78,13 @@ class DocumentController extends AbstractController
                 $customer,
                 $state
             );
-        } catch (Exception | DBALException $e) {
+        } catch (Exception|DBALException $e) {
             $this->logger->error($e->getMessage(), $e->getTrace());
             $this->addFlash('danger', "DOCUMENT_LOADING_ERROR");
         }
-        if ($request->get('isAjax')) {
+        if ($request->get('isAjax') === 'true') {
+            dump($request->get('isAjax'));
+
             return $this->render('document/_list.html.twig', [
                 'documents' => $documents,
                 'company' => $company,
@@ -123,19 +108,11 @@ class DocumentController extends AbstractController
     }
 
     #[Route('/{_locale}/{company}/document/new', name: 'app_document_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, Company $company, DocumentTypeRepository $documentTypeRepository): Response
+    public function new(Request $request, Company $company): Response
     {
         /** @var User $user */
         $user = $this->getUser();
-        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
-        if ($redirect) {
-            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-            return $redirect;
-        }
-
         $vats = $this->vatService->getValidVatsByCompany($company);
-
-
         $document = $this->documentFactory->createInvoiceOutgoing($company, $user);
         $form = $this->createForm(DocumentFormType::class, $document);
         $form->handleRequest($request);
@@ -169,13 +146,6 @@ class DocumentController extends AbstractController
         Company $company,
         Document $document,
     ): Response {
-        /** @var User $user */
-        $user = $this->getUser();
-        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
-        if ($redirect) {
-            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-            return $redirect;
-        }
         $vats = $this->vatService->getValidVatsByCompany($company);
         $form = $this->createForm(DocumentFormType::class, $document);
         $form->handleRequest($request);
@@ -193,12 +163,6 @@ class DocumentController extends AbstractController
                 $this->addFlash('danger', 'INVOICE_NOT_STORED');
                 $this->logger->error($e->getMessage(), $e->getTrace());
             }
-
-            return $this->redirectToRoute(
-                'app_document_index',
-                ['company' => $company->getId()],
-                Response::HTTP_SEE_OTHER
-            );
         }
 
         return $this->render('document/edit.html.twig', [
@@ -212,25 +176,19 @@ class DocumentController extends AbstractController
 
     #[Route('/{_locale}/{company}/document/{id}/pdf', name: 'app_document_print', methods: ['GET'])]
     public function toPdf(
-        Request $request,
-        Company $company,
         Document $document,
         PdfService $pdfService,
-    ) {
+    ): Response {
         /** @var User $user */
         $user = $this->getUser();
-        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
-        if ($redirect) {
-            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-            return $redirect;
-        }
+        $userName = sprintf('%s %s', $user->getName(), $user->getSurname());
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition',
+            sprintf('attachment; filename="%s.pdf"', $document->getDocumentNumber()));
+        $pdf = $pdfService->generateDocumentPdf($document, $userName);
+        $response->setContent($pdf->Output('', 'S')); // Output to string
 
-        $vats = $this->vatService->getValidVatsByCompany($company);
-
-
-        $pdf = $pdfService->generateDocumentPdf($document, "{$user->getName()} {$user->getSurname()}");
-        $fileName = "{$document->getDocumentNumber()}.pdf";
-
-        $pdf->Output($fileName, 'D');
+        return $response;
     }
 }

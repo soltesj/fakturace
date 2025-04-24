@@ -36,7 +36,7 @@ export default class extends Controller {
         }
     }
 
-    addCollectionElement(event) {
+    addCollectionElement() {
         const item = document.createElement('div');
         item.classList.add('row');
         item.innerHTML = this.prototypeValue.replace(/__name__/g, this.indexValue);

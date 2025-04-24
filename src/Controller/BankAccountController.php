@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\BankAccount;
 use App\Entity\Company;
-use App\Entity\User;
 use App\Form\BankAccountType;
 use App\Repository\BankAccountRepository;
 use App\Repository\StatusRepository;
@@ -14,31 +13,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Company\CompanyService;
-use App\Service\AuthorizationService;
 
 class BankAccountController extends AbstractController
 {
 
     public function __construct(
         private readonly StatusRepository $statusRepository,
-        private readonly CompanyService $companyService,
-        private readonly AuthorizationService $authorizationService,
     ) {}
 
     #[Route('/{_locale}/{company}/bank-account/', name: 'app_bank_account_index', methods: ['GET'])]
     public function index(
-        Request $request,
         Company $company,
         BankAccountRepository $accountRepository
     ): Response {
-        /** @var User $user */
-        $user = $this->getUser();
-        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
-        if ($redirect) {
-            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-            return $redirect;
-        }
         $bankAccounts = $accountRepository->findByCompany($company);
 
         return $this->render('bank_account/index.html.twig', [
@@ -50,13 +37,6 @@ class BankAccountController extends AbstractController
     #[Route('/{_locale}/{company}/bank-account/new', name: 'app_bank_account_new', methods: ['GET', 'POST'])]
     public function new(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
-        if ($redirect) {
-            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-            return $redirect;
-        }
         $bankAccount = new BankAccount();
         $bankAccount->setCompany($company);
         $bankAccount->setStatus($this->statusRepository->find(StatusValues::STATUS_ACTIVE));
@@ -88,13 +68,6 @@ class BankAccountController extends AbstractController
         BankAccount $bankAccount,
         EntityManagerInterface $entityManager
     ): Response {
-        /** @var User $user */
-        $user = $this->getUser();
-        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
-        if ($redirect) {
-            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-            return $redirect;
-        }
         if (count($bankAccount->getDocuments())) {
             $bankAccountNew = clone $bankAccount;
             $bankAccountNew->setStatus($this->statusRepository->find(StatusValues::STATUS_ACTIVE));
@@ -125,18 +98,10 @@ class BankAccountController extends AbstractController
 
     #[Route('/{_locale}/{company}/bank-account/{id}', name: 'app_bank_account_delete', methods: ['GET'])]
     public function delete(
-        Request $request,
         Company $company,
         BankAccount $bankAccount,
         EntityManagerInterface $entityManager
     ): Response {
-        /** @var User $user */
-        $user = $this->getUser();
-        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
-        if ($redirect) {
-            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-            return $redirect;
-        }
         if (count($bankAccount->getDocuments())) {
             $bankAccount->setStatus($this->statusRepository->find(StatusValues::STATUS_ARCHIVED));
         } else {

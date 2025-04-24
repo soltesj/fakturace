@@ -4,18 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Company;
 use App\Entity\Currency;
-use App\Entity\User;
 use App\Repository\CurrencyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Throwable;
-use App\Company\CompanyService;
-use App\Service\AuthorizationService;
 
 #[IsGranted('ROLE_USER')]
 class CompanyCurrencyController extends AbstractController
@@ -24,23 +20,13 @@ class CompanyCurrencyController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly LoggerInterface $logger,
-        private readonly CompanyService $companyService,
-        private readonly AuthorizationService $authorizationService,
     ) {
     }
 
     #[Route('/{_locale}/{company}/currency', name: 'app_currency_edit', methods: ['GET', 'POST'])]
-    public function currencies(Request $request, Company $company, CurrencyRepository $currencyRepository): Response
+    public function currencies(Company $company, CurrencyRepository $currencyRepository): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
-        if ($redirect) {
-            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-            return $redirect;
-        }
         $currencies = $currencyRepository->findBy([],['currencyCode' => 'ASC']);
-
 
         return $this->render('currency/index.html.twig', [
             'company' => $company,
@@ -49,16 +35,8 @@ class CompanyCurrencyController extends AbstractController
     }
 
     #[Route('/{_locale}/{company}/currency/{currency}/add/', name: 'app_company_add_currency', methods: ['GET'])]
-    public function add(Request $request, Currency $currency, Company $company): Response
+    public function add( Currency $currency, Company $company): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
-        if ($redirect) {
-            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-            return $redirect;
-        }
-
             try {
                 $company->addCurrency($currency);
                 $this->entityManager->flush();
@@ -74,15 +52,8 @@ class CompanyCurrencyController extends AbstractController
     }
 
     #[Route('/{_locale}/{company}/currency/{currency}/remove/', name: 'app_company_remove_currency', methods: ['GET'])]
-    public function remove(Request $request, Currency $currency, Company $company): Response
+    public function remove(Currency $currency, Company $company): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        $redirect = $this->authorizationService->checkUserCompanyAccess($request, $user, $company);
-        if ($redirect) {
-            $this->addFlash('warning', 'UNAUTHORIZED_ATTEMPT_TO_CHANGE_ADDRESS');
-            return $redirect;
-        }
         if (count($company->getCurrency()) > 1) {
             try {
                 $company->removeCurrency($currency);

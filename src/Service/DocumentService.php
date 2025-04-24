@@ -38,7 +38,6 @@ readonly class DocumentService
             $query,
             $customer,
             $state);
-        dump($documentsPayData);
         foreach ($documentsPayData as $documentPayData) {
             $documents[] = new DocumentToPay(...$documentPayData);
         }
