@@ -25,3 +25,8 @@ install: ## Installs composer packages
 update: ## Updates composer packages
 	docker exec fakturace_app composer update
 	docker exec fakturace_app composer audit
+
+.PHONY .SILENT:
+font: ## Copy fonts
+	cp fonts/* vendor/tecnickcom/tcpdf/fonts
+
