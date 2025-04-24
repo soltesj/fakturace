@@ -21,7 +21,7 @@ readonly class AuthorizationService
     ): bool {
         $company = $this->companyRepository->find($companyId);
 
-        return $company!==null && $user->getCompanies()->contains($company);
+        return $company !== null && $user->getCompanies()->contains($company);
     }
 
 }

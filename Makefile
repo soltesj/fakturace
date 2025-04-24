@@ -30,3 +30,6 @@ update: ## Updates composer packages
 font: ## Copy fonts
 	cp fonts/* vendor/tecnickcom/tcpdf/fonts
 
+.PHONY .SILENT: update
+test: ## Updates composer packages
+	docker exec fakturace_app php bin/phpunit
