@@ -10,8 +10,7 @@ use App\Service\AuthorizationService;
 
 class DefaultController extends AbstractController
 {
-
-    #[Route('/', name: 'app_home')]
+    #[Route(['/', '/{_locale}'], name: 'app_home')]
     public function index(): Response
     {
         return $this->render('default/index.html.twig', [
