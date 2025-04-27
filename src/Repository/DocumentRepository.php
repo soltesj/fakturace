@@ -27,26 +27,23 @@ class DocumentRepository extends ServiceEntityRepository
         parent::__construct($registry, Document::class);
     }
 
-    /**
-     * @param int[] $documentType
-     * @return ?Document[] Returns an array of Document objects
-     */
-    public function findByCompany(
+    public function findByCompanyAndId(
         Company $company,
-        array $documentType = [],
-        string $order = 'DESC',
-    ): ?array {
+        int $id,
+    ): Document {
         $qb = $this->createQueryBuilder('document')
-            ->addSelect('customer')
+            ->leftJoin('document.documentItems', 'documentItems')
+            ->addSelect('documentItems')
+            ->leftJoin('document.documentPrices', 'documentPrices')
+            ->addSelect('documentPrices')
             ->innerJoin('document.customer', 'customer')
+            ->addSelect('customer')
             ->andWhere('document.company = :company')
             ->setParameter('company', $company)
-            ->andWhere('document.documentType in (:documentType)')
-            ->setParameter('documentType', $documentType)
-            ->orderBy('document.dateIssue', $order)
-            ->orderBy('document.id', $order);
+            ->andWhere('document.id = :id')
+            ->setParameter('id', $id);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getSingleResult();
     }
 
     /**

@@ -179,61 +179,41 @@
 				<p>Celkem</p>
 			</td>
 		</tr>
+		{% for documentPrice in document.documentPrices %}
+			{% if documentPrice.priceType.id == 2 %}
 		<tr>
 			<td>
-				<p>Nulová sazba</p>
+				<p>{{ documentPrice.vatLevel ? documentPrice.vatLevel.name }}</p>
 			</td>
 			<td class="text-end">
-				<p>{{ document.priceNoVat|default(0)|number_format(2,',',' ') }}</p>
+				<p>{{ documentPrice.amount|default(0)|number_format(2,',',' ') }}</p>
 			</td>
 			<td class="text-end">
-{#				<p>{{ document.praces }}</p>#}
+				<p>{{ documentPrice.vatAmount|default(0)|number_format(2,',',' ') }}</p>
 			</td>
 			<td class="text-end">
-				<p>0,00</p>
+				<p>{{ (documentPrice.amount+documentPrice.vatAmount)|default(0)|number_format(2,',',' ') }}</p>
 			</td>
 		</tr>
-		<tr>
-			<td>
-				<p>Snížená sazba</p>
-			</td>
-			<td class="text-end">
-				<p>{{ document.priceWithoutLowVat|default(0)|number_format(2,',',' ')  }}</p>
-			</td>
-			<td class="text-end">
-				<p>0,00</p>
-			</td>
-			<td class="text-end">
-				<p>0,00</p>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<p>Základní sazba</p>
-			</td>
-			<td class="text-end">
-				<p>{{ document.priceWithoutHighVat|default(0)|number_format(2,',',' ')  }}</p>
-			</td>
-			<td class="text-end">
-				<p>0,00</p>
-			</td>
-			<td class="text-end">
-				<p>0,00</p>
-			</td>
-		</tr>
-		<tr>
-			<td colspan="3">
-				<p>
-					<strong>CELKEM K ÚHRADĚ</strong>
-				</p>
-			</td>
-			<td class="text-end">
-				<p>
-					<strong>{{ document.priceTotal|number_format(2,',',' ') }}
-						{{ document.currency.currencyCode }}</strong>
-				</p>
-			</td>
-		</tr>
+			{% endif %}
+		{% endfor %}
+		{% for documentPrice in document.documentPrices %}
+			{% if documentPrice.priceType.id == 1 %}
+				<tr>
+					<td colspan="3">
+						<p>
+							<strong>CELKEM K ÚHRADĚ</strong>
+						</p>
+					</td>
+					<td class="text-end">
+						<p>
+							<strong>{{ documentPrice.amount|default(0)|number_format(2,',',' ') }}
+								{{ document.currency.currencyCode }}</strong>
+						</p>
+					</td>
+				</tr>
+			{% endif %}
+		{% endfor %}
 		<tr>
 			<td colspan="4" class="text-end">
 				<p>Konečná částka je včetně zaokrouhlení.</p>

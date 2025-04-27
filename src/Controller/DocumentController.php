@@ -10,11 +10,9 @@ use App\Document\Types;
 use App\DocumentNumber\DocumentNumberGenerator;
 use App\Entity\Company;
 use App\Entity\Customer;
-use App\Entity\Document;
 use App\Entity\User;
 use App\Form\DocumentFormType;
-use App\Repository\CountryRepository;
-use App\Repository\VatLevelRepository;
+use App\Repository\DocumentRepository;
 use App\Service\Date;
 use App\Service\DocumentService;
 use App\Service\VatService;
@@ -40,6 +38,7 @@ class DocumentController extends AbstractController
         private readonly VatService $vatService,
         private readonly DocumentFactory $documentFactory,
         private readonly DocumentService $documentService,
+        private readonly DocumentRepository $documentRepository,
     ) {
     }
 
@@ -48,8 +47,6 @@ class DocumentController extends AbstractController
         Request $request,
         Company $company,
         DocumentFilterFormService $filterFormService,
-        VatLevelRepository $vatLevelRepository,
-        CountryRepository $countryRepository,
     ): Response {
         $documents = [];
         $dateFrom = Date::firstDayOfJanuary();
@@ -146,8 +143,9 @@ class DocumentController extends AbstractController
     public function edit(
         Request $request,
         Company $company,
-        Document $document,
+        int $id,
     ): Response {
+        $document = $this->documentRepository->findByCompanyAndId($company, $id);
         $vats = $this->vatService->getValidVatsByCompany($company);
         $form = $this->createForm(DocumentFormType::class, $document);
         $form->handleRequest($request);
@@ -178,12 +176,14 @@ class DocumentController extends AbstractController
 
     #[Route('/{_locale}/{company}/document/{id}/pdf', name: 'app_document_print', methods: ['GET'])]
     public function toPdf(
-        Document $document,
+        Company $company,
+        int $id,
         PdfService $pdfService,
     ): Response {
+        $document = $this->documentRepository->findByCompanyAndId($company, $id);
         /** @var User $user */
         $user = $this->getUser();
-        $userName = sprintf('%s %s', $user->getName(), $user->getSurname());
+        $userName = "{$user->getName()} {$user->getSurname()}";
         $response = new Response();
         $response->headers->set('Content-Type', 'application/pdf');
         $response->headers->set('Content-Disposition',

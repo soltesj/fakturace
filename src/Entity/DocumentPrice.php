@@ -14,7 +14,7 @@ class DocumentPrice
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'documentPrices')]
+    #[ORM\ManyToOne(targetEntity: Document::class, inversedBy: 'documentPrices')]
     private ?Document $document = null;
 
     #[ORM\ManyToOne]

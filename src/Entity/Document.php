@@ -82,7 +82,7 @@ class Document
      * @var Collection<int,DocumentItem>|null
      */
     #[ORM\OneToMany(targetEntity: DocumentItem::class, mappedBy: 'document', cascade: ['persist', 'remove'])]
-    private ?Collection $documentItems = null;
+    private ?Collection $documentItems;
 
     /**
      * @var Collection<int,DocumentPrice>
@@ -161,9 +161,9 @@ class Document
 
     public function __construct(Company $company)
     {
+        $this->company = $company;
         $this->documents = new ArrayCollection();
         $this->documentItems = new ArrayCollection();
-        $this->company = $company;
         $this->documentPrices = new ArrayCollection();
     }
 

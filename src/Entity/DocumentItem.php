@@ -14,7 +14,7 @@ class DocumentItem
     #[ORM\Column]
     protected ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'documentItems')]
+    #[ORM\ManyToOne(targetEntity: Document::class, inversedBy: 'documentItems')]
     private ?Document $document = null;
 
     #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
@@ -29,7 +29,7 @@ class DocumentItem
     #[ORM\Column(name: 'price', type: Types::DECIMAL, precision: 10, scale: 2, nullable: false)]
     private ?string $price = null;
 
-    #[ORM\Column( type: Types::SMALLINT, nullable: true)]
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $vatAmount = null;
 
     #[ORM\Column(name: 'price_with_vat', type: Types::BOOLEAN, nullable: true)]
