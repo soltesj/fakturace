@@ -11,7 +11,7 @@ restart: down up
 
 .PHONY .SILENT: recreate
 recreate:
-	docker-compose up --force-recreate -d
+	../docker/docker compose up --force-recreate -d
 
 .PHONY .SILENT: migrate
 migrate:
@@ -26,10 +26,19 @@ update: ## Updates composer packages
 	docker exec fakturace_app composer update
 	docker exec fakturace_app composer audit
 
-.PHONY .SILENT:
+.PHONY .SILENT: font
 font: ## Copy fonts
 	cp fonts/* vendor/tecnickcom/tcpdf/fonts
 
-.PHONY .SILENT: update
-test: ## Updates composer packages
+
+.PHONY .SILENT: test
+test: ## Runs phpunit tests
+	docker exec fakturace_app php bin/console cache:clear --env=test
+	docker exec fakturace_app php bin/console doctrine:database:drop --env=test --if-exists --force
+	docker exec fakturace_app php bin/console doctrine:database:create --env=test
+	docker exec fakturace_app php bin/console doctrine:schema:create --env=test --no-interaction
 	docker exec fakturace_app php bin/phpunit
+
+#.PHONY .SILENT: install
+#fixtures: ## Load doctrine fixtures
+#	docker exec fakturace_app php bin/console doctrine:fixtures:load --env=test --no-interaction --purger=PURGER

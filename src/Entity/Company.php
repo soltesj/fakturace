@@ -17,7 +17,7 @@ class Company
     protected ?int $id = null;
 
     #[ORM\ManyToOne]
-    private ?Country $country = null;
+    private Country $country;
 
     #[ORM\Column(name: 'vat_payer', type: Types::BOOLEAN, nullable: false)]
     private bool $vatPayer = false;
@@ -67,7 +67,7 @@ class Company
     /**
      * @var Collection<int,User>
      */
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'companies')]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'companies', cascade: ['persist'])]
     private Collection $users;
 
     /**
@@ -117,12 +117,12 @@ class Company
         return $this;
     }
 
-    public function getCountry(): ?Country
+    public function getCountry(): Country
     {
         return $this->country;
     }
 
-    public function setCountry(?Country $country): static
+    public function setCountry(Country $country): static
     {
         $this->country = $country;
 
@@ -308,7 +308,7 @@ class Company
         return $this->maturityDays;
     }
 
-    public function setMaturityDays(int $maturityDays): static
+    public function setMaturityDays(?int $maturityDays): static
     {
         $this->maturityDays = $maturityDays;
 

@@ -13,6 +13,8 @@ use App\Entity\Customer;
 use App\Entity\Document;
 use App\Entity\User;
 use App\Form\DocumentFormType;
+use App\Repository\CountryRepository;
+use App\Repository\VatLevelRepository;
 use App\Service\Date;
 use App\Service\DocumentService;
 use App\Service\VatService;
@@ -41,11 +43,13 @@ class DocumentController extends AbstractController
     ) {
     }
 
-    #[Route('/{_locale}/{company}/document/', name: 'app_document_index', methods: ['GET'])]
+    #[Route('/{_locale}/{company}/document', name: 'app_document_index', methods: ['GET'])]
     public function index(
         Request $request,
         Company $company,
         DocumentFilterFormService $filterFormService,
+        VatLevelRepository $vatLevelRepository,
+        CountryRepository $countryRepository,
     ): Response {
         $documents = [];
         $dateFrom = Date::firstDayOfJanuary();
@@ -83,8 +87,6 @@ class DocumentController extends AbstractController
             $this->addFlash('danger', "DOCUMENT_LOADING_ERROR");
         }
         if ($request->get('isAjax') === 'true') {
-            dump($request->get('isAjax'));
-
             return $this->render('document/_list.html.twig', [
                 'documents' => $documents,
                 'company' => $company,
@@ -187,7 +189,7 @@ class DocumentController extends AbstractController
         $response->headers->set('Content-Disposition',
             sprintf('attachment; filename="%s.pdf"', $document->getDocumentNumber()));
         $pdf = $pdfService->generateDocumentPdf($document, $userName);
-        $response->setContent($pdf->Output('', 'S')); // Output to string
+        $response->setContent($pdf->Output('', 'S'));
 
         return $response;
     }

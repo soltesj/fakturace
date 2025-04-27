@@ -7,9 +7,11 @@ namespace App\Service;
 use App\Entity\Company;
 use App\Repository\VatLevelRepository;
 
-class VatService
+readonly class VatService
 {
-    public function __construct(private readonly VatLevelRepository $vatLevelRepository) {}
+    public function __construct(private VatLevelRepository $vatLevelRepository)
+    {
+    }
 
     public function getValidVatsByCompany(Company $company): array
     {

@@ -42,6 +42,7 @@ class RegistrationController extends AbstractController
         $user = new User();
         $company = new Company();
         $company->setMaturityDays(14);
+        $company->addUser($user);
         $items = ['user' => $user, 'company' => $company];
         $form = $this->createFormBuilder($items)
             ->add('user', UserFormType::class)
@@ -56,14 +57,10 @@ class RegistrationController extends AbstractController
             ])->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
             $plainPassword = $request->request->all()['form']['user']['plainPassword'];
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
-            $entityManager->persist($user);
             $entityManager->persist($company);
-            $company->addUser($user);
             $entityManager->flush();
-            // generate a signed url and email it to the user
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())->from(new Address('registration@i-fakturace.eu',
                     'registrace'))
@@ -71,7 +68,6 @@ class RegistrationController extends AbstractController
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig'));
 
-            // do anything else you need here, like send an email*/
             return $userAuthenticator->authenticateUser($user, $authenticator, $request);
         }
 
@@ -84,7 +80,6 @@ class RegistrationController extends AbstractController
     public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        // validate email confirmation link, sets User::isVerified=true and persists
         try {
             /** @var User $user */
             $user = $this->getUser();
