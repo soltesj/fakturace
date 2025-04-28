@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Document\DocumentFactory;
 use App\Document\DocumentFilterFormService;
-use App\Document\DocumentManager;
+use App\Document\DocumentNewSaver;
+use App\Document\DocumentUpdater;
 use App\Document\PdfService;
 use App\Document\Types;
 use App\DocumentNumber\DocumentNumberGenerator;
@@ -32,13 +33,14 @@ class DocumentController extends AbstractController
 {
 
     public function __construct(
-        private readonly DocumentManager $documentManager,
         private readonly DocumentNumberGenerator $documentNumber,
         private readonly LoggerInterface $logger,
         private readonly VatService $vatService,
         private readonly DocumentFactory $documentFactory,
         private readonly DocumentService $documentService,
         private readonly DocumentRepository $documentRepository,
+        private readonly DocumentUpdater $documentUpdater,
+        private readonly DocumentNewSaver $documentNewSaver,
     ) {
     }
 
@@ -117,7 +119,7 @@ class DocumentController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->documentManager->saveNew($document);
+                $this->documentNewSaver->save($document);
                 $this->addFlash('success', 'INVOICE_STORED');
 
                 return $this->redirectToRoute(
@@ -151,7 +153,7 @@ class DocumentController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->documentManager->save($document);
+                $this->documentUpdater->update($document);
                 $this->addFlash('success', 'INVOICE_STORED');
 
                 return $this->redirectToRoute(
