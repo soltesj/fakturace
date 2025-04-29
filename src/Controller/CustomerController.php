@@ -37,9 +37,10 @@ class CustomerController extends AbstractController
     }
 
     #[Route('/{_locale}/{company}/customer/new', name: 'app_customer_new', methods: ['GET', 'POST'])]
+    #[IsGranted('CREATE')]
     public function new(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
-        $customer = new Customer();
+        $customer = new Customer($company);
         $customer->setCompany($company);
         $customer->setCountry($company->getCountry());
         $customer->setStatus($this->statusRepository->find(StatusValues::STATUS_ACTIVE));
@@ -61,7 +62,8 @@ class CustomerController extends AbstractController
         ]);
     }
 
-    #[Route('/{_locale}/{company}/customer/{id}/edit', name: 'app_customer_edit', methods: ['GET', 'POST'])]
+    #[Route('/{_locale}/{company}/customer/{customer}/edit', name: 'app_customer_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('EDIT', subject: 'customer')]
     public function edit(
         Request $request,
         Company $company,
@@ -96,7 +98,8 @@ class CustomerController extends AbstractController
         ]);
     }
 
-    #[Route('/{_locale}/{company}/customer/{id}/delete', name: 'app_customer_delete', methods: ['GET'])]
+    #[Route('/{_locale}/{company}/customer/{customer}/delete', name: 'app_customer_delete', methods: ['GET'])]
+    #[IsGranted('DELETE', subject: 'customer')]
     public function delete(
         Company $company,
         Customer $customer,

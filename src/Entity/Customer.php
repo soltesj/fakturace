@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
-class Customer
+class Customer implements CompanyOwnedInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -67,8 +67,9 @@ class Customer
     #[ORM\ManyToOne]
     private ?Status $status = null;
 
-    public function __construct()
+    public function __construct(Company $company)
     {
+        $this->company = $company;
         $this->documents = new ArrayCollection();
     }
 
@@ -202,12 +203,12 @@ class Customer
         $this->bankAccount = $bankAccount;
     }
 
-    public function getCompany(): ?Company
+    public function getCompany(): Company
     {
         return $this->company;
     }
 
-    public function setCompany(?Company $company): static
+    public function setCompany(Company $company): static
     {
         $this->company = $company;
 

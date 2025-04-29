@@ -12,11 +12,12 @@
         Adresář
     </h1>
     <div class="row mb-3">
-        <a href="{{ path('app_customer_new', {'company': company.id}) }}" class="text-decoration-none">
+        {% if is_granted('CREATE') %}<a href="{{ path('app_customer_new', {'company': company.id}) }}"
+                                        class="text-decoration-none">
             <svg width="16" height="16" class="bi me-1">
                 <use href="#plus-circle-fill"/>
             </svg>
-            NOVÝ</a>
+                NOVÝ</a>{% endif %}
     </div>
     <table class="table table-striped table-hover">
         <thead>
@@ -32,21 +33,21 @@
         <tbody>
         {% for customer in customers %}
             <tr>
-                <td>
-                    <a href="{{ path('app_customer_edit', {'id': customer.id, 'company':company.id}) }}"
-                       class="text-decoration-none">{{ customer.name }}</a>
+                <td>{% if is_granted('EDIT', customer) %}
+                        <a href="{{ path('app_customer_edit', {'customer': customer.id, 'company':company.id}) }}"
+                           class="text-decoration-none">{{ customer.name }}</a>{% else %}{{ customer.name }}{% endif %}
                 </td>
                 <td>{{ customer.town }}</td>
                 <td>{{ customer.bankAccount }}</td>
                 <td>{{ customer.companyNumber }}</td>
                 <td>{{ customer.vatNumber }}</td>
-                <td>
-                    <a href="{{ path('app_customer_delete', {'company':company.id, 'id': customer.id}) }}"
+                <td>{% if is_granted('EDIT', customer) %}
+                    <a href="{{ path('app_customer_delete', {'company':company.id, 'customer': customer.id}) }}"
                        class="text-secondary icon-link-hover">
                         <svg class="bi d-block mx-auto" width="20" height="20">
                             <use href="#dash-circle-fill"/>
                         </svg>
-                    </a>
+                        </a>{% endif %}
                 </td>
             </tr>
         {% else %}
