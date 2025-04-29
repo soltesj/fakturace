@@ -2,9 +2,11 @@
 
 namespace App\Document;
 
+use App\Entity\Company;
+use App\Entity\CompanyOwnedInterface;
 use DateTimeImmutable;
 
-class DocumentToPay
+class DocumentToPay implements CompanyOwnedInterface
 {
     private DateTimeImmutable $dateIssue;
     private DateTimeImmutable $dateDue;
@@ -17,7 +19,8 @@ class DocumentToPay
         string $dateDue,
         private readonly string $price,
         private readonly ?string $priceWithVat,
-        private readonly ?string $toPay
+        private readonly ?string $toPay,
+        private readonly Company $company,
     ) {
         $this->dateIssue = new DateTimeImmutable($dateIssue);
         $this->dateDue = new DateTimeImmutable($dateDue);
@@ -64,4 +67,8 @@ class DocumentToPay
     }
 
 
+    public function getCompany(): Company
+    {
+        return $this->company;
+    }
 }

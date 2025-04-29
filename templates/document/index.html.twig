@@ -49,14 +49,14 @@
         </div>
         {{ form_end(formFilter) }}
         <div class=" mb-3">
-
+            {% if is_granted('CREATE') %}
             <a href="{% if documentNumberExist %}{{ path('app_document_new', {'company': company.id}) }}{% else %}#{% endif %}"
                class="text-decoration-none {% if not documentNumberExist %}link-secondary pe-none{% endif %}">
                 <svg width="16" height="16" class="bi me-1">
                     <use href="#plus-circle-fill"/>
                 </svg>
                 NOVÁ FAKTURA</a>
-
+            {% endif %}
             <a href="#" class="text-decoration-none mx-4 ">
                 <svg width="16" height="16" class="bi me-1">
                     <use href="#cash-coin"/>

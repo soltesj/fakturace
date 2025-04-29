@@ -1,0 +1,7 @@
+roles:
+  ROLE_USER: "Základní uživatel"
+  ROLE_COMPANY_EDITOR: "Editor firmy"
+  ROLE_COMPANY_ADMIN: "Firemní administrátor"
+  ROLE_SUPERVISOR: "Podpora (pouze čtení)"
+  ROLE_ADMIN: "Globální administrátor"
+  ROLE_SUPER_ADMIN: "Superadmin"

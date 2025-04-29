@@ -11,9 +11,9 @@ use App\Document\Types;
 use App\DocumentNumber\DocumentNumberGenerator;
 use App\Entity\Company;
 use App\Entity\Customer;
+use App\Entity\Document;
 use App\Entity\User;
 use App\Form\DocumentFormType;
-use App\Repository\DocumentRepository;
 use App\Service\Date;
 use App\Service\DocumentService;
 use App\Service\VatService;
@@ -38,7 +38,6 @@ class DocumentController extends AbstractController
         private readonly VatService $vatService,
         private readonly DocumentFactory $documentFactory,
         private readonly DocumentService $documentService,
-        private readonly DocumentRepository $documentRepository,
         private readonly DocumentUpdater $documentUpdater,
         private readonly DocumentNewSaver $documentNewSaver,
     ) {
@@ -109,6 +108,7 @@ class DocumentController extends AbstractController
     }
 
     #[Route('/{_locale}/{company}/document/new', name: 'app_document_new', methods: ['GET', 'POST'])]
+    #[IsGranted('CREATE')]
     public function new(Request $request, Company $company): Response
     {
         /** @var User $user */
@@ -141,13 +141,13 @@ class DocumentController extends AbstractController
         ]);
     }
 
-    #[Route('/{_locale}/{company}/document/{id}/edit', name: 'app_document_edit', methods: ['GET', 'POST'])]
+    #[Route('/{_locale}/{company}/document/{document}/edit', name: 'app_document_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('EDIT', subject: 'document')]
     public function edit(
         Request $request,
         Company $company,
-        int $id,
+        Document $document,
     ): Response {
-        $document = $this->documentRepository->findByCompanyAndId($company, $id);
         $vats = $this->vatService->getValidVatsByCompany($company);
         $form = $this->createForm(DocumentFormType::class, $document);
         $form->handleRequest($request);
@@ -176,13 +176,13 @@ class DocumentController extends AbstractController
     }
 
 
-    #[Route('/{_locale}/{company}/document/{id}/pdf', name: 'app_document_print', methods: ['GET'])]
+    #[Route('/{_locale}/{company}/document/{document}/pdf', name: 'app_document_print', methods: ['GET'])]
+    #[IsGranted('VIEW', subject: 'document')]
     public function toPdf(
         Company $company,
-        int $id,
+        Document $document,
         PdfService $pdfService,
     ): Response {
-        $document = $this->documentRepository->findByCompanyAndId($company, $id);
         /** @var User $user */
         $user = $this->getUser();
         $userName = "{$user->getName()} {$user->getSurname()}";

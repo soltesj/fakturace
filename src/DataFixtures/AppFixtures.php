@@ -103,7 +103,7 @@ class AppFixtures extends Fixture
     {
         $user = new User();
         $user->setEmail(self::USER_1_EMAIL);
-        $user->setRoles(['ROLE_USER']);
+        $user->setRoles(['ROLE_USER', 'ROLE_COMPANY_EDITOR']);
         $user->setName('User_1');
         $user->setSurname('User_1');
         $user->setIsVerified(true);

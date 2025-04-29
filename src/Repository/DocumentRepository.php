@@ -58,8 +58,8 @@ class DocumentRepository extends ServiceEntityRepository
         ?string $query = null,
         ?Customer $customer = null,
         ?string $state = null
-    ): array{
-        $documents = [];
+    ): array
+    {
         $incomeOutcomeTypes = Types::TYPE_MAP[$documentTypes[0]];
         $conn = $this->getEntityManager()->getConnection();
         $sql = $this->getDocumentToPaySql($incomeOutcomeTypes, $documentTypes, $dateFrom, $dateTo, $customer, $query,
@@ -89,12 +89,15 @@ class DocumentRepository extends ServiceEntityRepository
         }
         if ($query) {
             $stmt->bindValue($valIndex, '%'.$query.'%');
-            $valIndex++;
         }
-        //dd($stmt);
-        $result = $stmt->executeQuery();
 
-        return $result->fetchAllAssociative();
+        $result = $stmt->executeQuery();
+        $data = $result->fetchAllAssociative();
+        foreach ($data as &$row) {
+            $row['company'] = $company;
+        }
+
+        return $data;
     }
 
     /**

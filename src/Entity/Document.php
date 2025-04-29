@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping\UniqueConstraint;
 
 #[ORM\Entity]
 #[UniqueConstraint(name: "UX_company_id_document_number", columns: ['company_id','document_number'])]
-class Document
+class Document implements CompanyOwnedInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -22,13 +22,13 @@ class Document
     private ?self $document = null;
 
     /**
-     * @var Collection<int,Document>
+     * @var Collection<int,Document>|null
      */
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'document')]
     private ?Collection $documents = null;
 
     #[ORM\ManyToOne]
-    private ?Company $company = null;
+    private Company $company;
 
     #[ORM\ManyToOne]
     private ?DocumentType $documentType = null;
@@ -565,12 +565,12 @@ class Document
         return $this;
     }
 
-    public function getCompany(): ?Company
+    public function getCompany(): Company
     {
         return $this->company;
     }
 
-    public function setCompany(?Company $company): static
+    public function setCompany(Company $company): static
     {
         $this->company = $company;
 

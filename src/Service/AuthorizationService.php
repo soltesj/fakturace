@@ -17,9 +17,11 @@ readonly class AuthorizationService
 
     public function checkUserCompanyAccess(
         UserInterface $user,
-        int $companyId
+        Company|int $company
     ): bool {
-        $company = $this->companyRepository->find($companyId);
+        if (!$company instanceof Company) {
+            $company = $this->companyRepository->find($company);
+        }
 
         return $company !== null && $user->getCompanies()->contains($company);
     }
