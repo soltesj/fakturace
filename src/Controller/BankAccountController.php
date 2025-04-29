@@ -13,10 +13,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_USER')]
 class BankAccountController extends AbstractController
 {
-
     public function __construct(
         private readonly StatusRepository $statusRepository,
     ) {}
@@ -35,9 +36,10 @@ class BankAccountController extends AbstractController
     }
 
     #[Route('/{_locale}/{company}/bank-account/new', name: 'app_bank_account_new', methods: ['GET', 'POST'])]
+    #[IsGranted('CREATE')]
     public function new(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
-        $bankAccount = new BankAccount();
+        $bankAccount = new BankAccount($company);
         $bankAccount->setCompany($company);
         $bankAccount->setStatus($this->statusRepository->find(StatusValues::STATUS_ACTIVE));
         $form = $this->createForm(BankAccountType::class, $bankAccount);
@@ -61,7 +63,11 @@ class BankAccountController extends AbstractController
         ]);
     }
 
-    #[Route('/{_locale}/{company}/bank-account/{id}/edit', name: 'app_bank_account_edit', methods: ['GET', 'POST'])]
+    #[Route('/{_locale}/{company}/bank-account/{bankAccount}/edit', name: 'app_bank_account_edit', methods: [
+        'GET',
+        'POST',
+    ])]
+    #[IsGranted('EDIT', subject: 'bankAccount')]
     public function edit(
         Request $request,
         Company $company,
@@ -96,7 +102,8 @@ class BankAccountController extends AbstractController
         ]);
     }
 
-    #[Route('/{_locale}/{company}/bank-account/{id}', name: 'app_bank_account_delete', methods: ['GET'])]
+    #[Route('/{_locale}/{company}/bank-account/{bankAccount}/delete', name: 'app_bank_account_delete', methods: ['GET'])]
+    #[IsGranted('DELETE', subject: 'bankAccount')]
     public function delete(
         Company $company,
         BankAccount $bankAccount,

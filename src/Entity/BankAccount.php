@@ -8,7 +8,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-class BankAccount
+class BankAccount implements CompanyOwnedInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,7 +16,7 @@ class BankAccount
     protected ?int $id = null;
 
     #[ORM\ManyToOne]
-    private ?Company $company = null;
+    private Company $company;
 
     #[ORM\ManyToOne]
     private ?Status $status = null;
@@ -54,8 +54,9 @@ class BankAccount
     #[ORM\Column( length: 32, nullable: true)]
     private ?string $routingNumber = null;
 
-    public function __construct()
+    public function __construct(Company $company)
     {
+        $this->company = $company;
         $this->documents = new ArrayCollection();
     }
 
@@ -154,12 +155,12 @@ class BankAccount
         $this->routingNumber = $routingNumber;
     }
 
-    public function getCompany(): ?Company
+    public function getCompany(): Company
     {
         return $this->company;
     }
 
-    public function setCompany(?Company $company): static
+    public function setCompany(Company $company): static
     {
         $this->company = $company;
 

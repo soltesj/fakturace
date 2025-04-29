@@ -12,11 +12,12 @@
         Bank Account
     </h1>
     <div class="row mb-3">
-        <a href="{{ path('app_bank_account_new',{'company':company.id}) }}" class="text-decoration-none">
-            <svg width="16" height="16" class="bi me-1">
-                <use href="#plus-circle-fill"/>
-            </svg>
-            NOVÝ</a>
+        {% if is_granted('CREATE') %}<a href="{{ path('app_bank_account_new',{'company':company.id}) }}"
+                                        class="text-decoration-none">
+                <svg width="16" height="16" class="bi me-1">
+                    <use href="#plus-circle-fill"/>
+                </svg>
+                NOVÝ</a>{% endif %}
     </div>
     <table class="table mt-3">
         <thead>
@@ -34,8 +35,9 @@
         <tbody>
         {% for bank_account in bank_accounts %}
             <tr>
-                <td><a href="{{ path('app_bank_account_edit', {'company':company.id,'id': bank_account.id}) }}"
-                       class="text-decoration-none">{{ bank_account.name }}</a>
+                <td>{% if is_granted('EDIT', bank_account) %}<a
+                        href="{{ path('app_bank_account_edit', {'company':company.id,'bankAccount': bank_account.id}) }}"
+                        class="text-decoration-none">{{ bank_account.name }}</a>{% else %}{{ bank_account.name }}{% endif %}
                 </td>
                 <td>{{ bank_account.shortName }}</td>
                 <td>{{ bank_account.accountNumber }}</td>
@@ -43,14 +45,13 @@
                 <td>{{ bank_account.iban }}</td>
                 <td>{{ bank_account.bic }}</td>
                 <td>{{ bank_account.sequence }}</td>
-                <td>
-                    <a href="{{ path('app_bank_account_delete', {'company':company.id,'id': bank_account.id}) }}"
-                       class="text-secondary icon-link-hover">
-                        <svg class="bi d-block mx-auto" width="20" height="20">
-                            <use href="#dash-circle-fill"/>
-                        </svg>
-                    </a>
-                </td>
+                <td>{% if is_granted('EDIT', bank_account) %}<a
+                        href="{{ path('app_bank_account_delete', {'company':company.id,'bankAccount': bank_account.id}) }}"
+                        class="text-secondary icon-link-hover">
+                            <svg class="bi d-block mx-auto" width="20" height="20">
+                                <use href="#dash-circle-fill"/>
+                            </svg>
+                        </a>{% endif %}</td>
             </tr>
         {% else %}
             <tr>
