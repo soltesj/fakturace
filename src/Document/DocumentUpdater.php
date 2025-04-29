@@ -36,7 +36,7 @@ readonly class DocumentUpdater
                     $documentPrice->setAmount($data['amount']);
                     unset($vatPrices[$vatLevelId]);
                 } else {
-                    $document->removeDocumentPrice($documentPrice);
+                    $this->entityManager->remove($documentPrice);
                 }
             }
             if ($priceTypeId === PriceTypes::TOTAL_PRICE) {
