@@ -15,7 +15,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_USER')]
 class DocumentNumbersController extends AbstractController
 {
     #[Route('/{_locale}/{company}/document-numbers/', name: 'app_document_numbers_index', methods: ['GET'])]
@@ -62,6 +64,7 @@ class DocumentNumbersController extends AbstractController
         'GET',
         'POST',
     ])]
+    #[IsGranted('CREATE')]
     public function new(
         Request $request,
         Company $company,
@@ -86,10 +89,11 @@ class DocumentNumbersController extends AbstractController
         ]);
     }
 
-    #[Route('/{_locale}/{company}/document-numbers/{id}/edit', name: 'app_document_numbers_edit', methods: [
+    #[Route('/{_locale}/{company}/document-numbers/{documentNumber}/edit', name: 'app_document_numbers_edit', methods: [
         'GET',
         'POST',
     ])]
+    #[IsGranted('EDIT', subject: 'documentNumber')]
     public function edit(
         Request $request,
         Company $company,

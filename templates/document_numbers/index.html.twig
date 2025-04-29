@@ -8,7 +8,8 @@
             <svg class="bi me-3 mb-1" width="30" height="30">
                 <use href="#arrow-left-circle"/>
             </svg>
-        </a>DocumentNumbers index</h1>
+        </a>DocumentNumbers index
+    </h1>
 
     <table class="table">
         <thead>
@@ -26,9 +27,13 @@
                 <td>{{ documentNumber.numberFormat }}</td>
                 <td>{{ documentNumber.nextNumber }}</td>
                 <td>{% if documentNumber.id is null %}
-                        <a href="{{ path('app_document_numbers_new', {'documentType': documentTypeId, 'company':company.id}) }}">edit</a>
+                        {% if is_granted('CREATE') %}
+                            <a href="{{ path('app_document_numbers_new', {'documentType': documentTypeId, 'company':company.id}) }}">edit</a>
+                        {% endif %}
                     {% else %}
-                        <a href="{{ path('app_document_numbers_edit', {'id': documentNumber.id, 'company':company.id}) }}">edit</a>
+                        {% if is_granted('EDIT', documentNumber) %}
+                            <a href="{{ path('app_document_numbers_edit', {'documentNumber': documentNumber.id, 'company':company.id}) }}">edit</a>
+                        {% endif %}
                     {% endif %}
                 </td>
             </tr>

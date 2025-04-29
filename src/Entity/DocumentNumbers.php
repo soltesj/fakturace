@@ -7,7 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DocumentNumbersRepository::class)]
-class DocumentNumbers
+class DocumentNumbers implements CompanyOwnedInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -15,7 +15,7 @@ class DocumentNumbers
     protected ?int $id = null;
 
     #[ORM\ManyToOne]
-    private ?Company $company;
+    private Company $company;
 
     #[ORM\ManyToOne]
     private ?DocumentType $documentType;
@@ -74,12 +74,12 @@ class DocumentNumbers
     }
 
 
-    public function getCompany(): ?Company
+    public function getCompany(): Company
     {
         return $this->company;
     }
 
-    public function setCompany(?Company $company): static
+    public function setCompany(Company $company): static
     {
         $this->company = $company;
 
