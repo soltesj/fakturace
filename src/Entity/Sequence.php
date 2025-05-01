@@ -17,21 +17,21 @@ class Sequence
     #[ORM\Column]
     protected ?int $id = null;
 
-    #[ORM\Column(name: 'type', type: Types::INTEGER, nullable: false)]
-    private ?int $type = null;
+    #[ORM\Column(type: Types::INTEGER, nullable: false)]
+    private int $type = 0;
 
-    #[ORM\Column(name: 'name', type: Types::STRING, length: 64, nullable: false)]
-    private ?string $name = null;
+    #[ORM\Column(type: Types::STRING, length: 64, nullable: false)]
+    private string $name = '';
 
-    #[ORM\Column(name: 'abbreviation', type: Types::STRING, length: 32, nullable: false)]
-    private ?string $abbreviation = null;
+    #[ORM\Column(type: Types::STRING, length: 32, nullable: false)]
+    private string $abbreviation = '';
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getType(): ?int
+    public function getType(): int
     {
         return $this->type;
     }
@@ -41,7 +41,7 @@ class Sequence
         $this->type = $type;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -51,7 +51,7 @@ class Sequence
         $this->name = $name;
     }
 
-    public function getAbbreviation(): ?string
+    public function getAbbreviation(): string
     {
         return $this->abbreviation;
     }
@@ -60,7 +60,4 @@ class Sequence
     {
         $this->abbreviation = $abbreviation;
     }
-
-
-
 }

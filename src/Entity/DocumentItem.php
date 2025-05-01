@@ -18,16 +18,16 @@ class DocumentItem
     private ?Document $document = null;
 
     #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
-    private ?string $name = null;
+    private string $name = '';
 
     #[ORM\Column(name: 'quantity', type: Types::DECIMAL, precision: 10, scale: 2, nullable: false)]
-    private ?string $quantity = null;
+    private string $quantity = '1.00';
 
     #[ORM\Column(name: 'unit', type: Types::STRING, length: 10, nullable: true)]
     private ?string $unit = null;
 
     #[ORM\Column(name: 'price', type: Types::DECIMAL, precision: 10, scale: 2, nullable: false)]
-    private ?string $price = null;
+    private string $price;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $vatAmount = null;

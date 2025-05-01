@@ -25,6 +25,9 @@ readonly class DocumentUpdater
         $this->entityManager->flush();
     }
 
+    /**
+     * @param array<int,array{vat:VatLevel, amount:float, vatAmount:float|null}> $vatPrices
+     */
     private function updateExistingPrices(Document $document, array &$vatPrices, float $priceTotal): void
     {
         foreach ($document->getDocumentPrices() as $documentPrice) {
@@ -33,18 +36,21 @@ readonly class DocumentUpdater
                 $vatLevelId = $documentPrice->getVatLevel()?->getId();
                 if ($vatLevelId !== null && array_key_exists($vatLevelId, $vatPrices)) {
                     $data = $vatPrices[$vatLevelId];
-                    $documentPrice->setAmount($data['amount']);
+                    $documentPrice->setAmount((string)$data['amount']);
                     unset($vatPrices[$vatLevelId]);
                 } else {
                     $this->entityManager->remove($documentPrice);
                 }
             }
             if ($priceTypeId === PriceTypes::TOTAL_PRICE) {
-                $documentPrice->setAmount($priceTotal);
+                $documentPrice->setAmount((string)$priceTotal);
             }
         }
     }
 
+    /**
+     * @param array<int,array{vat:VatLevel, amount:float, vatAmount:float|null}> $vatPrices
+     */
     private function createMissingPrices(Document $document, array $vatPrices): void
     {
         foreach ($vatPrices as $data) {
@@ -54,7 +60,12 @@ readonly class DocumentUpdater
         }
     }
 
-    public function createPriceEntity(Document $document, VatLevel $vatLevel, $amount, $vatAmount): DocumentPrice
+    public function createPriceEntity(
+        Document $document,
+        VatLevel $vatLevel,
+        float $amount,
+        float $vatAmount
+    ): DocumentPrice
     {
         $priceEntity = new DocumentPrice();
         $priceEntity->setDocument($document);

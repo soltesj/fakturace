@@ -15,6 +15,7 @@ class DocumentNumbers implements CompanyOwnedInterface
     protected ?int $id = null;
 
     #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
     private Company $company;
 
     #[ORM\ManyToOne]
@@ -23,10 +24,10 @@ class DocumentNumbers implements CompanyOwnedInterface
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private ?int $year;
 
-    #[ORM\Column(type: Types::STRING, length: 15, nullable: true)]
-    private ?string $numberFormat = null;
+    #[ORM\Column(type: Types::STRING, length: 15, nullable: false)]
+    private string $numberFormat;
 
-    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    #[ORM\Column(type: Types::INTEGER, nullable: false)]
     private int $nextNumber = 0;
 
     public function __construct(Company $company, DocumentType $documentType, int $year,string $numberFormat)
@@ -36,7 +37,6 @@ class DocumentNumbers implements CompanyOwnedInterface
         $this->year = $year;
         $this->numberFormat = $numberFormat;
     }
-
 
     public function getId(): ?int
     {

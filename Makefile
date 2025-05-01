@@ -42,3 +42,11 @@ test: ## Runs phpunit tests
 #.PHONY .SILENT: install
 #fixtures: ## Load doctrine fixtures
 #	docker exec fakturace_app php bin/console doctrine:fixtures:load --env=test --no-interaction --purger=PURGER
+
+.PHONY .SILENT: check
+check: ## Runs static analysis and formatter checks
+	docker exec fakturace_app php bin/console doctrine:schema:validate
+	#docker exec fakturace_app ./vendor/bin/phpcs
+	docker exec fakturace_app php bin/console cache:clear --quiet
+	docker exec fakturace_app php bin/console cache:clear --env=test --quiet
+	docker exec fakturace_app php -d memory_limit=1G ./vendor/bin/phpstan analyze -vvv

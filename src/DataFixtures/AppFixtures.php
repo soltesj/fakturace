@@ -9,6 +9,7 @@ use App\Entity\DocumentNumbers;
 use App\Entity\DocumentType;
 use App\Entity\User;
 use App\Entity\VatLevel;
+use DateMalformedStringException;
 use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -22,8 +23,8 @@ class AppFixtures extends Fixture
     const COMPANY_1 = 1;
 
     const VAT_LEVELS_DATA = [
-        ['amount' => 21.00, 'name' => 'Základní sazba', 'validFrom' => '2013-01-01'],
-        ['amount' => 12.00, 'name' => 'Snížená sazba', 'validFrom' => '2024-01-01'],
+        ['amount' => '21.00', 'name' => 'Základní sazba', 'validFrom' => '2013-01-01'],
+        ['amount' => '12.00', 'name' => 'Snížená sazba', 'validFrom' => '2024-01-01'],
     ];
 
     const DOCUMENT_TYPES_DATA = [
@@ -88,6 +89,9 @@ class AppFixtures extends Fixture
         return $currency;
     }
 
+    /**
+     * @param array{amount: string, name: string, validFrom: string} $data
+     */
     public function createVatLevel(array $data, Country $country): VatLevel
     {
         $vatLevel = new VatLevel();
@@ -145,6 +149,9 @@ class AppFixtures extends Fixture
         return $company;
     }
 
+    /**
+     * @param array{name:string, defaultFormat:string} $documentTypeData
+     */
     public function createDocumentType(array $documentTypeData): DocumentType
     {
         $documentType = new DocumentType();
@@ -156,8 +163,12 @@ class AppFixtures extends Fixture
 
     public function createDocumentNumber(Company $company, DocumentType $documentType): DocumentNumbers
     {
-        $documentNumber = new DocumentNumbers($company, $documentType, new DateTimeImmutable()->format('Y'),
-            $documentType->getDefaultFormat());
+        $documentNumber = new DocumentNumbers(
+            $company,
+            $documentType,
+            (int)new DateTimeImmutable()->format('Y'),
+            $documentType->getDefaultFormat()
+        );
         $documentNumber->setNextNumber(1);
 
         return $documentNumber;

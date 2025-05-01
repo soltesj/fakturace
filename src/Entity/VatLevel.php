@@ -16,19 +16,24 @@ class VatLevel
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 4, scale: 2)]
-    private ?string $vatAmount = null;
+    private string $vatAmount = '0.00';
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private string $name = '';
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    private ?DateTimeImmutable $validFrom = null;
+    private DateTimeImmutable $validFrom;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
     private ?DateTimeImmutable $validTo = null;
 
     #[ORM\ManyToOne]
     private ?Country $country = null;
+
+    public function __construct()
+    {
+        $this->validFrom = new DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {

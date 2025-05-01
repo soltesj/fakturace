@@ -61,7 +61,7 @@ class DocumentController extends AbstractController
             /**
              * @var string|null $query
              * @var DateTime $dateFrom
-             * @var DateTime $dateTo
+             * @var DateTime|null $dateTo
              * @var Customer|null $customer
              * @var string|null $state
              * */

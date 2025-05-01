@@ -2,9 +2,9 @@
 
 namespace App\Company;
 
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 readonly class CompanyService
 {
@@ -13,12 +13,16 @@ readonly class CompanyService
         private UrlGeneratorInterface $urlGenerator,
     ) {}
 
-    public function getCorrectCompanyUrl(Request $request, UserInterface $user): string
+    public function getCorrectCompanyUrl(Request $request, User $user): string
     {
         $route = $request->get('_route');
         $routeParams = $request->get('_route_params');
-        $routeParams['company'] = $user->getCompanies()->first()->getId();
+        if ($user->getCompanies()->first()) {
+            $routeParams['company'] = $user->getCompanies()->first()->getId();
 
-        return $this->urlGenerator->generate($route, $routeParams);
+            return $this->urlGenerator->generate($route, $routeParams);
+        }
+
+        return $this->urlGenerator->generate('app_home', ['_locale' => $routeParams['_locale']]);
     }
 }

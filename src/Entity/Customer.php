@@ -16,26 +16,29 @@ class Customer implements CompanyOwnedInterface
     #[ORM\Column]
     protected ?int $id = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'customers')]
+    #[ORM\JoinColumn(
+        nullable: false,
+    )]
     private Company $company;
 
-    #[ORM\ManyToOne]
-    private Country $country;
+    #[ORM\ManyToOne(targetEntity: Country::class)]
+    private ?Country $country;
 
     /**
      * @var Collection<int,Document>
      */
-    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'customer', fetch: 'EXTRA_LAZY')]
+    #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'customer')]
     private Collection $documents;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: false)]
-    private ?string $name = null;
+    private string $name;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $contact = null;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: false)]
-    private ?string $street = null;
+    private string $street;
 
     #[ORM\Column(type: Types::STRING, length: 25, nullable: true)]
     private ?string $houseNumber = null;
@@ -220,7 +223,7 @@ class Customer implements CompanyOwnedInterface
         return $this->country;
     }
 
-    public function setCountry(?Country $country): static
+    public function setCountry(Country $country): static
     {
         $this->country = $country;
 

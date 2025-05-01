@@ -16,7 +16,8 @@ class Company
     #[ORM\Column]
     protected ?int $id = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'companies')]
+    #[ORM\JoinColumn(nullable: false)]
     private Country $country;
 
     #[ORM\Column(name: 'vat_payer', type: Types::BOOLEAN, nullable: false)]
@@ -76,7 +77,7 @@ class Company
     #[ORM\ManyToMany(targetEntity: Currency::class)]
     private Collection $currency;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private ?int $maturityDays = null;
 
     public function __construct()

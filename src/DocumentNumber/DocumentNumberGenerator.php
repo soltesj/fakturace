@@ -5,6 +5,7 @@ namespace App\DocumentNumber;
 use App\Entity\Company;
 use App\Entity\DocumentType;
 use App\Repository\DocumentNumbersRepository;
+use Exception;
 
 class DocumentNumberGenerator
 {
@@ -22,16 +23,18 @@ class DocumentNumberGenerator
         $numberFormat = $documentNumber->getNumberFormat();
         $nextNumber = $documentNumber->getNextNumber();
         $nextNumber++;
-        $numberFormat = str_replace("YYYY", date("Y", strtotime($year)),
-            $numberFormat); //echo $numberFormat."<br>";
-        $numberFormat = str_replace("YY", date("y", strtotime($year)),
-            $numberFormat); //echo $numberFormat."<br>";
-        $numberFormat = str_replace("MM", date("m", strtotime($year)),
-            $numberFormat); //echo $numberFormat."<br>";
-        $numberFormat = str_replace("DD", date("d", strtotime($year)),
-            $numberFormat); //echo $numberFormat."<br>";
+        if (!$timestamp = strtotime($year)) {
+            $timestamp = null;
+        }
+        $numberFormat = str_replace("YYYY", date("Y", $timestamp), $numberFormat);
+        $numberFormat = str_replace("YY", date("y", $timestamp), $numberFormat);
+        $numberFormat = str_replace("MM", date("m", $timestamp), $numberFormat);
+        $numberFormat = str_replace("DD", date("d", $timestamp), $numberFormat);
         preg_match("([0]+n$)", $numberFormat, $matches);
-        $numberChar = strlen($matches[0]); //echo $numberChar."<br>";
+        if (empty($matches[0])) {
+            throw new InvalidNumberFormatException("INVALID_DOCUMENT_NUMBER_FORMAT");
+        }
+        $numberChar = strlen($matches[0]);
 
         return preg_replace("([0]+n$)", sprintf("%0".$numberChar."d", $nextNumber), $numberFormat);
     }

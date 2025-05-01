@@ -16,7 +16,7 @@ class BankAccount implements CompanyOwnedInterface
     protected ?int $id = null;
 
     #[ORM\ManyToOne]
-    private Company $company;
+    private ?Company $company;
 
     #[ORM\ManyToOne]
     private ?Status $status = null;
@@ -28,16 +28,16 @@ class BankAccount implements CompanyOwnedInterface
     private Collection $documents;
 
     #[ORM\Column(name: 'sequence', type: Types::SMALLINT, nullable: false)]
-    private ?int $sequence;
+    private int $sequence = 0;
 
     #[ORM\Column(length: 255, nullable: false)]
-    private ?string $shortName;
+    private string $shortName;
 
     #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
-    private ?string $name;
+    private string $name;
 
     #[ORM\Column(length: 255)]
-    private ?string $accountNumber;
+    private string $accountNumber;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $bankCode;
@@ -65,12 +65,12 @@ class BankAccount implements CompanyOwnedInterface
         return $this->id;
     }
 
-    public function getSequence(): ?int
+    public function getSequence(): int
     {
         return $this->sequence;
     }
 
-    public function setSequence(?int $sequence): void
+    public function setSequence(int $sequence): void
     {
         $this->sequence = $sequence;
     }
@@ -80,7 +80,7 @@ class BankAccount implements CompanyOwnedInterface
         return $this->shortName;
     }
 
-    public function setShortName(?string $shortName): void
+    public function setShortName(string $shortName): void
     {
         $this->shortName = $shortName;
     }
@@ -90,7 +90,7 @@ class BankAccount implements CompanyOwnedInterface
         return $this->name;
     }
 
-    public function setName(?string $name): void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -100,7 +100,7 @@ class BankAccount implements CompanyOwnedInterface
         return $this->accountNumber;
     }
 
-    public function setAccountNumber(?string $accountNumber): void
+    public function setAccountNumber(string $accountNumber): void
     {
         $this->accountNumber = $accountNumber;
     }

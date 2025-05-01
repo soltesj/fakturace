@@ -22,12 +22,13 @@ class Document implements CompanyOwnedInterface
     private ?self $document = null;
 
     /**
-     * @var Collection<int,Document>|null
+     * @var Collection<int,Document>
      */
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'document')]
-    private ?Collection $documents = null;
+    private Collection $documents;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'documents')]
+    #[ORM\JoinColumn(nullable: false)]
     private Company $company;
 
     #[ORM\ManyToOne]
@@ -36,7 +37,7 @@ class Document implements CompanyOwnedInterface
     #[ORM\ManyToOne]
     private ?User $user = null;
 
-    #[ORM\ManyToOne(fetch: 'EXTRA_LAZY', inversedBy: 'documents')]
+    #[ORM\ManyToOne(targetEntity: Customer::class, inversedBy: 'documents')]
     private ?Customer $customer = null;
 
     #[ORM\ManyToOne]
@@ -52,7 +53,7 @@ class Document implements CompanyOwnedInterface
     private ?int $stateId = null;
 
     #[ORM\Column(name: 'transfer_tax', type: Types::BOOLEAN, nullable: false)]
-    private ?bool $transferTax = null;
+    private bool $transferTax;
 
     #[ORM\Column(name: 'send', type: Types::BOOLEAN, nullable: true)]
     private ?bool $send = null;
@@ -64,7 +65,7 @@ class Document implements CompanyOwnedInterface
     private ?string $rate = null;
 
     #[ORM\Column(name: 'document_number', type: Types::STRING, length: 20, nullable: false)]
-    private ?string $documentNumber = null;
+    private string $documentNumber;
 
     #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
     private ?string $variableSymbol = null;
@@ -79,10 +80,10 @@ class Document implements CompanyOwnedInterface
     private ?BankAccount $bankAccount = null;
 
     /**
-     * @var Collection<int,DocumentItem>|null
+     * @var Collection<int,DocumentItem>
      */
     #[ORM\OneToMany(targetEntity: DocumentItem::class, mappedBy: 'document', cascade: ['persist', 'remove'])]
-    private ?Collection $documentItems;
+    private Collection $documentItems;
 
     /**
      * @var Collection<int,DocumentPrice>
@@ -103,7 +104,7 @@ class Document implements CompanyOwnedInterface
     private ?string $bic = null;
 
     #[ORM\Column(name: 'date_issue', type: Types::DATE_MUTABLE, nullable: false)]
-    private ?DateTimeInterface $dateIssue = null;
+    private DateTimeInterface $dateIssue;
 
     #[ORM\Column(name: 'date_taxable', type: Types::DATE_MUTABLE, nullable: true)]
     private ?DateTimeInterface $dateTaxable = null;
@@ -135,8 +136,8 @@ class Document implements CompanyOwnedInterface
     #[ORM\Column(name: 'customer_dic', type: Types::STRING, length: 20, nullable: true)]
     private ?string $customerDic = null;
 
-    #[ORM\Column(name: 'description', type: Types::TEXT, length: 65535, nullable: false)]
-    private ?string $description = null;
+    #[ORM\Column(type: Types::TEXT, length: 65535, nullable: true)]
+    private ?string $description;
 
     #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
     private ?bool $vatHigh = null;
@@ -442,12 +443,12 @@ class Document implements CompanyOwnedInterface
         $this->customerDic = $customerDic;
     }
 
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function setDescription(string $description): void
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
     }

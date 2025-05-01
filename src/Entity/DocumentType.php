@@ -15,10 +15,10 @@ class DocumentType
     protected ?int $id = null;
 
     #[ORM\Column(type: Types::STRING, length: 128, nullable: false)]
-    private ?string $name = null;
+    private string $name = '';
 
     #[ORM\Column(type: Types::STRING, length: 16, nullable: false)]
-    private ?string $defaultFormat = null;
+    private string $defaultFormat = '';
 
     public function getId(): ?int
     {
@@ -35,7 +35,7 @@ class DocumentType
         $this->name = $name;
     }
 
-    public function getDefaultFormat(): ?string
+    public function getDefaultFormat(): string
     {
         return $this->defaultFormat;
     }

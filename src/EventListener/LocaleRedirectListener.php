@@ -8,10 +8,17 @@ use Symfony\Component\Routing\RouterInterface;
 
 class LocaleRedirectListener
 {
+
+    /**
+     * @var string[]
+     */
     private array $locales;
     private string $defaultLocale;
     private RouterInterface $router;
 
+    /**
+     * @param string[] $locales
+     */
     public function __construct(RouterInterface $router, array $locales = ['en', 'cs'], string $defaultLocale = 'en')
     {
         $this->router = $router;

@@ -3,6 +3,7 @@
 namespace App\EventSubscriber;
 
 use App\Company\CompanyService;
+use App\Entity\User;
 use App\Logging\UnauthorizedAccessLogger;
 use App\Service\AuthorizationService;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -32,6 +33,7 @@ readonly class CompanyAuthorizationSubscriber implements EventSubscriberInterfac
     {
         $request = $event->getRequest();
         $companyId = $request->attributes->get('company');
+        /** @var User $user */
         $user = $this->security->getUser();
         if (!$companyId || !$user) {
             return;

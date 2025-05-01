@@ -11,16 +11,16 @@ class Currency
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    protected ?int $id = null;
 
     #[ORM\Column(length: 3)]
-    private ?string $currencyCode = null;
+    private string $currencyCode;
 
     #[ORM\Column(length: 255)]
-    private ?string $currencyName = null;
+    private string $currencyName;
 
     #[ORM\Column(length: 50)]
-    private ?string $currencySymbol = null;
+    private string $currencySymbol;
 
     public function getId(): ?int
     {
