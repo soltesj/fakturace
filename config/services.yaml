@@ -26,3 +26,9 @@ services:
     App\Security\RoleRegistry:
         arguments:
             $rolesFilePath: '%kernel.project_dir%/config/security/roles.yaml'
+    App\EventListener\LocaleRedirectListener:
+        arguments:
+            $locales: [ 'en', 'cs' ]
+            $defaultLocale: 'en'
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, priority: 100 }
