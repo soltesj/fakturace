@@ -55,6 +55,9 @@ class Customer implements CompanyOwnedInterface
     #[ORM\Column( type: Types::STRING, length: 20, nullable: true)]
     private ?string $vatNumber = null;
 
+    #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
+    private bool $isVatPayer = false;
+
     #[ORM\Column(type: Types::STRING, length: 25, nullable: true)]
     private ?string $phone = null;
 
@@ -164,6 +167,16 @@ class Customer implements CompanyOwnedInterface
     public function setVatNumber(?string $vatNumber): void
     {
         $this->vatNumber = $vatNumber;
+    }
+
+    public function isVatPayer(): bool
+    {
+        return $this->isVatPayer;
+    }
+
+    public function setIsVatPayer(bool $isVatPayer): void
+    {
+        $this->isVatPayer = $isVatPayer;
     }
 
     public function getPhone(): ?string

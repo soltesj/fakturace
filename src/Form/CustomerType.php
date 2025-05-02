@@ -23,6 +23,7 @@ class CustomerType extends AbstractType
             ->add('zipcode')
             ->add('companyNumber')
             ->add('vatNumber')
+            ->add('isVatPayer')
             ->add('phone')
             ->add('email')
             ->add('web')

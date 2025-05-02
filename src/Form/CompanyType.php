@@ -15,7 +15,7 @@ class CompanyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('vatPayer')
+            ->add('isVatPayer')
             ->add('name')
 //            ->add('alias')
             ->add('contact')
@@ -32,9 +32,8 @@ class CompanyType extends AbstractType
             ->add('emailInvoiceMessage')
             ->add('country', EntityType::class, [
                 'class' => Country::class,
-'choice_label' => 'name',
-            ])
-        ;
+                'choice_label' => 'name',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

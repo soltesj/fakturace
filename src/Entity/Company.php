@@ -20,28 +20,28 @@ class Company
     #[ORM\JoinColumn(nullable: false)]
     private Country $country;
 
-    #[ORM\Column(name: 'vat_payer', type: Types::BOOLEAN, nullable: false)]
-    private bool $vatPayer = false;
+    #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
+    private bool $isVatPayer = false;
 
-    #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: false)]
     private string $name;
 
-    #[ORM\Column(name: 'alias', type: Types::STRING, length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $alias = null;
 
-    #[ORM\Column(name: 'contact', type: Types::STRING, length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $contact = null;
 
-    #[ORM\Column(name: 'street', type: Types::STRING, length: 128, nullable: false)]
+    #[ORM\Column(type: Types::STRING, length: 128, nullable: false)]
     private string $street;
 
-    #[ORM\Column(name: 'building_number', type: Types::STRING, length: 16, nullable: false)]
+    #[ORM\Column(type: Types::STRING, length: 16, nullable: false)]
     private string $buildingNumber;
 
-    #[ORM\Column(name: 'city', type: Types::STRING, length: 128, nullable: false)]
+    #[ORM\Column(type: Types::STRING, length: 128, nullable: false)]
     private string $city;
 
-    #[ORM\Column(name: 'zipcode', type: Types::STRING, length: 6, nullable: false)]
+    #[ORM\Column(type: Types::STRING, length: 6, nullable: false)]
     private string $zipcode;
 
     #[ORM\Column(type: Types::STRING, length: 16, nullable: false)]
@@ -50,16 +50,16 @@ class Company
     #[ORM\Column(type: Types::STRING, length: 16, nullable: true)]
     private string $vatNumber;
 
-    #[ORM\Column(name: 'info', type: Types::TEXT, length: 65535, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, length: 65535, nullable: true)]
     private ?string $info = null;
 
-    #[ORM\Column(name: 'phone', type: Types::STRING, length: 25, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 25, nullable: true)]
     private ?string $phone = null;
 
-    #[ORM\Column(name: 'email', type: Types::STRING, length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $email = null;
 
-    #[ORM\Column(name: 'website', type: Types::STRING, length: 255, nullable: true)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $website = null;
 
     #[ORM\Column(name: 'email_invoice_message', type: Types::TEXT, length: 65535, nullable: true)]
@@ -132,12 +132,12 @@ class Company
 
     public function isVatPayer(): bool
     {
-        return $this->vatPayer;
+        return $this->isVatPayer;
     }
 
-    public function setVatPayer(bool $vatPayer): void
+    public function setIsVatPayer(bool $isVatPayer): void
     {
-        $this->vatPayer = $vatPayer;
+        $this->isVatPayer = $isVatPayer;
     }
 
     public function getName(): string
