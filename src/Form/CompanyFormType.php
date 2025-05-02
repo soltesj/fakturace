@@ -27,6 +27,7 @@ class CompanyFormType extends AbstractType
             ->add('businessId')
             ->add('vatNumber')
             ->add('isVatPayer')
+            ->add('isOss')
             ->add('country', EntityType::class, [
                 'class' => Country::class,
                 'choice_label' => 'name',

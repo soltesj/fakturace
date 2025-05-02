@@ -23,6 +23,10 @@ class Company
     #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     private bool $isVatPayer = false;
 
+    //OSS => One Stop Shop
+    #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
+    private bool $isOss = false;
+
     #[ORM\Column(type: Types::STRING, length: 255, nullable: false)]
     private string $name;
 
@@ -138,6 +142,16 @@ class Company
     public function setIsVatPayer(bool $isVatPayer): void
     {
         $this->isVatPayer = $isVatPayer;
+    }
+
+    public function isOss(): bool
+    {
+        return $this->isOss;
+    }
+
+    public function setIsOss(bool $isOss): void
+    {
+        $this->isOss = $isOss;
     }
 
     public function getName(): string

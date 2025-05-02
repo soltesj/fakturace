@@ -16,15 +16,15 @@ class CompanyType extends AbstractType
     {
         $builder
             ->add('isVatPayer')
+            ->add('isOss')
             ->add('name')
-//            ->add('alias')
             ->add('contact')
             ->add('street')
             ->add('buildingNumber')
             ->add('city')
             ->add('zipcode')
-            ->add('ic')
-            ->add('dic')
+            ->add('businessId')
+            ->add('vatNumber')
             ->add('info')
             ->add('phone')
             ->add('email')
