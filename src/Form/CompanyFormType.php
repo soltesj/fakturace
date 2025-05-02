@@ -24,8 +24,8 @@ class CompanyFormType extends AbstractType
             ->add('buildingNumber')
             ->add('city')
             ->add('zipcode')
-            ->add('ic')
-            ->add('dic')
+            ->add('businessId')
+            ->add('vatNumber')
             ->add('country', EntityType::class, [
                 'class' => Country::class,
                 'choice_label' => 'name',

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\VatMode;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -159,6 +160,9 @@ class Document implements CompanyOwnedInterface
 
     #[ORM\Column( type: Types::TEXT, length: 65535, nullable: true)]
     private ?string $tag = null;
+
+    #[ORM\Column(type: 'string', nullable: true, enumType: VatMode::class)]
+    private ?VatMode $vatMode = null;
 
     public function __construct(Company $company)
     {
@@ -682,5 +686,15 @@ class Document implements CompanyOwnedInterface
         }
 
         return $this;
+    }
+
+    public function getVatMode(): ?VatMode
+    {
+        return $this->vatMode;
+    }
+
+    public function setVatMode(?VatMode $vatMode): void
+    {
+        $this->vatMode = $vatMode;
     }
 }

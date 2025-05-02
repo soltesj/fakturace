@@ -139,8 +139,8 @@ class AppFixtures extends Fixture
         $company->setStreet('Ulice 1');
         $company->setBuildingNumber('123');
         $company->setZipcode('12345');
-        $company->setDic('CZ1234567890');
-        $company->setIc('1234567890');
+        $company->setVatNumber('CZ1234567890');
+        $company->setBusinessId('1234567890');
         $company->setMaturityDays(14);
         $company->setCountry($country);
         $company->addCurrency($currency);

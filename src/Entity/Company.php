@@ -44,11 +44,11 @@ class Company
     #[ORM\Column(name: 'zipcode', type: Types::STRING, length: 6, nullable: false)]
     private string $zipcode;
 
-    #[ORM\Column(name: 'ic', type: Types::STRING, length: 16, nullable: false)]
-    private string $ic;
+    #[ORM\Column(type: Types::STRING, length: 16, nullable: false)]
+    private string $businessId;
 
-    #[ORM\Column(name: 'dic', type: Types::STRING, length: 16, nullable: false)]
-    private string $dic;
+    #[ORM\Column(type: Types::STRING, length: 16, nullable: true)]
+    private string $vatNumber;
 
     #[ORM\Column(name: 'info', type: Types::TEXT, length: 65535, nullable: true)]
     private ?string $info = null;
@@ -210,24 +210,24 @@ class Company
         $this->zipcode = $zipcode;
     }
 
-    public function getIc(): string
+    public function getBusinessId(): string
     {
-        return $this->ic;
+        return $this->businessId;
     }
 
-    public function setIc(string $ic): void
+    public function setBusinessId(string $businessId): void
     {
-        $this->ic = $ic;
+        $this->businessId = $businessId;
     }
 
-    public function getDic(): string
+    public function getVatNumber(): string
     {
-        return $this->dic;
+        return $this->vatNumber;
     }
 
-    public function setDic(string $dic): void
+    public function setVatNumber(string $vatNumber): void
     {
-        $this->dic = $dic;
+        $this->vatNumber = $vatNumber;
     }
 
     public function getInfo(): ?string
