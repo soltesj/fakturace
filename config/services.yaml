@@ -32,3 +32,11 @@ services:
             $defaultLocale: 'en'
         tags:
             - { name: kernel.event_listener, event: kernel.request, priority: 100 }
+
+    App\CompanyRegistry\Registry\:
+        resource: '../src/CompanyRegistry/Registry/*'
+        tags: [ 'app.company_registry' ]
+
+    App\CompanyRegistry\CompanyRegistryResolver:
+        arguments:
+            $strategies: !tagged_iterator app.company_registry
