@@ -2,27 +2,32 @@
 
 namespace App\Document;
 
+use App\Document\Price\PriceCalculatorService;
 use App\DocumentPrice\Types as PriceTypes;
 use App\Entity\Document;
 use App\Entity\DocumentPrice;
 use App\Entity\VatLevel;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\DocumentPriceTypeRepository;
+use App\Service\VatModeService;
+use Doctrine\ORM\EntityManagerInterface;
 
 readonly class DocumentNewSaver
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private DocumentNumberManager $documentManager,
-        private PriceCalculator $priceCalculator,
+        private DocumentNumberManager $documentNumberManager,
+        private PriceCalculatorService $priceCalculatorService,
         private DocumentPriceTypeRepository $documentPriceTypeRepository,
+        private VatModeService $vatModeService,
     ) {
     }
 
     public function save(Document $document): void
     {
-        $this->documentManager->generate($document);
-        [$vatPrices, $priceTotal] = $this->priceCalculator->calculateVatPrices($document);
+        $this->documentNumberManager->generate($document);
+        $vatMode = $this->vatModeService->getVatMode($document->getCompany(), $document->getCustomer());
+        $document->setVatMode($vatMode);
+        [$vatPrices, $priceTotal] = $this->priceCalculatorService->calculate($document);
         $this->createDocumentPrices($document, $vatPrices, $priceTotal);
         $this->entityManager->persist($document);
         $this->entityManager->flush();

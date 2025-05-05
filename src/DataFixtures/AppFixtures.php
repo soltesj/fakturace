@@ -75,6 +75,7 @@ class AppFixtures extends Fixture
         $country = new Country();
         $country->setName('Czech Republic');
         $country->setSname('CZ');
+        $country->setIsEU(true);
 
         return $country;
     }

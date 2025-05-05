@@ -40,3 +40,11 @@ services:
     App\CompanyRegistry\CompanyRegistryResolver:
         arguments:
             $strategies: !tagged_iterator app.company_registry
+
+    App\Document\PriceCalculator\:
+        resource: '../src/Document/PriceCalculator/*'
+        tags: [ 'app.price_calculator' ]
+
+    App\Document\Price\PriceCalculatorResolver:
+        arguments:
+            $strategies: !tagged_iterator app.price_calculator

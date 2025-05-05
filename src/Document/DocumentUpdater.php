@@ -2,24 +2,36 @@
 
 namespace App\Document;
 
+use App\Document\Price\PriceCalculatorService;
+use App\Document\PriceCalculator\PriceCalculatorInterface;
 use App\DocumentPrice\Types as PriceTypes;
 use App\Entity\Document;
 use App\Entity\DocumentPrice;
 use App\Entity\DocumentPriceType;
 use App\Entity\VatLevel;
+use App\Service\VatModeService;
 use Doctrine\ORM\EntityManagerInterface;
 
-readonly class DocumentUpdater
+class DocumentUpdater
 {
+
+    /**
+     * @var array<string,PriceCalculatorInterface>
+     */
+    private array $priceCalculators;
+
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private PriceCalculator $priceCalculator,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly PriceCalculatorService $priceCalculatorService,
+        private readonly VatModeService $vatModeService,
     ) {
     }
 
     public function update(Document $document): void
     {
-        [$vatPrices, $priceTotal] = $this->priceCalculator->calculateVatPrices($document);
+        $vatMode = $this->vatModeService->getVatMode($document->getCompany(), $document->getCustomer());
+        $document->setVatMode($vatMode);
+        [$vatPrices, $priceTotal] = $this->priceCalculatorService->calculate($document);
         $this->updateExistingPrices($document, $vatPrices, $priceTotal);
         $this->createMissingPrices($document, $vatPrices);
         $this->entityManager->flush();

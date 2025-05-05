@@ -16,7 +16,6 @@ class CompanyRegistryService
     public function lookup(Country $country, string $businessNumber): CompanyDTO
     {
         $resolver = $this->companyRegistryResolver->resolve($businessNumber, $country->getSname());
-        dump($resolver);
         if (!$resolver instanceof CompanyRegistryInterface) {
             throw new InvalidArgumentException("Pro tuto zemi zatim nemame data: {$country->getName()}");
         }

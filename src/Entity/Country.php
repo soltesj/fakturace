@@ -10,27 +10,25 @@ use Doctrine\ORM\Mapping as ORM;
 class Country
 {
 
-    #[ORM\Column( type: Types::INTEGER, nullable: false)]
+    #[ORM\Column(type: Types::INTEGER, nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected ?int $id;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'sname', type: Types::STRING, length: 10, nullable: false)]
     private string $sname;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]
     private string $name;
+
+    #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
+    private bool $isEU;
 
     public function getId(): int
     {
         return $this->id;
     }
+
     public function getSname(): string
     {
         return $this->sname;
@@ -49,5 +47,15 @@ class Country
     public function setName(string $name): void
     {
         $this->name = $name;
+    }
+
+    public function isEU(): bool
+    {
+        return $this->isEU;
+    }
+
+    public function setIsEU(bool $isEU): void
+    {
+        $this->isEU = $isEU;
     }
 }

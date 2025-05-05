@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Document;
+namespace App\Document\PriceCalculator;
 
 use App\Entity\Document;
 use App\Entity\VatLevel;
+use App\Enum\VatMode;
 
-class PriceCalculator
+class PriceCalculatorDomestic implements PriceCalculatorInterface
 {
-
+    const VatMode VAT_MODE = VatMode::DOMESTIC;
     /**
      * @return  array{array<int,array{vat:VatLevel, amount:float, vatAmount:float|null}>, float} $vatPrices
      */
-    public function calculateVatPrices(Document $document): array
+    public function calculate(Document $document): array
     {
         $vatPrices = [];
         $priceTotal = 0;
@@ -24,7 +25,7 @@ class PriceCalculator
                     'vatAmount' => 0,
                 ];
             }
-//            kde nejlepe pretypovavta decimel type z doctriny kdyz ho vraci jako string a ja potrebuji dale pracivat s cislem
+
             $amount = $documentItem->getPrice() * $documentItem->getQuantity();
             $vatAmount = $amount * ($documentItem->getVat()->getVatAmount() / 100);
             $vatPrices[$vatId]['amount'] += $amount;
@@ -33,5 +34,10 @@ class PriceCalculator
         }
 
         return [$vatPrices, $priceTotal];
+    }
+
+    public function support(VatMode $vatMode): bool
+    {
+        return self::VAT_MODE === $vatMode;
     }
 }

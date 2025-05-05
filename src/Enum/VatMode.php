@@ -8,6 +8,7 @@ enum VatMode: string
     case OSS = 'oss';
     case REVERSE_CHARGE = 'reverse_charge';
     case NONE = 'none';
+    case EXPORT = 'export';
 
     public function label(): string
     {
@@ -16,6 +17,7 @@ enum VatMode: string
             self::OSS => 'OSS (One Stop Shop)',
             self::REVERSE_CHARGE => 'Reverse charge',
             self::NONE => 'Bez DPH',
+            self::EXPORT => 'Export',
         };
     }
 }
