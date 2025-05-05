@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Customer\CustomerService;
 use App\Entity\Company;
 use App\Entity\Customer;
 use App\Form\CustomerType;
@@ -22,6 +23,8 @@ class CustomerController extends AbstractController
     public function __construct(
         private readonly CustomerRepository $customerRepository,
         private readonly StatusRepository $statusRepository,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly CustomerService $customerService,
     ) {
     }
 
@@ -41,14 +44,13 @@ class CustomerController extends AbstractController
     public function new(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
         $customer = new Customer($company);
-        $customer->setCompany($company);
         $customer->setCountry($company->getCountry());
         $customer->setStatus($this->statusRepository->find(StatusValues::STATUS_ACTIVE));
         $form = $this->createForm(CustomerType::class, $customer);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($customer);
-            $entityManager->flush();
+            $this->entityManager->persist($customer);
+            $this->entityManager->flush();
             $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
             return $this->redirectToRoute('app_customer_index', ['company' => $company->getId()],
@@ -68,27 +70,17 @@ class CustomerController extends AbstractController
         Request $request,
         Company $company,
         Customer $customer,
-        EntityManagerInterface $entityManager
     ): Response {
-        if (count($customer->getDocuments())) {
-            $customerNew = clone $customer;
-            $customerNew->setStatus($this->statusRepository->find(StatusValues::STATUS_ACTIVE));
-            $customer->setStatus($this->statusRepository->find(StatusValues::STATUS_ARCHIVED));
-        } else {
-            $customerNew = $customer;
-        }
+        $customerNew = $this->customerService->assignCustomerStatus($customer);
         $form = $this->createForm(CustomerType::class, $customerNew);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($customerNew);
-            $entityManager->flush();
+            $this->entityManager->persist($customerNew);
+            $this->entityManager->flush();
             $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
             return $this->redirectToRoute('app_customer_index', ['company' => $company->getId()],
                 Response::HTTP_SEE_OTHER);
-        }
-        foreach ($customer->getDocuments() as $document) {
-            dump($document);
         }
 
         return $this->render('customer/edit.html.twig', [

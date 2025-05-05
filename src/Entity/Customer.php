@@ -224,13 +224,6 @@ class Customer implements CompanyOwnedInterface
         return $this->company;
     }
 
-    public function setCompany(Company $company): static
-    {
-        $this->company = $company;
-
-        return $this;
-    }
-
     public function getCountry(): ?Country
     {
         return $this->country;

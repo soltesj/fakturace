@@ -35,7 +35,10 @@ class CzCompanyRegistry implements CompanyRegistryInterface
         $houseNumber = $this->mekeHouseNumber($sidlo);
         $town = $this->makeTownName($sidlo);
         $isVatPayer = $this->isVatPayer($data);
-        $companyDTO = new CompanyDTO($data['obchodniJmeno'], $data['dic'], $sidlo['nazevUlice'], $houseNumber, $town,
+        $name = $data['obchodniJmeno'] ?? '';
+        $vatNumber = $data['dic'] ?? '';
+        $street = $sidlo['nazevUlice'] ?? '';
+        $companyDTO = new CompanyDTO($name, $vatNumber, $street, $houseNumber, $town,
             $sidlo['psc'], $isVatPayer);
 
         return $companyDTO;
