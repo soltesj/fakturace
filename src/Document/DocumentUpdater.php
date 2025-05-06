@@ -3,32 +3,28 @@
 namespace App\Document;
 
 use App\Document\Price\PriceCalculatorService;
-use App\Document\PriceCalculator\PriceCalculatorInterface;
 use App\DocumentPrice\Types as PriceTypes;
 use App\Entity\Document;
+use App\Entity\DocumentItem;
 use App\Entity\DocumentPrice;
 use App\Entity\DocumentPriceType;
 use App\Entity\VatLevel;
 use App\Service\VatModeService;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
-class DocumentUpdater
+readonly class DocumentUpdater
 {
-
-    /**
-     * @var array<string,PriceCalculatorInterface>
-     */
-    private array $priceCalculators;
-
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly PriceCalculatorService $priceCalculatorService,
-        private readonly VatModeService $vatModeService,
+        private EntityManagerInterface $entityManager,
+        private PriceCalculatorService $priceCalculatorService,
+        private VatModeService $vatModeService,
     ) {
     }
 
-    public function update(Document $document): void
+    public function update(Document $document, ArrayCollection $originalItems): void
     {
+        $this->removeUnassociatedItems($originalItems, $document);
         $vatMode = $this->vatModeService->getVatMode($document->getCompany(), $document->getCustomer());
         $document->setVatMode($vatMode);
         [$vatPrices, $priceTotal] = $this->priceCalculatorService->calculate($document);
@@ -88,5 +84,15 @@ class DocumentUpdater
         $priceEntity->setVatAmount(number_format($vatAmount, 2, '.', ''));
 
         return $priceEntity;
+    }
+
+    public function removeUnassociatedItems(ArrayCollection $originalItems, Document $document): void
+    {
+        /** @var DocumentItem $documentItem */
+        foreach ($originalItems as $documentItem) {
+            if (false === $document->getDocumentItems()->contains($documentItem)) {
+                $this->entityManager->remove($documentItem);
+            }
+        }
     }
 }

@@ -1,7 +1,7 @@
 import {Controller} from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static targets = ['collectionContainer', 'vatAmount', 'isPriceWithVat','price']
+    static targets = ['collectionContainer', 'vatAmount', 'isPriceWithVat', 'price']
 
     static values = {
         index: Number,
@@ -11,10 +11,10 @@ export default class extends Controller {
     }
 
     connect() {
-        // console.log(this.priceTargets);
         this.toggleVat();
-        if(this.indexValue ===0){
+        if (this.indexValue === 0) {
             this.addCollectionElement();
+            this.removeCollectionElement();
         }
     }
 
@@ -43,5 +43,9 @@ export default class extends Controller {
         this.collectionContainerTarget.appendChild(item);
         this.indexValue++;
         this.toggleVat();
+    }
+
+    removeCollectionElement(e) {
+        e.currentTarget.parentNode.parentNode.parentNode.remove()
     }
 }

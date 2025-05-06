@@ -18,6 +18,7 @@ use App\Service\Date;
 use App\Service\DocumentService;
 use App\Service\VatService;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception as DBALException;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -148,12 +149,16 @@ class DocumentController extends AbstractController
         Company $company,
         Document $document,
     ): Response {
+        $originalItems = new ArrayCollection();
+        foreach ($document->getDocumentItems() as $documentItem) {
+            $originalItems->add($documentItem);
+        }
         $vats = $this->vatService->getValidVatsByCompany($company);
         $form = $this->createForm(DocumentFormType::class, $document);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->documentUpdater->update($document);
+                $this->documentUpdater->update($document, $originalItems);
                 $this->addFlash('success', 'INVOICE_STORED');
 
                 return $this->redirectToRoute(
