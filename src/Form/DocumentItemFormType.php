@@ -25,10 +25,10 @@ class DocumentItemFormType extends AbstractType
             ->add('vat', EntityType::class, [
                 'class' => VatLevel::class,
                 'query_builder' => function (EntityRepository $er): QueryBuilder {
-                    return $er->createQueryBuilder('vat_level')->andWhere('vat_level.validTo is null or vat_level.validTo >= :now')->setParameter(
-                        'now',
-                        new DateTime()
-                    )->orderBy('vat_level.vatAmount', 'DESC');
+                    return $er->createQueryBuilder('vat_level')
+                        ->andWhere('vat_level.validTo is null or vat_level.validTo >= :now')
+                        ->setParameter('now', new DateTime())
+                        ->orderBy('vat_level.vatAmount', 'DESC');
                 },
                 'choice_label' => 'vatAmount',
             ])

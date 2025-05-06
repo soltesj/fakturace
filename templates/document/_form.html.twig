@@ -81,9 +81,7 @@
         </div>
     </div>
 </div>
-<div {{ stimulus_controller('price-calc', {
-    vats: vats
-}) }}>
+<div {{ stimulus_controller('price-calc', {vats: vats}) }}>
     <div
             {{ stimulus_controller('document-item-collection', {
                 isVatPayer: company.vatPayer,
