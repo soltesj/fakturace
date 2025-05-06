@@ -46,6 +46,11 @@ export default class extends Controller {
     }
 
     removeCollectionElement(e) {
-        e.currentTarget.parentNode.parentNode.parentNode.remove()
+        const container = e.currentTarget.closest('.row')
+        if (container) {
+            container.remove();
+        } else {
+            console.warn('No valid .row container found for removal.');
+        }
     }
 }
