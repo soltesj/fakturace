@@ -31,8 +31,7 @@ class DocumentItemFormType extends AbstractType
                         ->orderBy('vat_level.vatAmount', 'DESC');
                 },
                 'choice_label' => 'vatAmount',
-            ])
-            ->add('priceWithVat');
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

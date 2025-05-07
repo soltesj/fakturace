@@ -90,7 +90,7 @@
 
             {#        data-document-item-collection-index-value="{{ form.documentItems|length > 0 ? form.documentItems|last.vars.name + 1 : 0 }}" #}
             data-document-item-collection-prototype-value="
-     {{ '<div class="col-md-4"><div class="input-group"><button type="button" class="btn btn-info" data-action="document-item-collection#removeCollectionElement"><svg width="16" height="16" class="bi me-1"><use href="#minus-circle"/></svg></button>'|e('html_attr') }}
+     {{ '<div class="col-md-5"><div class="input-group"><button type="button" class="btn btn-info" data-action="document-item-collection#removeCollectionElement"><svg width="16" height="16" class="bi me-1"><use href="#minus-circle"/></svg></button>'|e('html_attr') }}
 {{ form_widget(form.documentItems.vars.prototype.name)|e('html_attr') }}
 {{ '</div></div>'|e('html_attr') }}
     {{ '<div class="col-md-1">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.quantity,{'attr':{
@@ -106,10 +106,6 @@
                 'data-price-calc-target':'vat',
                 'data-action':'price-calc#calc'
             }})|e('html_attr') }}{{ '</div>'|e('html_attr') }}
-    {{ '<div class="col-md-1" data-document-item-collection-target="isPriceWithVat">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.priceWithVat,{
-                'label_attr': {'class': 'd-none'},
-                'attr': {'data-price-calc-target':'isPriceWithVat'}
-            })|e('html_attr') }}{{ '</div>'|e('html_attr') }}
     {{ '<div class="col-md-1"><div class="form-control" data-price-calc-target="priceItem">&nbsp;</div></div>'|e('html_attr') }}
     {{ '</div>'|e('html_attr') }}"
     >
@@ -121,15 +117,12 @@
             </svg>
         </button>
         <div class="row">
-            <div class="col-md-4">name</div>
+            <div class="col-md-5">name</div>
             <div class="col-md-1">quantity</div>
             <div class="col-md-1">unit</div>
             <div class="col-md-3">price</div>
             <div class="col-md-1"
                  data-document-item-collection-target="vatAmount">vat
-            </div>
-            <div class="col-md-1"
-                 data-document-item-collection-target="isPriceWithVat">priceWithVat
             </div>
             <div class="col-md-1">priceTotal</div>
         </div>
@@ -137,7 +130,7 @@
         <div {{ stimulus_target('document-item-collection', 'collectionContainer') }}>
             {% for documentItem in form.documentItems %}
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <div class="input-group">
                             <button type="button" {{ stimulus_action('document-item-collection', 'removeCollectionElement') }}
                                     class="btn btn-info">
@@ -162,12 +155,6 @@
                             'data-price-calc-target':'vat',
                             'data-action':'price-calc#calc'
                         }}) }}</div>
-                    <div class="col-md-1"
-                         data-document-item-collection-target="isPriceWithVat"> {{ form_widget(documentItem.priceWithVat,{
-                            'label_attr' : { 'class': 'd-none' },
-                            'attr' : { 'data-price-calc-target':'isPriceWithVat' },
-                        }) }}
-                    </div>
                     <div class="col-md-1">
                         <div class="form-control" data-price-calc-target="priceItem">00.00</div>
                     </div>
