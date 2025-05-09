@@ -9,11 +9,13 @@ use App\Entity\Customer;
 use App\Entity\Document;
 use App\Entity\DocumentType;
 use App\Entity\PaymentType;
+use App\Enum\VatMode;
 use App\Status\StatusValues;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -28,6 +30,7 @@ class DocumentFormType extends AbstractType
 //        dump( $document);
         $company = $document->getCompany();
 //        dump(array_keys($options));
+        $domesticReverseCharge = ($document->getVatMode() === VatMode::DOMESTIC_REVERSE_CHARGE) ? 'checked' : false;
         $documentTypes = Types::INVOICE_OUTGOING_TYPES;
         $builder->add('documentType', EntityType::class, [
             'class' => DocumentType::class,
@@ -46,200 +49,155 @@ class DocumentFormType extends AbstractType
             'row_attr' => [
                 'class' => 'form-floating mb-3',
             ],
-        ])->add('documentNumber', options: [
-            'label' => 'documentNumber',
-            'attr' => [
-                'placeholder' => 'documentNumber',
-                'readonly' => true,
-                'class' => 'form-control-plaintext',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
-        ])->add('variableSymbol', options: [
-            'label' => 'variableSymbol',
-            'attr' => [
-                'placeholder' => 'variableSymbol',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
-        ])->add('paymentType', EntityType::class, [
-            'class' => PaymentType::class,
-            'choice_label' => 'name',
-            'label' => 'payment Type',
-            'attr' => [
-                'placeholder' => 'payment Type',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
-        ])->add('transferTax', options: [
-            'label' => 'transferTax',
-            'attr' => [
-                'placeholder' => 'transferTax',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
-        ])->add('dateIssue', options: [
-            'label' => 'dateIssue',
-            'attr' => [
-                'placeholder' => 'dateIssue',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
-        ])->add('dateTaxable', options: [
-            'label' => 'dateTaxable',
-            'attr' => [
-                'placeholder' => 'dateTaxable',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
-        ])->add('dateDue', options: [
-            'label' => 'dateDue',
-            'attr' => [
-                'placeholder' => 'dateDue',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
-        ])->add('bankAccount', EntityType::class, [
-            'class' => BankAccount::class,
-            'query_builder' => function (EntityRepository $er) use ($company): QueryBuilder {
-                return $er->createQueryBuilder('bank_account')
-                    ->andWhere('bank_account.company = :company')
-                    ->setParameter('company', $company)
-                    ->andWhere('bank_account.status = :status')
-                    ->setParameter('status', StatusValues::STATUS_ACTIVE)
-                    ->orderBy('bank_account.sequence', 'ASC');
-            },
-            'choice_label' => 'name',
-            'label' => 'bankAccount',
-            'attr' => [
-                'placeholder' => 'bankAccount',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
-        ])->add('customer', EntityType::class, [
-            'class' => Customer::class,
-            'choice_label' => 'name',
-            'query_builder' => function (EntityRepository $er) use ($company): QueryBuilder {
-                return $er->createQueryBuilder('customer')
-                    ->andWhere('customer.company = :company')
-                    ->setParameter('company', $company)
-                    ->andWhere('customer.status = :status')
-                    ->setParameter('status', StatusValues::STATUS_ACTIVE)
-                    ->orderBy('customer.name', 'ASC');
-            },
-            'label' => 'customer',
-            'placeholder' => '',
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
         ])
-//            ->add('customerName', options: [
-//            'label' => 'customerName',
-//            'attr' => [
-//                'placeholder' => 'customerName',
-//            ],
-//            'row_attr' => [
-//                'class' => 'form-floating mb-3',
-//            ],
-//        ])->add('customerStreet', options: [
-//            'label' => 'customerStreet',
-//            'attr' => [
-//                'placeholder' => 'customerStreet',
-//            ],
-//            'row_attr' => [
-//                'class' => 'form-floating mb-3',
-//            ],
-//        ])->add('customerHouseNumber', options: [
-//            'label' => 'customer_house_number',
-//            'attr' => [
-//                'placeholder' => 'customer_house_number',
-//            ],
-//            'row_attr' => [
-//                'class' => 'form-floating mb-3',
-//            ],
-//        ])->add('customerTown', options: [
-//            'label' => 'customerTown',
-//            'attr' => [
-//                'placeholder' => 'customerTown',
-//            ],
-//            'row_attr' => [
-//                'class' => 'form-floating mb-3',
-//            ],
-//        ])->add('customerZipcode', options: [
-//            'label' => 'Zipcode',
-//            'attr' => [
-//                'placeholder' => 'Zipcode',
-//            ],
-//            'row_attr' => [
-//                'class' => 'form-floating mb-3',
-//            ],
-//        ])->add('customerIc', options: [
-//            'label' => 'customerIc',
-//            'attr' => [
-//                'placeholder' => 'customerIc',
-//            ],
-//            'row_attr' => [
-//                'class' => 'form-floating mb-3',
-//            ],
-//        ])->add('customerDic', options: [
-//            'label' => 'customerDic',
-//            'attr' => [
-//                'placeholder' => 'customerDic',
-//            ],
-//            'row_attr' => [
-//                'class' => 'form-floating mb-3',
-//            ],
-//        ])
+            ->add('documentNumber', options: [
+                'label' => 'documentNumber',
+                'attr' => [
+                    'placeholder' => 'documentNumber',
+                    'readonly' => true,
+                    'class' => 'form-control-plaintext',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating mb-3',
+                ],
+            ])
+            ->add('variableSymbol', options: [
+                'label' => 'variableSymbol',
+                'attr' => [
+                    'placeholder' => 'variableSymbol',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating mb-3',
+                ],
+            ])
+            ->add('paymentType', EntityType::class, [
+                'class' => PaymentType::class,
+                'choice_label' => 'name',
+                'label' => 'payment Type',
+                'attr' => [
+                    'placeholder' => 'payment Type',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating mb-3',
+                ],
+            ])
+            ->add('transferTax', options: [
+                'label' => 'transferTax',
+                'attr' => [
+                    'placeholder' => 'transferTax',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating mb-3',
+                ],
+            ])
+            ->add('dateIssue', options: [
+                'label' => 'dateIssue',
+                'attr' => [
+                    'placeholder' => 'dateIssue',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating mb-3',
+                ],
+            ])
+            ->add('dateTaxable', options: [
+                'label' => 'dateTaxable',
+                'attr' => [
+                    'placeholder' => 'dateTaxable',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating mb-3',
+                ],
+            ])
+            ->add('dateDue', options: [
+                'label' => 'dateDue',
+                'attr' => [
+                    'placeholder' => 'dateDue',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating mb-3',
+                ],
+            ])
+            ->add('bankAccount', EntityType::class, [
+                'class' => BankAccount::class,
+                'query_builder' => function (EntityRepository $er) use ($company): QueryBuilder {
+                    return $er->createQueryBuilder('bank_account')
+                        ->andWhere('bank_account.company = :company')
+                        ->setParameter('company', $company)
+                        ->andWhere('bank_account.status = :status')
+                        ->setParameter('status', StatusValues::STATUS_ACTIVE)
+                        ->orderBy('bank_account.sequence', 'ASC');
+                },
+                'choice_label' => 'name',
+                'label' => 'bankAccount',
+                'attr' => [
+                    'placeholder' => 'bankAccount',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating mb-3',
+                ],
+            ])
+            ->add('customer', EntityType::class, [
+                'class' => Customer::class,
+                'choice_label' => 'name',
+                'query_builder' => function (EntityRepository $er) use ($company): QueryBuilder {
+                    return $er->createQueryBuilder('customer')
+                        ->andWhere('customer.company = :company')
+                        ->setParameter('company', $company)
+                        ->andWhere('customer.status = :status')
+                        ->setParameter('status', StatusValues::STATUS_ACTIVE)
+                        ->orderBy('customer.name', 'ASC');
+                },
+                'label' => 'customer',
+                'placeholder' => '',
+                'row_attr' => [
+                    'class' => 'form-floating mb-3',
+                ],
+            ])
             ->add('currency', EntityType::class, [
-            'class' => Currency::class,
-            'query_builder' => function (EntityRepository $er) use ($company): QueryBuilder {
-                return $er->createQueryBuilder('currency')
-                    ->andWhere('currency.id in( :companyCurrencies)')
-                    ->setParameter('companyCurrencies',
-                        $company->getCurrency())
-                    ->orderBy('currency.currencyCode', 'ASC');
-            },
-            'choice_label' => 'currencyCode',
-            'label' => 'currency',
-            'attr' => [
-                'placeholder' => 'currency',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
-        ])->add('rate', options: [
-            'label' => 'currency rate',
-            'attr' => [
-                'placeholder' => 'currency rate',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
-        ])->add('tag', options: [
-            'label' => 'tag',
-            'attr' => [
-                'placeholder' => 'tag',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
-        ])->add('description', options: [
-            'label' => 'description',
-            'attr' => [
-                'placeholder' => 'description',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
-        ])
+                'class' => Currency::class,
+                'query_builder' => function (EntityRepository $er) use ($company): QueryBuilder {
+                    return $er->createQueryBuilder('currency')
+                        ->andWhere('currency.id in( :companyCurrencies)')
+                        ->setParameter('companyCurrencies',
+                            $company->getCurrency())
+                        ->orderBy('currency.currencyCode', 'ASC');
+                },
+                'choice_label' => 'currencyCode',
+                'label' => 'currency',
+                'attr' => [
+                    'placeholder' => 'currency',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating mb-3',
+                ],
+            ])
+            ->add('rate', options: [
+                'label' => 'currency rate',
+                'attr' => [
+                    'placeholder' => 'currency rate',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating mb-3',
+                ],
+            ])
+            ->add('tag', options: [
+                'label' => 'tag',
+                'attr' => [
+                    'placeholder' => 'tag',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating mb-3',
+                ],
+            ])
+            ->add('description', options: [
+                'label' => 'description',
+                'attr' => [
+                    'placeholder' => 'description',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating mb-3',
+                ],
+            ])
             ->add('priceWithoutHighVat', HiddenType::class)
             ->add('priceWithoutLowVat', HiddenType::class)
             ->add('priceNoVat', HiddenType::class)
@@ -251,7 +209,12 @@ class DocumentFormType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
             ])
-        ;
+            ->add('useDomesticReverseCharge', CheckboxType::class, [
+                'label' => 'Použít režim přenesení daňové povinnosti',
+                'required' => false,
+                'mapped' => false,
+                'attr' => ['checked' => $domesticReverseCharge],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

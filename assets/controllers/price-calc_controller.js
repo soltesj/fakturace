@@ -2,7 +2,7 @@ import {Controller} from '@hotwired/stimulus';
 
 export default class extends Controller {
 
-    static targets = ['quantity', 'price', 'priceItem', 'vatPercentage', 'isPriceWithVat', 'priceTotal', 'priceTotalVat', 'priceVat', 'priceWithoutLowVat', 'priceWithoutHighVat', 'priceTotalWithVat', 'priceTotalWithoutVat', 'customer', 'documentWithVat', 'itemName',]
+    static targets = ['quantity', 'price', 'priceItem', 'vatPercentage', 'isPriceWithVat', 'priceTotal', 'priceTotalVat', 'priceVat', 'priceWithoutLowVat', 'priceWithoutHighVat', 'priceTotalWithVat', 'priceTotalWithoutVat', 'customer', 'documentWithVat', 'itemName', 'useDomesticReverseCharge']
 
     static values = {
         vats: Object, vatMode: String,

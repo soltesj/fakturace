@@ -73,6 +73,7 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     //.autoProvidejQuery()
+    .enableSourceMaps(!Encore.isProduction())
 ;
 
 module.exports = Encore.getWebpackConfig();

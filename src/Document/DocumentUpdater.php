@@ -9,6 +9,7 @@ use App\Entity\DocumentItem;
 use App\Entity\DocumentPrice;
 use App\Entity\DocumentPriceType;
 use App\Entity\VatLevel;
+use App\Enum\VatMode;
 use App\Service\VatModeService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,10 +23,11 @@ readonly class DocumentUpdater
     ) {
     }
 
-    public function update(Document $document, ArrayCollection $originalItems): void
+    public function update(Document $document, ArrayCollection $originalItems, bool $useDomesticReverseCharge): void
     {
         $this->removeUnassociatedItems($originalItems, $document);
         $vatMode = $this->vatModeService->getVatMode($document->getCompany(), $document->getCustomer());
+        $vatMode = ($useDomesticReverseCharge && $vatMode === VatMode::DOMESTIC) ? VatMode::DOMESTIC_REVERSE_CHARGE : $vatMode;
         $document->setVatMode($vatMode);
         [$vatPrices, $priceTotal] = $this->priceCalculatorService->calculate($document);
         $this->updateExistingPrices($document, $vatPrices, $priceTotal);

@@ -121,7 +121,8 @@ class DocumentController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->documentNewSaver->save($document);
+                $useDomesticReverseCharge = $form->get('useDomesticReverseCharge')->getData();
+                $this->documentNewSaver->save($document, $useDomesticReverseCharge);
                 $this->addFlash('success', 'INVOICE_STORED');
 
                 return $this->redirectToRoute(
@@ -160,14 +161,15 @@ class DocumentController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->documentUpdater->update($document, $originalItems);
+                $useDomesticReverseCharge = $form->get('useDomesticReverseCharge')->getData();
+                dump($useDomesticReverseCharge);
+                $this->documentUpdater->update($document, $originalItems, $useDomesticReverseCharge);
                 $this->addFlash('success', 'INVOICE_STORED');
-
-                return $this->redirectToRoute(
-                    'app_document_index',
-                    ['company' => $company->getId()],
-                    Response::HTTP_SEE_OTHER
-                );
+//                return $this->redirectToRoute(
+//                    'app_document_index',
+//                    ['company' => $company->getId()],
+//                    Response::HTTP_SEE_OTHER
+//                );
             } catch (Throwable $e) {
                 $this->addFlash('danger', 'INVOICE_NOT_STORED');
                 $this->logger->error($e->getMessage(), $e->getTrace());

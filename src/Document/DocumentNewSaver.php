@@ -7,6 +7,7 @@ use App\DocumentPrice\Types as PriceTypes;
 use App\Entity\Document;
 use App\Entity\DocumentPrice;
 use App\Entity\VatLevel;
+use App\Enum\VatMode;
 use App\Repository\DocumentPriceTypeRepository;
 use App\Service\VatModeService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,10 +23,11 @@ readonly class DocumentNewSaver
     ) {
     }
 
-    public function save(Document $document): void
+    public function save(Document $document, bool $useDomesticReverseCharge): void
     {
         $this->documentNumberManager->generate($document);
         $vatMode = $this->vatModeService->getVatMode($document->getCompany(), $document->getCustomer());
+        $vatMode = ($useDomesticReverseCharge && $vatMode === VatMode::DOMESTIC) ? VatMode::DOMESTIC_REVERSE_CHARGE : $vatMode;
         $document->setVatMode($vatMode);
         [$vatPrices, $priceTotal] = $this->priceCalculatorService->calculate($document);
         $this->createDocumentPrices($document, $vatPrices, $priceTotal);

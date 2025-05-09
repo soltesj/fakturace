@@ -9,7 +9,7 @@
                     {{ form_row(form.documentNumber) }}
                     {{ form_row(form.variableSymbol) }}
                     {{ form_row(form.paymentType) }}
-                    {{ form_row(form.transferTax) }}
+                    {{ form_row(form.useDomesticReverseCharge, {'attr':{'data-price-calc':'useDomesticReverseCharge'}}) }}
                 </div>
             </div>
             <div class="col-md-4" {{ stimulus_controller('dates',{

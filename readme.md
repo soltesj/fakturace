@@ -10,8 +10,9 @@
 - [ ] refactor the document customer ⇒ remove all customer columns and create customers in the customer table with
   relations
 - [ ] improve handling with customer in the document when the customer was changed during editing the document
-- [ ] refactor the document bank account ⇒ remove all bank account columns and create bank account in the bank account
+- [ ] refactor the document bank account ⇒ remove all bank account columns and create a bank account in the bank account
   table with relations
+- [ ] remove transfer_tax from database it will be replaced by vat_mode ``VatMode::DOMESTIC_REVERSE_CHARGE``
 
 ## Installation
 adding czech font is necessary copy them from ``fonts`` to ``vendor/tecnickcom/tcpdf/fonts`` directory. Or use the TCPDF utility ``tools/tcpdf_addfont.php`` Specify the path to the font
