@@ -11,6 +11,7 @@ use App\Entity\Company;
 use App\Entity\Document;
 use App\Entity\DocumentItem;
 use App\Entity\User;
+use App\Enum\VatMode;
 use App\Repository\DocumentTypeRepository;
 use DateTime;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -43,6 +44,7 @@ class DocumentFactory
         $document->addDocumentItem(new DocumentItem());
         $document->setUser($user);
         $document->setDescription('Fakturujeme Vám služby dle Vaší objednávky:');
+        $document->setVatMode($company->isVatPayer() ? VatMode::DOMESTIC : VatMode::NONE);
 
 
         return $document;

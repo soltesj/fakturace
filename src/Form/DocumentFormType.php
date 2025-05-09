@@ -136,69 +136,69 @@ class DocumentFormType extends AbstractType
                     ->orderBy('customer.name', 'ASC');
             },
             'label' => 'customer',
-            'attr' => [
-                'placeholder' => 'customer',
-            ],
+            'placeholder' => '',
             'row_attr' => [
                 'class' => 'form-floating mb-3',
             ],
-        ])->add('customerName', options: [
-            'label' => 'customerName',
-            'attr' => [
-                'placeholder' => 'customerName',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
-        ])->add('customerStreet', options: [
-            'label' => 'customerStreet',
-            'attr' => [
-                'placeholder' => 'customerStreet',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
-        ])->add('customerHouseNumber', options: [
-            'label' => 'customer_house_number',
-            'attr' => [
-                'placeholder' => 'customer_house_number',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
-        ])->add('customerTown', options: [
-            'label' => 'customerTown',
-            'attr' => [
-                'placeholder' => 'customerTown',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
-        ])->add('customerZipcode', options: [
-            'label' => 'Zipcode',
-            'attr' => [
-                'placeholder' => 'Zipcode',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
-        ])->add('customerIc', options: [
-            'label' => 'customerIc',
-            'attr' => [
-                'placeholder' => 'customerIc',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
-        ])->add('customerDic', options: [
-            'label' => 'customerDic',
-            'attr' => [
-                'placeholder' => 'customerDic',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
-        ])->add('currency', EntityType::class, [
+        ])
+//            ->add('customerName', options: [
+//            'label' => 'customerName',
+//            'attr' => [
+//                'placeholder' => 'customerName',
+//            ],
+//            'row_attr' => [
+//                'class' => 'form-floating mb-3',
+//            ],
+//        ])->add('customerStreet', options: [
+//            'label' => 'customerStreet',
+//            'attr' => [
+//                'placeholder' => 'customerStreet',
+//            ],
+//            'row_attr' => [
+//                'class' => 'form-floating mb-3',
+//            ],
+//        ])->add('customerHouseNumber', options: [
+//            'label' => 'customer_house_number',
+//            'attr' => [
+//                'placeholder' => 'customer_house_number',
+//            ],
+//            'row_attr' => [
+//                'class' => 'form-floating mb-3',
+//            ],
+//        ])->add('customerTown', options: [
+//            'label' => 'customerTown',
+//            'attr' => [
+//                'placeholder' => 'customerTown',
+//            ],
+//            'row_attr' => [
+//                'class' => 'form-floating mb-3',
+//            ],
+//        ])->add('customerZipcode', options: [
+//            'label' => 'Zipcode',
+//            'attr' => [
+//                'placeholder' => 'Zipcode',
+//            ],
+//            'row_attr' => [
+//                'class' => 'form-floating mb-3',
+//            ],
+//        ])->add('customerIc', options: [
+//            'label' => 'customerIc',
+//            'attr' => [
+//                'placeholder' => 'customerIc',
+//            ],
+//            'row_attr' => [
+//                'class' => 'form-floating mb-3',
+//            ],
+//        ])->add('customerDic', options: [
+//            'label' => 'customerDic',
+//            'attr' => [
+//                'placeholder' => 'customerDic',
+//            ],
+//            'row_attr' => [
+//                'class' => 'form-floating mb-3',
+//            ],
+//        ])
+            ->add('currency', EntityType::class, [
             'class' => Currency::class,
             'query_builder' => function (EntityRepository $er) use ($company): QueryBuilder {
                 return $er->createQueryBuilder('currency')

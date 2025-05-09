@@ -1,7 +1,8 @@
 import {Controller} from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static targets = ['collectionContainer', 'vatAmount', 'isPriceWithVat', 'price']
+    static targets = ['collectionContainer']
+
 
     static values = {
         index: Number,
@@ -11,28 +12,9 @@ export default class extends Controller {
     }
 
     connect() {
-        this.toggleVat();
         if (this.indexValue === 0) {
             this.addCollectionElement();
             this.removeCollectionElement();
-        }
-    }
-
-    toggleVat() {
-        if (this.isVatPayerValue) {
-            this.vatAmountTargets.forEach((element) => {
-                element.classList.remove('d-none')
-            })
-            this.isPriceWithVatTargets.forEach((element) => {
-                element.classList.remove('d-none')
-            })
-        } else {
-            this.vatAmountTargets.forEach((element) => {
-                element.classList.add('d-none')
-            })
-            this.isPriceWithVatTargets.forEach((element) => {
-                element.classList.add('d-none')
-            })
         }
     }
 
@@ -42,7 +24,8 @@ export default class extends Controller {
         item.innerHTML = this.prototypeValue.replace(/__name__/g, this.indexValue);
         this.collectionContainerTarget.appendChild(item);
         this.indexValue++;
-        this.toggleVat();
+
+        this.dispatch('add-row')
     }
 
     removeCollectionElement(e) {

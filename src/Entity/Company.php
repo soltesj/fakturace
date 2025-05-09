@@ -16,7 +16,7 @@ class Company
     #[ORM\Column]
     protected ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Country::class, inversedBy: 'companies')]
+    #[ORM\ManyToOne(targetEntity: Country::class)]
     #[ORM\JoinColumn(nullable: false)]
     private Country $country;
 

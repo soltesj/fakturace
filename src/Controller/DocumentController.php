@@ -13,6 +13,7 @@ use App\Entity\Company;
 use App\Entity\Customer;
 use App\Entity\Document;
 use App\Entity\User;
+use App\Enum\VatMode;
 use App\Form\DocumentFormType;
 use App\Service\Date;
 use App\Service\DocumentService;
@@ -139,6 +140,7 @@ class DocumentController extends AbstractController
             'form' => $form->createView(),
             'company' => $company,
             'vats' => $vats,
+            'vatMode' => $document->getVatMode()->value,
         ]);
     }
 
@@ -177,6 +179,7 @@ class DocumentController extends AbstractController
             'form' => $form->createView(),
             'company' => $company,
             'vats' => $vats,
+            'vatMode' => $document->getVatMode()->value,
         ]);
     }
 

@@ -28,7 +28,7 @@ class Document implements CompanyOwnedInterface
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'document')]
     private Collection $documents;
 
-    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'documents')]
+    #[ORM\ManyToOne(targetEntity: Company::class)]
     #[ORM\JoinColumn(nullable: false)]
     private Company $company;
 

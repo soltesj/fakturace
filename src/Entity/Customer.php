@@ -16,7 +16,7 @@ class Customer implements CompanyOwnedInterface
     #[ORM\Column]
     protected ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'customers')]
+    #[ORM\ManyToOne(targetEntity: Company::class)]
     #[ORM\JoinColumn(
         nullable: false,
     )]
