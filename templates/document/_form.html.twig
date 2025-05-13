@@ -1,33 +1,33 @@
 {{ form_start(form) }}
-<div {{ stimulus_controller('price-calc', {vats:vats, company:company.id}) }}
-        data-action="document-item-collection:add-row->price-calc#toggleDocumentWithWat">
-    <div data-controller="extended-info">
+<div {{ stimulus_controller('document/price-calc', {vats:vats, company:company.id}) }}
+        data-action="document--document-item-collection:add-row->price-calc#toggleDocumentWithWat">
+    <div {{ stimulus_controller('document/extended-info') }}>
         <div class="row">
             <div class="col-md-4">
                 {{ form_row(form.documentType) }}
-                {{ form_row(form.vatMode, {'attr':{'data-price-calc-target':'vatMode',
-                    'data-action':'price-calc#vatModeChange'}}) }}
-                <div data-extended-info-target="extendedInfo">
+                {{ form_row(form.vatMode, {'attr':{'data-document--price-calc-target':'vatMode',
+                    'data-action':'document--price-calc#vatModeChange'}}) }}
+                <div data-document--extended-info-target="extendedInfo">
                     {{ form_row(form.documentNumber) }}
                     {{ form_row(form.variableSymbol) }}
                 </div>
             </div>
-            <div class="col-md-4" {{ stimulus_controller('dates',{
+            <div class="col-md-4" {{ stimulus_controller('document/dates',{
                 maturityDays: company.maturityDays|default(14)
             }) }}>
                 {{ form_row(form.dateIssue, {'attr':{
-                    'data-dates-target':'dateIssue',
-                    'data-action':'dates#changeDate'
+                    'data-document--dates-target':'dateIssue',
+                    'data-action':'document--dates#changeDate'
                 }}) }}
-                <div data-extended-info-target="extendedInfo">
-                    {{ form_row(form.dateTaxable, {'attr':{'data-dates-target':'dateTaxable'}}) }}
-                    {{ form_row(form.dateDue, {'attr':{'data-dates-target':'dateDue'}}) }}
+                <div data-document--extended-info-target="extendedInfo">
+                    {{ form_row(form.dateTaxable, {'attr':{'data-document--dates-target':'dateTaxable'}}) }}
+                    {{ form_row(form.dateDue, {'attr':{'data-document--dates-target':'dateDue'}}) }}
                 </div>
             </div>
             <div class="col-md-4">
-                {{ form_row(form.customer,{attr:{'data-price-calc-target':'customer',
+                {{ form_row(form.customer,{attr:{'data-document--price-calc-target':'customer',
                     'data-action':"change->price-calc#customerChange"}}) }}
-                <div data-extended-info-target="extendedInfo">
+                <div data-document--extended-info-target="extendedInfo">
                     {{ form_row(form.paymentType) }}
                     {{ form_row(form.bankAccount) }}
                     <div class="row">
@@ -41,7 +41,7 @@
                 </div>
             </div>
         </div>
-        <div class="row" data-extended-info-target="extendedInfo">
+        <div class="row" data-document--extended-info-target="extendedInfo">
             <div class="col-md-8">
                 {{ form_row(form.description) }}
             </div>
@@ -53,7 +53,7 @@
             <div class="col-md-4 text-center">
                 <button type="button"
                         class="btn btn-info mt-2"
-                        data-action="extended-info#toggleInfo">
+                        data-action="document--extended-info#toggleInfo">
                     <svg width="16" height="16" class="bi me-1">
                         <use href="#plus-circle"/>
                     </svg>
@@ -64,55 +64,55 @@
     </div>
     <div>
         <div
-                {{ stimulus_controller('document-item-collection', {
+                {{ stimulus_controller('document/document-item-collection', {
                     index:  form.documentItems|length > 0 ? form.documentItems|last.vars.name + 1 : 0,
                 }) }}
 
-                {#        data-document-item-collection-index-value="{{ form.documentItems|length > 0 ? form.documentItems|last.vars.name + 1 : 0 }}" #}
-                data-document-item-collection-prototype-value="
-     {{ '<div class="col-md-5" data-price-calc-target="itemName"><div class="input-group"><button type="button" class="btn btn-info" data-action="document-item-collection#removeCollectionElement"><svg width="16" height="16" class="bi me-1"><use href="#minus-circle"/></svg></button>'|e('html_attr') }}
+                {#        data-document--document-item-collection-index-value="{{ form.documentItems|length > 0 ? form.documentItems|last.vars.name + 1 : 0 }}" #}
+                data-document--document-item-collection-prototype-value="
+     {{ '<div class="col-md-5" data-document--price-calc-target="itemName"><div class="input-group"><button type="button" class="btn btn-info" data-action="document--document-item-collection#removeCollectionElement"><svg width="16" height="16" class="bi me-1"><use href="#minus-circle"/></svg></button>'|e('html_attr') }}
 {{ form_widget(form.documentItems.vars.prototype.name)|e('html_attr') }}
 {{ '</div></div>'|e('html_attr') }}
     {{ '<div class="col-md-1">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.quantity,{'attr':{
-                    'data-price-calc-target':'quantity',
-                    'data-action':'price-calc#calc'
+                    'data-document--price-calc-target':'quantity',
+                    'data-action':'document--price-calc#calc'
                 }})|e('html_attr') }}{{ '</div>'|e('html_attr') }}
     {{ '<div class="col-md-1">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.unit)|e('html_attr') }}{{ '</div>'|e('html_attr') }}
     {{ '<div class="col-md-3">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.price, {'attr':{
-                    'data-price-calc-target':'price',
-                    'data-action':'price-calc#calc'
+                    'data-document--price-calc-target':'price',
+                    'data-action':'document--price-calc#calc'
                 }})|e('html_attr') }}{{ '</div>'|e('html_attr') }}
-    {{ '<div class="col-md-1" data-price-calc-target="documentWithVat">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.vat,{'attr':{
-                    'data-price-calc-target':'vatPercentage',
-                    'data-action':'price-calc#calc'
+    {{ '<div class="col-md-1" data-document--price-calc-target="documentWithVat">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.vat,{'attr':{
+                    'data-document--price-calc-target':'vatPercentage',
+                    'data-action':'document--price-calc#calc'
                 }})|e('html_attr') }}{{ '</div>'|e('html_attr') }}
-    {{ '<div class="col-md-1"><div class="form-control" data-price-calc-target="priceItem">&nbsp;</div></div>'|e('html_attr') }}
+    {{ '<div class="col-md-1"><div class="form-control" data-document--price-calc-target="priceItem">&nbsp;</div></div>'|e('html_attr') }}
     {{ '</div>'|e('html_attr') }}"
         >
 
-            <button type="button" {{ stimulus_action('document-item-collection', 'addCollectionElement') }}
+            <button type="button" {{ stimulus_action('document/document-item-collection', 'addCollectionElement') }}
                     class="btn btn-info">
                 <svg width="16" height="16" class="bi me-1">
                     <use href="#plus-circle"/>
                 </svg>
             </button>
             <div class="row">
-                <div class="col-md-5" {{ stimulus_target('price-calc', 'itemName') }}>name</div>
+                <div class="col-md-5" {{ stimulus_target('document/price-calc', 'itemName') }}>name</div>
                 <div class="col-md-1">quantity</div>
                 <div class="col-md-1">unit</div>
                 <div class="col-md-3">price</div>
                 <div class="col-md-1"
-                     data-price-calc-target="documentWithVat">vat
+                     data-document--price-calc-target="documentWithVat">vat
                 </div>
                 <div class="col-md-1">priceTotal</div>
             </div>
 
-            <div {{ stimulus_target('document-item-collection', 'collectionContainer') }}>
+            <div {{ stimulus_target('document/document-item-collection', 'collectionContainer') }}>
                 {% for documentItem in form.documentItems %}
                     <div class="row">
-                        <div class="col-md-5" {{ stimulus_target('price-calc', 'itemName') }}>
+                        <div class="col-md-5" {{ stimulus_target('document/price-calc', 'itemName') }}>
                             <div class="input-group">
-                                <button type="button" {{ stimulus_action('document-item-collection', 'removeCollectionElement') }}
+                                <button type="button" {{ stimulus_action('document/document-item-collection', 'removeCollectionElement') }}
                                         class="btn btn-info">
                                     <svg width="16" height="16" class="bi me-1">
                                         <use href="#minus-circle"/>
@@ -121,53 +121,53 @@
                             </div>
                         </div>
                         <div class="col-md-1">{{ form_widget(documentItem.quantity, {'attr':{
-                                'data-price-calc-target':'quantity',
-                                'data-action':'price-calc#calc'
+                                'data-document--price-calc-target':'quantity',
+                                'data-action':'document--price-calc#calc'
                             }}) }}</div>
                         <div class="col-md-1">{{ form_widget(documentItem.unit) }}</div>
                         <div class="col-md-3">{{ form_widget(documentItem.price, {'attr':{
-                                'data-price-calc-target':'price',
-                                'data-action':'price-calc#calc'
+                                'data-document--price-calc-target':'price',
+                                'data-action':'document--price-calc#calc'
                             }}) }}</div>
                         <div class="col-md-1"
-                             data-price-calc-target="documentWithVat">
+                             data-document--price-calc-target="documentWithVat">
                             {{ form_widget(documentItem.vat, {'attr':{
-                                'data-price-calc-target':'vatPercentage',
-                                'data-action':'price-calc#calc'
+                                'data-document--price-calc-target':'vatPercentage',
+                                'data-action':'document--price-calc#calc'
                             }}) }}</div>
                         <div class="col-md-1">
-                            <div class="form-control" data-price-calc-target="priceItem">00.00</div>
+                            <div class="form-control" data-document--price-calc-target="priceItem">00.00</div>
                         </div>
                     </div>
                 {% endfor %}
 
             </div>
-            <div data-price-calc-target="documentWithVat">
+            <div data-document--price-calc-target="documentWithVat">
                 <div class="row mt-3">
                     <div class="offset-md-6 col-md-3 text-end">Celkem bez DPH:</div>
-                    <div class="col-md-3 text-end" data-price-calc-target="priceTotal">0.00</div>
+                    <div class="col-md-3 text-end" data-document--price-calc-target="priceTotal">0.00</div>
                 </div>
                 <div class="row">
                     <div class="offset-md-6 col-md-3 text-end">DPH:</div>
-                    <div class="col-md-3 text-end" data-price-calc-target="priceVat">0.00</div>
+                    <div class="col-md-3 text-end" data-document--price-calc-target="priceVat">0.00</div>
                 </div>
             </div>
             <div class="row">
                 <div class="offset-md-6 col-md-3 text-end">Cena celkem:</div>
-                <div class="col-md-3 text-end" data-price-calc-target="priceTotalVat">0.00</div>
+                <div class="col-md-3 text-end" data-document--price-calc-target="priceTotalVat">0.00</div>
             </div>
         </div>
         {{ form_row(form.priceTotal, {
-            'attr' : { 'data-price-calc-target':'priceTotalWithVat' },
+            'attr' : { 'data-document--price-calc-target':'priceTotalWithVat' },
         }) }}
         {{ form_row(form.priceWithoutHighVat, {
-            'attr' : { 'data-price-calc-target':'priceWithoutHighVat' },
+            'attr' : { 'data-document--price-calc-target':'priceWithoutHighVat' },
         }) }}
         {{ form_row(form.priceWithoutLowVat, {
-            'attr' : { 'data-price-calc-target':'priceWithoutLowVat' },
+            'attr' : { 'data-document--price-calc-target':'priceWithoutLowVat' },
         }) }}
         {{ form_row(form.priceNoVat, {
-            'attr' : { 'data-price-calc-target':'priceTotalWithoutVat' },
+            'attr' : { 'data-document--price-calc-target':'priceTotalWithoutVat' },
         }) }}
     </div>
 
