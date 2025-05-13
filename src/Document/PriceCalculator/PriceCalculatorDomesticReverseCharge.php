@@ -18,7 +18,17 @@ class PriceCalculatorDomesticReverseCharge implements PriceCalculatorInterface
         $vatPrices = [];
         $priceTotal = 0;
         foreach ($document->getDocumentItems() as $documentItem) {
-            $priceTotal += $documentItem->getPrice() * $documentItem->getQuantity();
+            $vatId = $documentItem->getVat()->getId();
+            if (!array_key_exists($vatId, $vatPrices)) {
+                $vatPrices[$vatId] = [
+                    'vat' => $documentItem->getVat(),
+                    'amount' => 0,
+                    'vatAmount' => 0,
+                ];
+            }
+            $amount = $documentItem->getPrice() * $documentItem->getQuantity();
+            $vatPrices[$vatId]['amount'] += $amount;
+            $priceTotal += $amount;
         }
 
         return [$vatPrices, $priceTotal];

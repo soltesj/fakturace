@@ -7,6 +7,12 @@
         font-size: 8px;
     }
 
+    .final-price {
+        font-size: 10px;
+        font-weight: bold;
+        padding-top: 10px;
+    }
+
     h1 {
         font-size: large;
     }
@@ -16,6 +22,10 @@
     }
 
     .pb-3 {
+        padding-bottom: 30px;
+    }
+
+    .mb-3 {
         padding-bottom: 30px;
     }
 
@@ -43,6 +53,12 @@
         margin: 0;
         padding: 0;
     }
+
+    .block {
+        background-color: rgb(220, 220, 220);
+        padding: 20px 20px 20px 20px;
+    }
+
 </style>
 
 
@@ -138,7 +154,7 @@
             <th class="">Položka</th>
             <th class="text-end">Množství</th>
             <th class="text-end">Jed. cena</th>
-            {% if document.vatMode.name in ['DOMESTIC','OSS'] %}
+            {% if document.vatMode.name in ['DOMESTIC','DOMESTIC_REVERSE_CHARGE','OSS'] %}
                 <th class="text-end">DPH</th>
                 <th class="text-end">Celkem bez DPH</th>
                 <th class="text-end">Celkem s DPH</th>
@@ -149,14 +165,14 @@
         </thead>
         <tbody>
         {% for item in document.documentItems %}
-            {% if document.vatMode.name in ['DOMESTIC','OSS'] %}
+            {% if document.vatMode.name in ['DOMESTIC','DOMESTIC_REVERSE_CHARGE','OSS'] %}
                 {% set vat = item.vat?item.vat.vatAmount /100 + 1:null %}
             {% endif %}
             <tr>
                 <td>{{ item.name }}</td>
                 <td class="text-end">{{ item.quantity }} {{ item.unit }}</td>
                 <td class="text-end">{{ item.price }}</td>
-                {% if document.vatMode.name in ['DOMESTIC','OSS'] %}
+                {% if document.vatMode.name in ['DOMESTIC','DOMESTIC_REVERSE_CHARGE','OSS'] %}
                     <td class="text-end">{{ item.vat.vatAmount }}</td>
                     <td class="text-end">{{ (item.price * item.quantity)|number_format }}</td>
                     <td class="text-end">{{ (item.price * item.quantity * vat)|number_format }}</td>
@@ -168,9 +184,9 @@
         </tbody>
     </table>
 </div>
-<div style="padding:0 0 0 50px">
+<div style="padding:0 0 0 100px;">
     <table>
-        {% if document.vatMode.name in ['DOMESTIC','OSS'] %}
+        {% if document.vatMode.name in ['DOMESTIC','DOMESTIC_REVERSE_CHARGE','OSS'] %}
             <tr>
                 <td>&nbsp;</td>
                 <td class="text-end">Základ</td>
@@ -191,9 +207,9 @@
         {% for documentPrice in document.documentPrices %}
             {% if documentPrice.priceType.id == 1 %}
                 <tr>
-                    <td colspan="3"><strong>CELKEM K ÚHRADĚ</strong></td>
-                    <td class="text-end">
-                        <strong>{{ documentPrice.amount|default(0)|number_format(2,',',' ') }}  {{ document.currency.currencyCode }}</strong>
+                    <td colspan="3" class="final-price">CELKEM K ÚHRADĚ</td>
+                    <td class="text-end final-price">
+                        {{ documentPrice.amount|default(0)|number_format(2,',',' ') }}  {{ document.currency.currencyCode }}
                     </td>
                 </tr>
             {% endif %}
@@ -202,4 +218,29 @@
             <td colspan="4" class="text-end">Konečná částka je včetně zaokrouhlení.</td>
         </tr>
     </table>
+
 </div>
+{% if document.vatMode.name == 'DOMESTIC_REVERSE_CHARGE' %}
+    <div class="block">
+        <table>
+            <tr>
+                <td>
+                    <strong>Dan odvede zakazník</strong><br>
+                    V režimu přenesené danové povinnosti
+                </td>
+                <td>
+                    <table>
+                        {% for documentPrice in document.documentPrices %}
+                            {% if documentPrice.priceType.id == 2 %}
+                                <tr>
+                                    <td>{{ documentPrice.vatLevel ? documentPrice.vatLevel.name }}</td>
+                                    <td class="text-end">{{ documentPrice.amount|default(0)|number_format(2,',',' ') }} {{ document.currency.currencyCode }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+{% endif %}

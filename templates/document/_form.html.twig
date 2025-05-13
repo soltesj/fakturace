@@ -1,6 +1,6 @@
 {{ form_start(form) }}
 <div {{ stimulus_controller('document/price-calc', {vats:vats, company:company.id}) }}
-        data-action="document--document-item-collection:add-row->price-calc#toggleDocumentWithWat">
+        data-action="document--document-item-collection:add-row->document--price-calc#toggleDocumentWithWat">
     <div {{ stimulus_controller('document/extended-info') }}>
         <div class="row">
             <div class="col-md-4">
@@ -26,7 +26,7 @@
             </div>
             <div class="col-md-4">
                 {{ form_row(form.customer,{attr:{'data-document--price-calc-target':'customer',
-                    'data-action':"change->price-calc#customerChange"}}) }}
+                    'data-action':"change->document--price-calc#customerChange"}}) }}
                 <div data-document--extended-info-target="extendedInfo">
                     {{ form_row(form.paymentType) }}
                     {{ form_row(form.bankAccount) }}

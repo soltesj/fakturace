@@ -115,7 +115,9 @@ class DocumentController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        $vats['domestic'] = $this->vatService->getValidVatsByCompany($company);
+        $vatsDomestic = $this->vatService->getValidVatsByCompany($company);
+        $vats['domestic'] = $vatsDomestic;
+        $vats['domestic_reverse_charge'] = $vatsDomestic;
         $document = $this->documentFactory->createInvoiceOutgoing($company, $user);
         $form = $this->createForm(DocumentFormType::class, $document);
         $form->handleRequest($request);
@@ -155,18 +157,21 @@ class DocumentController extends AbstractController
         foreach ($document->getDocumentItems() as $documentItem) {
             $originalItems->add($documentItem);
         }
-        $vats['domestic'] = $this->vatService->getValidVatsByCompany($company);
+        $vatsDomestic = $this->vatService->getValidVatsByCompany($company);
+        $vats['domestic'] = $vatsDomestic;
+        $vats['domestic_reverse_charge'] = $vatsDomestic;
         $form = $this->createForm(DocumentFormType::class, $document);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->documentUpdater->update($document, $originalItems);
                 $this->addFlash('success', 'INVOICE_STORED');
-//                return $this->redirectToRoute(
-//                    'app_document_index',
-//                    ['company' => $company->getId()],
-//                    Response::HTTP_SEE_OTHER
-//                );
+
+                return $this->redirectToRoute(
+                    'app_document_index',
+                    ['company' => $company->getId()],
+                    Response::HTTP_SEE_OTHER
+                );
             } catch (Throwable $e) {
                 $this->addFlash('danger', 'INVOICE_NOT_STORED');
                 $this->logger->error($e->getMessage(), $e->getTrace());

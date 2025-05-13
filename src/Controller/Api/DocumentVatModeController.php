@@ -28,7 +28,9 @@ class DocumentVatModeController extends AbstractController
     {
         $vatModes = $this->vatModeService->getAvailableVatModes($company, $customer);
         $country = $company->getCountry();
-        $vats['domestic'] = $this->vatService->getValidVatsByCountry($country);
+        $vatsDomestic = $this->vatService->getValidVatsByCountry($country);
+        $vats['domestic'] = $vatsDomestic;
+        $vats['domestic_reverse_charge'] = $vatsDomestic;
         if (in_array(VatMode::OSS->value, $vatModes)) {
             $country = $customer->getCountry();
             $vats['oss'] = $this->vatService->getValidVatsByCountry($country);

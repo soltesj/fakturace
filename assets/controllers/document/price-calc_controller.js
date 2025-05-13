@@ -27,7 +27,7 @@ export default class extends Controller {
             const quantity = parseFloat(this.quantityTargets[i].value)
             const priceItem = price * quantity;
             if (this.isVatModeEnabled()) {
-                const vat = 1 + this.vatsValue[this.vatModeTarget.value][this.vatPercentageTargets[i].value] / 100;
+                const vat = (this.vatModeTarget.value === 'domestic_reverse_charge') ? 1 : 1 + this.vatsValue[this.vatModeTarget.value][this.vatPercentageTargets[i].value] / 100;
                 const priceItemWithVat = priceItem * vat;
                 this.priceTotal += priceItemWithVat ? priceItemWithVat : 0;
                 this.priceItemTargets[i].innerHTML = priceItemWithVat ? this.round(priceItemWithVat + Number.EPSILON) : '--'
@@ -134,7 +134,7 @@ export default class extends Controller {
     }
 
     isVatModeEnabled() {
-        return ['oss', 'domestic'].includes(this.vatModeTarget.value);
+        return ['domestic', 'domestic_reverse_charge', 'oss'].includes(this.vatModeTarget.value);
     }
 
     round(value) {
