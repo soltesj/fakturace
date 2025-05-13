@@ -115,14 +115,13 @@ class DocumentController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        $vats = $this->vatService->getValidVatsByCompany($company);
+        $vats['domestic'] = $this->vatService->getValidVatsByCompany($company);
         $document = $this->documentFactory->createInvoiceOutgoing($company, $user);
         $form = $this->createForm(DocumentFormType::class, $document);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $useDomesticReverseCharge = $form->get('useDomesticReverseCharge')->getData();
-                $this->documentNewSaver->save($document, $useDomesticReverseCharge);
+                $this->documentNewSaver->save($document);
                 $this->addFlash('success', 'INVOICE_STORED');
 
                 return $this->redirectToRoute(
@@ -156,14 +155,12 @@ class DocumentController extends AbstractController
         foreach ($document->getDocumentItems() as $documentItem) {
             $originalItems->add($documentItem);
         }
-        $vats = $this->vatService->getValidVatsByCompany($company);
+        $vats['domestic'] = $this->vatService->getValidVatsByCompany($company);
         $form = $this->createForm(DocumentFormType::class, $document);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $useDomesticReverseCharge = $form->get('useDomesticReverseCharge')->getData();
-                dump($useDomesticReverseCharge);
-                $this->documentUpdater->update($document, $originalItems, $useDomesticReverseCharge);
+                $this->documentUpdater->update($document, $originalItems);
                 $this->addFlash('success', 'INVOICE_STORED');
 //                return $this->redirectToRoute(
 //                    'app_document_index',

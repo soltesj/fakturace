@@ -26,20 +26,21 @@ class DocumentVatModeController extends AbstractController
     #[Route('/api/{company}/document-vat-mode/{customer}', name: 'api_company_registry_lookup')]
     public function lookup(Company $company, Customer $customer): JsonResponse
     {
-        $vatMode = $this->vatModeService->getVatMode($company, $customer);
+        $vatModes = $this->vatModeService->getAvailableVatModes($company, $customer);
         $country = $company->getCountry();
-        if ($vatMode === VatMode::OSS) {
+        $vats['domestic'] = $this->vatService->getValidVatsByCountry($country);
+        if (in_array(VatMode::OSS->value, $vatModes)) {
             $country = $customer->getCountry();
+            $vats['oss'] = $this->vatService->getValidVatsByCountry($country);
         }
-        $vats = $this->vatService->getValidVatsByCountry($country);
+
         try {
             return $this->json([
-                'vatMode' => $vatMode->name,
+                'vatMode' => array_flip($vatModes),
                 'vatRates' => $vats,
             ]);
         } catch (Exception $e) {
             return $this->json(['error' => $e->getMessage()], 400);
         }
     }
-
 }

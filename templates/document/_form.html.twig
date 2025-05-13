@@ -1,15 +1,15 @@
 {{ form_start(form) }}
-<div {{ stimulus_controller('price-calc', {vats:vats, vatMode:vatMode, company:company.id}) }}
+<div {{ stimulus_controller('price-calc', {vats:vats, company:company.id}) }}
         data-action="document-item-collection:add-row->price-calc#toggleDocumentWithWat">
     <div data-controller="extended-info">
         <div class="row">
             <div class="col-md-4">
                 {{ form_row(form.documentType) }}
+                {{ form_row(form.vatMode, {'attr':{'data-price-calc-target':'vatMode',
+                    'data-action':'price-calc#vatModeChange'}}) }}
                 <div data-extended-info-target="extendedInfo">
                     {{ form_row(form.documentNumber) }}
                     {{ form_row(form.variableSymbol) }}
-                    {{ form_row(form.paymentType) }}
-                    {{ form_row(form.useDomesticReverseCharge, {'attr':{'data-price-calc':'useDomesticReverseCharge'}}) }}
                 </div>
             </div>
             <div class="col-md-4" {{ stimulus_controller('dates',{
@@ -22,21 +22,26 @@
                 <div data-extended-info-target="extendedInfo">
                     {{ form_row(form.dateTaxable, {'attr':{'data-dates-target':'dateTaxable'}}) }}
                     {{ form_row(form.dateDue, {'attr':{'data-dates-target':'dateDue'}}) }}
-                    {{ form_row(form.bankAccount) }}
                 </div>
             </div>
             <div class="col-md-4">
                 {{ form_row(form.customer,{attr:{'data-price-calc-target':'customer',
                     'data-action':"change->price-calc#customerChange"}}) }}
+                <div data-extended-info-target="extendedInfo">
+                    {{ form_row(form.paymentType) }}
+                    {{ form_row(form.bankAccount) }}
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form_row(form.currency) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(form.rate) }}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row" data-extended-info-target="extendedInfo">
-            <div class="col-md-4">
-                {{ form_row(form.currency) }}
-            </div>
-            <div class="col-md-4">
-                {{ form_row(form.rate) }}
-            </div>
             <div class="col-md-8">
                 {{ form_row(form.description) }}
             </div>

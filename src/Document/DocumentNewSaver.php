@@ -19,16 +19,12 @@ readonly class DocumentNewSaver
         private DocumentNumberManager $documentNumberManager,
         private PriceCalculatorService $priceCalculatorService,
         private DocumentPriceTypeRepository $documentPriceTypeRepository,
-        private VatModeService $vatModeService,
     ) {
     }
 
-    public function save(Document $document, bool $useDomesticReverseCharge): void
+    public function save(Document $document): void
     {
         $this->documentNumberManager->generate($document);
-        $vatMode = $this->vatModeService->getVatMode($document->getCompany(), $document->getCustomer());
-        $vatMode = ($useDomesticReverseCharge && $vatMode === VatMode::DOMESTIC) ? VatMode::DOMESTIC_REVERSE_CHARGE : $vatMode;
-        $document->setVatMode($vatMode);
         [$vatPrices, $priceTotal] = $this->priceCalculatorService->calculate($document);
         $this->createDocumentPrices($document, $vatPrices, $priceTotal);
         $this->entityManager->persist($document);

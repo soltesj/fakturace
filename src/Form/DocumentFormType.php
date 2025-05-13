@@ -10,12 +10,13 @@ use App\Entity\Document;
 use App\Entity\DocumentType;
 use App\Entity\PaymentType;
 use App\Enum\VatMode;
+use App\Service\VatModeService;
 use App\Status\StatusValues;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -27,10 +28,7 @@ class DocumentFormType extends AbstractType
     {
         /** @var Document $document */
         $document = $options['data'];
-//        dump( $document);
         $company = $document->getCompany();
-//        dump(array_keys($options));
-        $domesticReverseCharge = ($document->getVatMode() === VatMode::DOMESTIC_REVERSE_CHARGE) ? 'checked' : false;
         $documentTypes = Types::INVOICE_OUTGOING_TYPES;
         $builder->add('documentType', EntityType::class, [
             'class' => DocumentType::class,
@@ -76,15 +74,6 @@ class DocumentFormType extends AbstractType
                 'label' => 'payment Type',
                 'attr' => [
                     'placeholder' => 'payment Type',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
-                ],
-            ])
-            ->add('transferTax', options: [
-                'label' => 'transferTax',
-                'attr' => [
-                    'placeholder' => 'transferTax',
                 ],
                 'row_attr' => [
                     'class' => 'form-floating mb-3',
@@ -209,11 +198,20 @@ class DocumentFormType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
             ])
-            ->add('useDomesticReverseCharge', CheckboxType::class, [
-                'label' => 'Použít režim přenesení daňové povinnosti',
-                'required' => false,
-                'mapped' => false,
-                'attr' => ['checked' => $domesticReverseCharge],
+            ->add('vatMode', ChoiceType::class, [
+                'choices' => VatMode::cases(),
+                //$this->vatModeService->getAvailableVatModes($company,$document->getCustomer()),
+                'choice_label' => fn(VatMode $mode) => $mode->label(),
+                'choice_value' => fn(?VatMode $mode) => $mode?->value,
+//                'data' => $this->vatModeService->getDefaultVatMode($company)->value,
+                'label' => 'VAT_MODE',
+                'required' => true,
+                'attr' => [
+                    'placeholder' => 'VAT_MODE',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating mb-3',
+                ],
             ]);
     }
 

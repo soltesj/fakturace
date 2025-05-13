@@ -2,15 +2,15 @@ import {Controller} from '@hotwired/stimulus';
 
 export default class extends Controller {
 
-    static targets = ['quantity', 'price', 'priceItem', 'vatPercentage', 'isPriceWithVat', 'priceTotal', 'priceTotalVat', 'priceVat', 'priceWithoutLowVat', 'priceWithoutHighVat', 'priceTotalWithVat', 'priceTotalWithoutVat', 'customer', 'documentWithVat', 'itemName', 'useDomesticReverseCharge']
+    static targets = ['quantity', 'price', 'priceItem', 'vatPercentage', 'isPriceWithVat', 'priceTotal', 'priceTotalVat', 'priceVat', 'priceWithoutLowVat', 'priceWithoutHighVat', 'priceTotalWithVat', 'priceTotalWithoutVat', 'customer', 'documentWithVat', 'itemName', 'useDomesticReverseCharge', 'vatMode']
 
     static values = {
-        vats: Object, vatMode: String,
+        vats: Object,
     }
     prices = [];
     priceTotalWithoutVat = [];
     priceTotal = 0;
-
+    vatModes = {}
 
     connect() {
         this.updateVatOptions()
@@ -27,7 +27,7 @@ export default class extends Controller {
             const quantity = parseFloat(this.quantityTargets[i].value)
             const priceItem = price * quantity;
             if (this.isVatModeEnabled()) {
-                const vat = 1 + this.vatsValue[this.vatPercentageTargets[i].value] / 100;
+                const vat = 1 + this.vatsValue[this.vatModeTarget.value][this.vatPercentageTargets[i].value] / 100;
                 const priceItemWithVat = priceItem * vat;
                 this.priceTotal += priceItemWithVat ? priceItemWithVat : 0;
                 this.priceItemTargets[i].innerHTML = priceItemWithVat ? this.round(priceItemWithVat + Number.EPSILON) : '--'
@@ -60,12 +60,18 @@ export default class extends Controller {
             return
         }
         const vatData = await this.getVatProcessingData(customerId);
-
         this.vatsValue = vatData.vatRates;
-        this.vatModeValue = vatData.vatMode;
+
+        this.updateVatModeOptions(vatData.vatMode);
         this.updateVatOptions();
         this.toggleDocumentWithWat();
+        this.vatModeChange();
         this.calc()
+    }
+
+    vatModeChange() {
+        this.updateVatOptions()
+        this.toggleDocumentWithWat()
     }
 
     toggleDocumentWithWat() {
@@ -98,13 +104,25 @@ export default class extends Controller {
     }
 
     updateVatOptions() {
-        const vatEntries = Object.entries(this.vatsValue);
+        const mode = this.vatModeTarget.value
+
+        const vatEntries = this.vatsValue[mode] || {};
 
         this.vatPercentageTargets.forEach(select => {
             select.innerHTML = '';
-            vatEntries.forEach(([value, label]) => {
+            Object.entries(vatEntries).forEach(([value, label]) => {
                 select.appendChild(this.createOption(value, label));
             });
+        });
+    }
+
+    updateVatModeOptions(vatModes) {
+        const select = this.vatModeTarget;
+        select.innerHTML = '';
+
+        Object.entries(vatModes).forEach(([label, value]) => {
+            const option = this.createOption(label, value);
+            select.appendChild(option);
         });
     }
 
@@ -116,7 +134,7 @@ export default class extends Controller {
     }
 
     isVatModeEnabled() {
-        return ['OSS', 'DOMESTIC'].includes(this.vatModeValue);
+        return ['oss', 'domestic'].includes(this.vatModeTarget.value);
     }
 
     round(value) {

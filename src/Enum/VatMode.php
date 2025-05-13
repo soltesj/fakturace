@@ -19,7 +19,7 @@ enum VatMode: string
             self::OSS => 'OSS (One Stop Shop)',
             self::REVERSE_CHARGE => 'Reverse charge',
             self::NONE => 'Bez DPH',
-            self::EXPORT => 'Export',
+            self::EXPORT => 'Export (Mimo EU)',
         };
     }
 }

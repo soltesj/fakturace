@@ -11,7 +11,9 @@ readonly class CompanyService
 
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
-    ) {}
+    )
+    {
+    }
 
     public function getCorrectCompanyUrl(Request $request, User $user): string
     {
