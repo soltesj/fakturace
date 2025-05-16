@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-<html lang="cs" data-bs-theme="light">
+<html lang="cs" class="dark">
 <head>
-    <script src="/assets/js/color-modes.js"></script>
     <meta charset="UTF-8">
     <title>{% block title %}Welcome!{% endblock %}</title>
     <link rel="icon"
@@ -16,27 +15,71 @@
 
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const settingsMenu = document.getElementById('settings-menu');
+                const submenu = document.getElementById('settings-submenu');
+
+                settingsMenu.addEventListener('mouseenter', () => {
+                    submenu.classList.remove('hidden');
+                });
+
+                settingsMenu.addEventListener('mouseleave', () => {
+                    submenu.classList.add('hidden');
+                });
+
+                const userMenu = document.getElementById('user-menu');
+                const userSubmenu = document.getElementById('user-submenu');
+
+                userMenu.addEventListener('mouseenter', () => {
+                    userSubmenu.classList.remove('hidden');
+                });
+
+                userMenu.addEventListener('mouseleave', () => {
+                    userSubmenu.classList.add('hidden');
+                });
+            });
+        </script>
         {% block importmap %}{% endblock %}
     {% endblock %}
 </head>
-<body>
+<body class="bg-background text-secondary transition-colors duration-300">
+
 {% include 'svg-symbols.html.twig' %}
 {% if app.user and company|default(null) %}
     {% include 'header-user.html.twig' %}
 {% else %}
     {% include 'header.html.twig' %}
 {% endif %}
-<div class="container-lg">
+<div class="max-w-7xl mx-auto md:px-4 py-4 pb-32 md:py-4">
     {% for label, messages in app.flashes %}
         {% for message in messages %}
-            <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+            <div class="mb-4 rounded border-l-4 p-4 delay-75  transition-opacity opacity-100 duration-900
+            {% if label == 'info' %}
+                    border-blue-500 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100
+                {% elseif label == 'success' %}
+                    border-green-500 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100
+                {% elseif label == 'error' %}
+                    border-red-500 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100
+                {% elseif label == 'warning' %}
+                    border-yellow-500 bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100
+                {% else %}
+                    border-gray-500 bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100
+                {% endif %}
+            ">
                 {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         {% endfor %}
     {% endfor %}
 
     {% block body %}{% endblock %}
 </div>
+<script>
+    const theme = localStorage.getItem('theme')
+    console.log(theme)
+    document.getElementById('toggle-theme').addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark')
+    })
+</script>
 </body>
 </html>

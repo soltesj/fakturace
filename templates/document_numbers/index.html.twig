@@ -3,46 +3,48 @@
 {% block title %}DocumentNumbers index{% endblock %}
 
 {% block body %}
-    <h1 class="mb-5">
+    <h1 class="mb-5 flex justify-start items-center text-xl space-x-3">
         <a href="{{ path('app_dash_board',{'company': company.id}) }}" class="text-decoration-none">
-            <svg class="bi me-3 mb-1" width="30" height="30">
+            <svg class="size-8">
                 <use href="#arrow-left-circle"/>
             </svg>
-        </a>DocumentNumbers index
+        </a>
+        <span>DocumentNumbers index</span>
     </h1>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Year</th>
-            <th>NumberFormat</th>
-            <th>NextNumber</th>
-            <th>actions</th>
-        </tr>
-        </thead>
-        <tbody>
+    <div class="bg-background-secondary p-0 md:p-4">
+        <div class="bg-table-header text-text-primary/80 grid grid-cols-[1fr_1fr_1fr_50px]">
+            <div class="p-2">Year</div>
+            <div class="p-2">NumberFormat</div>
+            <div class="p-2">NextNumber</div>
+            <div class="p-2"></div>
+        </div>
         {% for documentTypeId,documentNumber in documentNumbers %}
-            <tr>
-                <td>{{ documentNumber.documentType.name }}</td>
-                <td>{{ documentNumber.numberFormat }}</td>
-                <td>{{ documentNumber.nextNumber }}</td>
-                <td>{% if documentNumber.id is null %}
+            <div class="grid grid-cols-[1fr_1fr_1fr_50px] border-b border-b-border">
+                <div class="p-2">{{ documentNumber.documentType.name }}</div>
+                <div class="p-2">{{ documentNumber.numberFormat }}</div>
+                <div class="p-2">{{ documentNumber.nextNumber }}</div>
+                <div class="p-2">{% if documentNumber.id is null %}
                         {% if is_granted('CREATE') %}
-                            <a href="{{ path('app_document_numbers_new', {'documentType': documentTypeId, 'company':company.id}) }}">edit</a>
+                            <a href="{{ path('app_setting_document_numbers_new', {'documentType': documentTypeId, 'company':company.id}) }}">
+                                <svg class="size-4">
+                                    <use href="#plus-circle-fill"/>
+                                </svg>
+                            </a>
                         {% endif %}
                     {% else %}
                         {% if is_granted('EDIT', documentNumber) %}
-                            <a href="{{ path('app_document_numbers_edit', {'documentNumber': documentNumber.id, 'company':company.id}) }}">edit</a>
+                            <a href="{{ path('app_setting_document_numbers_edit', {'documentNumber': documentNumber.id, 'company':company.id}) }}">
+                                <svg class="size-4">
+                                    <use href="#pen-to-square"/>
+                                </svg>
+                            </a>
                         {% endif %}
                     {% endif %}
-                </td>
-            </tr>
+                </div>
+            </div>
         {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
+            <p class="p-2">{{ 'NO_RECORD_FOUND'|trans }}</p>
         {% endfor %}
-        </tbody>
-    </table>
-
+    </div>
 {% endblock %}

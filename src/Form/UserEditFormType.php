@@ -19,17 +19,11 @@ class UserEditFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Name',
                 ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
-                ],
             ])
             ->add('surname',null,[
                 'label' => 'Surname',
                 'attr' => [
                     'placeholder' => 'Surname',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
                 ],
             ])
             ->add('email',null,[
@@ -37,17 +31,11 @@ class UserEditFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Email',
                 ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
-                ],
             ])
             ->add('phone',null,[
                 'label' => 'Phone',
                 'attr' => [
                     'placeholder' => 'Phone',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
                 ],
             ])
         ;

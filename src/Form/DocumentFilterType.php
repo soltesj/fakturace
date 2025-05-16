@@ -12,22 +12,22 @@ class DocumentFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-       // dd($options['data']);
+        // dd($options['data']);
         $builder->setMethod('GET')
             ->add('q', TextType::class, [
-            'label' => 'search',
-            'required'=>false,
-            'attr' => [
-                'placeholder' => 'search',
-            ],
-            'row_attr' => [
-                'class' => 'form-floating',
-            ],
-        ])
+                'label' => 'search',
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'search',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating',
+                ],
+            ])
             ->add('state', ChoiceType::class, [
                 'choices' => ['NO_PAID' => 'NO_PAID', 'PAID' => 'PAID', 'ALL' => 'ALL', 'OVERDUE' => 'OVERDUE'],
                 'label' => 'state',
-                'required'=>false,
+                'required' => false,
                 'attr' => [
                     'placeholder' => 'state',
                 ],
@@ -37,7 +37,7 @@ class DocumentFilterType extends AbstractType
             ])
             ->add('customer', TextType::class, [
                 'label' => 'customer',
-                'required'=>false,
+                'required' => false,
                 'attr' => [
                     'placeholder' => 'customer',
                 ],
@@ -47,7 +47,7 @@ class DocumentFilterType extends AbstractType
             ])
             ->add('dateFrom', DateType::class, [
                 'label' => 'dateFrom',
-                'required'=>false,
+                'required' => false,
                 'attr' => [
                     'placeholder' => 'dateFrom',
                 ],
@@ -57,7 +57,7 @@ class DocumentFilterType extends AbstractType
             ])
             ->add('dateTo', DateType::class, [
                 'label' => 'dateTo',
-                'required'=>false,
+                'required' => false,
                 'attr' => [
                     'placeholder' => 'dateTo',
                 ],

@@ -3,61 +3,55 @@
 {% block title %}BankAccount index{% endblock %}
 
 {% block body %}
-    <h1 class="mb-5">
+    <h1 class="mb-5 flex justify-start items-center text-xl space-x-3">
         <a href="{{ path('app_dash_board',{'company': company.id}) }}" class="text-decoration-none">
-            <svg class="bi me-3 mb-1" width="30" height="30">
+            <svg class="size-8">
                 <use href="#arrow-left-circle"/>
             </svg>
         </a>
-        Bank Account
+        <span>Bank Account</span>
     </h1>
-    <div class="row mb-3">
-        {% if is_granted('CREATE') %}<a href="{{ path('app_bank_account_new',{'company':company.id}) }}"
-                                        class="text-decoration-none">
-                <svg width="16" height="16" class="bi me-1">
+
+    <div class="grid grid-flow-col justify-end md:justify-start space-x-3 md:space-x-4 p-3">
+        {% if is_granted('CREATE') %}<a href="{{ path('app_setting_account_new',{'company':company.id}) }}"
+                                        class="text-primary flex justify-start items-center space-x-1
+fixed bottom-20 right-20 md:relative md:bottom-auto md:right-auto">
+                <svg class="size-10  md:size-5">
                     <use href="#plus-circle-fill"/>
                 </svg>
-                NOVÝ</a>{% endif %}
+                <span class="hidden md:block">NOVÝ</span>
+            </a>{% endif %}
     </div>
-    <table class="table mt-3">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Short name</th>
-            <th>Number</th>
-            <th>Code</th>
-            <th>Iban</th>
-            <th>Bic</th>
-            <th>Sequence</th>
-            <th>actions</th>
-        </tr>
-        </thead>
-        <tbody>
+
+    <div class="bg-background-secondary p-0 md:p-4">
+        <div class="bg-table-header text-text-primary/80 grid grid-cols-[40px_1fr_1fr_50px] md:grid-cols-[50px_1fr_2fr_2fr_1fr_50px]">
+            <div class="p-2">#</div>
+            <div class="p-2">Name</div>
+            <div class="p-2">Number</div>
+            <div class="p-2 hidden md:block">Iban</div>
+            <div class="p-2 hidden md:block">Bic</div>
+            <div class="p-2"></div>
+        </div>
+        <div class="grid grid-cols-[40px_1fr_1fr_50px] md:grid-cols-[40px_1fr_2fr_2fr_1fr_50px] border-b border-b-border">
         {% for bank_account in bank_accounts %}
-            <tr>
-                <td>{% if is_granted('EDIT', bank_account) %}<a
-                        href="{{ path('app_bank_account_edit', {'company':company.id,'bankAccount': bank_account.id}) }}"
-                        class="text-decoration-none">{{ bank_account.name }}</a>{% else %}{{ bank_account.name }}{% endif %}
-                </td>
-                <td>{{ bank_account.shortName }}</td>
-                <td>{{ bank_account.accountNumber }}</td>
-                <td>{{ bank_account.bankCode }}</td>
-                <td>{{ bank_account.iban }}</td>
-                <td>{{ bank_account.bic }}</td>
-                <td>{{ bank_account.sequence }}</td>
-                <td>{% if is_granted('EDIT', bank_account) %}<a
-                        href="{{ path('app_bank_account_delete', {'company':company.id,'bankAccount': bank_account.id}) }}"
+            <div class="p-2">{{ bank_account.sequence }}</div>
+            <div class="p-2">{% if is_granted('EDIT', bank_account) %}<a
+                    href="{{ path('app_setting_account_edit', {'company':company.id,'bankAccount': bank_account.id}) }}"
+                    class="text-decoration-none">{{ bank_account.shortName }}</a>{% else %}{{ bank_account.shortName }}{% endif %}
+            </div>
+            <div class="p-2">{{ bank_account.accountNumber }}/{{ bank_account.bankCode }}</div>
+            <div class="p-2 hidden md:block">{{ bank_account.iban }}</div>
+            <div class="p-2 hidden md:block">{{ bank_account.bic }}</div>
+            <div class="p-2 flex justify-end">{% if is_granted('EDIT', bank_account) %}<a
+                    href="{{ path('app_setting_account_delete', {'company':company.id,'bankAccount': bank_account.id}) }}"
                         class="text-secondary icon-link-hover">
-                            <svg class="bi d-block mx-auto" width="20" height="20">
+                        <svg class="size-5">
                                 <use href="#dash-circle-fill"/>
                             </svg>
-                        </a>{% endif %}</td>
-            </tr>
+                    </a>{% endif %}</div>
         {% else %}
-            <tr>
-                <td colspan="12">no records found</td>
-            </tr>
+            <p class="p-2">{{ 'NO_RECORD_FOUND'|trans }}</p>
         {% endfor %}
-        </tbody>
-    </table>
+        </div>
+    </div>
 {% endblock %}

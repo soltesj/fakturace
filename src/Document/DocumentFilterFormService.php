@@ -9,6 +9,7 @@ use DateTimeInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -30,9 +31,6 @@ class DocumentFilterFormService
                 'attr' => [
                     'placeholder' => 'search',
                 ],
-                'row_attr' => [
-                    'class' => 'form-floating',
-                ],
             ])
             ->add('state', ChoiceType::class, [
                 'choices' => ['NO_PAID' => 'NO_PAID', 'PAID' => 'PAID', 'ALL' => 'ALL', 'OVERDUE' => 'OVERDUE'],
@@ -41,9 +39,6 @@ class DocumentFilterFormService
                 'required' => true,
                 'attr' => [
                     'placeholder' => 'state',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating',
                 ],
             ])
             ->add('customer', EntityType::class, [
@@ -60,9 +55,6 @@ class DocumentFilterFormService
                 'attr' => [
                     'placeholder' => 'customer',
                 ],
-                'row_attr' => [
-                    'class' => 'form-floating',
-                ],
             ])
             ->add('dateFrom', DateType::class, [
                 'label' => 'dateFrom',
@@ -70,18 +62,12 @@ class DocumentFilterFormService
                 'attr' => [
                     'placeholder' => 'dateFrom',
                 ],
-                'row_attr' => [
-                    'class' => 'form-floating',
-                ],
             ])
             ->add('dateTo', DateType::class, [
                 'label' => 'dateTo',
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'dateTo',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating',
                 ],
             ])
             ->getForm();

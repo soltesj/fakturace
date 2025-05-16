@@ -14,6 +14,11 @@ class DashBoardController extends AbstractController
     #[Route('/{_locale}/{company}/dashboard', name: 'app_dash_board')]
     public function index( Company $company): Response
     {
+        $this->addFlash('info', 'Welcome to the dashboard');
+        $this->addFlash('warning', 'You can use the menu on the left to navigate through the application');
+        $this->addFlash('error', 'You can use the menu on the left to navigate through the application');
+        $this->addFlash('success', 'You can use the menu on the left to navigate through the application');
+
         return $this->render('dash_board/index.html.twig', [
             'controller_name' => 'DashBoardController',
             'company' => $company,

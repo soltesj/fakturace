@@ -1,5 +1,4 @@
 import './bootstrap.js';
-import { Dropdown } from 'bootstrap';
 import { registerReactControllerComponents } from '@symfony/ux-react';
 
 registerReactControllerComponents(require.context('./react/controllers', true, /\.[jt]sx?$/));

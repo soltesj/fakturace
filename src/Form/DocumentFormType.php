@@ -44,9 +44,6 @@ class DocumentFormType extends AbstractType
             'attr' => [
                 'placeholder' => 'Document Type',
             ],
-            'row_attr' => [
-                'class' => 'form-floating mb-3',
-            ],
         ])
             ->add('documentNumber', options: [
                 'label' => 'documentNumber',
@@ -55,17 +52,11 @@ class DocumentFormType extends AbstractType
                     'readonly' => true,
                     'class' => 'form-control-plaintext',
                 ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
-                ],
             ])
             ->add('variableSymbol', options: [
                 'label' => 'variableSymbol',
                 'attr' => [
                     'placeholder' => 'variableSymbol',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
                 ],
             ])
             ->add('paymentType', EntityType::class, [
@@ -75,17 +66,11 @@ class DocumentFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'payment Type',
                 ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
-                ],
             ])
             ->add('dateIssue', options: [
                 'label' => 'dateIssue',
                 'attr' => [
                     'placeholder' => 'dateIssue',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
                 ],
             ])
             ->add('dateTaxable', options: [
@@ -93,17 +78,11 @@ class DocumentFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'dateTaxable',
                 ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
-                ],
             ])
             ->add('dateDue', options: [
                 'label' => 'dateDue',
                 'attr' => [
                     'placeholder' => 'dateDue',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
                 ],
             ])
             ->add('bankAccount', EntityType::class, [
@@ -121,9 +100,6 @@ class DocumentFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'bankAccount',
                 ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
-                ],
             ])
             ->add('customer', EntityType::class, [
                 'class' => Customer::class,
@@ -138,9 +114,6 @@ class DocumentFormType extends AbstractType
                 },
                 'label' => 'customer',
                 'placeholder' => '',
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
-                ],
             ])
             ->add('currency', EntityType::class, [
                 'class' => Currency::class,
@@ -156,17 +129,11 @@ class DocumentFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'currency',
                 ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
-                ],
             ])
             ->add('rate', options: [
                 'label' => 'currency rate',
                 'attr' => [
                     'placeholder' => 'currency rate',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
                 ],
             ])
             ->add('tag', options: [
@@ -174,17 +141,11 @@ class DocumentFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'tag',
                 ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
-                ],
             ])
             ->add('description', options: [
                 'label' => 'description',
                 'attr' => [
                     'placeholder' => 'description',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
                 ],
             ])
             ->add('priceWithoutHighVat', HiddenType::class)
@@ -208,9 +169,6 @@ class DocumentFormType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'placeholder' => 'VAT_MODE',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating mb-3',
                 ],
             ]);
     }

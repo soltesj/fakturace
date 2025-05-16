@@ -1,21 +1,28 @@
-{% form_theme form 'form/bootstrap_5_horizontal_layout.html.twig' %}
 {{ form_start(form) }}
 <div class="row mb-5" {{ stimulus_controller('customer/ico-autofill',{}) }}>
     <div {{ stimulus_target('customer/ico-autofill','alertBox') }}></div>
     <div class="col-md-6">
         {{ form_row(form.country, { attr: { 'data-customer--ico-autofill-target': 'countryInput' } }) }}
-        <div class="mb-3 row">
-            <div class="input-group">
-                {{ form_label(form.companyNumber) }}
-                {{ form_widget(form.companyNumber, { attr: { 'data-customer--ico-autofill-target': 'companyNumberInput' }}) }}
-                <button class="btn btn-outline-secondary" type="button" id="button-addon"
-                        data-action="customer--ico-autofill#lookup">Auto fill
-                </button>
-                <div class="invalid-feedback ">
-                    Please choose a username.
-                </div>
-            </div>
+
+        <div class="mb-1 grid grid-cols-[15rem_1fr]">
+            {{ form_label(form.companyNumber) }}
+
+            {{ form_widget(form.companyNumber, { attr: { 'data-customer--ico-autofill-target': 'companyNumberInput' }}) }}
+            <button class="bg-background-secondary flex items-center justify-center p-2" type="button" id="button-addon"
+                    {{ stimulus_action('customer--ico-autofill','lookup') }}
+                    {{ stimulus_target('customer--ico-autofill','lookupButton') }}
+            >
+                <svg class="animate-spin size-5 mr-3 hidden" {{ stimulus_target('customer--ico-autofill','buttonSpinner') }}>
+                    <use href="#spinner"/>
+                </svg>
+                <svg class="size-5 mr-3 text-secondary" {{ stimulus_target('customer--ico-autofill','buttonLabel') }}>
+                    <use href="#share"/>
+                </svg>
+                Auto fill
+            </button>
         </div>
+
+
         {{ form_row(form.name, { attr: { 'data-customer--ico-autofill-target': 'nameInput' } }) }}
         {{ form_row(form.contact) }}
         {{ form_row(form.street, { attr: { 'data-customer--ico-autofill-target': 'streetInput' } }) }}

@@ -46,11 +46,8 @@ class DocumentController extends AbstractController
     }
 
     #[Route('/{_locale}/{company}/document', name: 'app_document_index', methods: ['GET'])]
-    public function index(
-        Request $request,
-        Company $company,
-        DocumentFilterFormService $filterFormService,
-    ): Response {
+    public function index(Request $request, Company $company, DocumentFilterFormService $filterFormService): Response
+    {
         $documents = [];
         $dateFrom = Date::firstDayOfJanuary();
         $dateTo = null;
@@ -148,11 +145,8 @@ class DocumentController extends AbstractController
 
     #[Route('/{_locale}/{company}/document/{document}/edit', name: 'app_document_edit', methods: ['GET', 'POST'])]
     #[IsGranted('EDIT', subject: 'document')]
-    public function edit(
-        Request $request,
-        Company $company,
-        Document $document,
-    ): Response {
+    public function edit(Request $request, Company $company, Document $document): Response
+    {
         $originalItems = new ArrayCollection();
         foreach ($document->getDocumentItems() as $documentItem) {
             $originalItems->add($documentItem);
@@ -190,11 +184,8 @@ class DocumentController extends AbstractController
 
     #[Route('/{_locale}/{company}/document/{document}/pdf', name: 'app_document_print', methods: ['GET'])]
     #[IsGranted('VIEW', subject: 'document')]
-    public function toPdf(
-        Company $company,
-        Document $document,
-        PdfService $pdfService,
-    ): Response {
+    public function toPdf(Company $company, Document $document, PdfService $pdfService): Response
+    {
         /** @var User $user */
         $user = $this->getUser();
         $userName = "{$user->getName()} {$user->getSurname()}";

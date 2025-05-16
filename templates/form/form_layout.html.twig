@@ -1,0 +1,24 @@
+{% use 'form_div_layout.html.twig' %}
+
+{% block form_row %}
+    <div class="mb-4">
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+    </div>
+{% endblock %}
+
+{% block form_widget_simple %}
+    {% set type = type|default('text') %}
+    <input type="{{ type }}"
+            {{ block('widget_attributes') }}
+           value="{{ value }}"
+           class="rounded-sm mt-0 block w-full border-0 border-b-2 bg-input-bg border-input-border px-1 focus:border-input-border-focus focus:ring-0"
+    />
+{% endblock %}
+
+{% block choice_widget_collapsed %}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' rounded-sm mt-0 block w-full border-0 border-b-2 bg-input-bg border-input-border px-1 focus:border-input-border-focus focus:ring-0')|trim
+    }) -%}
+    {{- parent() -}}
+{% endblock %}

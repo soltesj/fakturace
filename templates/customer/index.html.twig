@@ -3,58 +3,62 @@
 {% block title %}Adresář{% endblock %}
 
 {% block body %}
-    <h1 class="mb-5">
-        <a href="{{ path('app_dash_board', {'company': company.id}) }}" class="text-decoration-none">
-            <svg class="bi me-3 mb-1" width="30" height="30">
+    <h1 class="mb-5 flex justify-start items-center text-xl space-x-3">
+        <a href="{{ path('app_dash_board', {'company': company.id}) }}">
+            <svg class="size-8">
                 <use href="#arrow-left-circle"/>
             </svg>
         </a>
-        Adresář
+        <span>Adresář</span>
     </h1>
-    <div class="row mb-3">
-        {% if is_granted('CREATE') %}<a href="{{ path('app_customer_new', {'company': company.id}) }}"
-                                        class="text-decoration-none">
-            <svg width="16" height="16" class="bi me-1">
-                <use href="#plus-circle-fill"/>
-            </svg>
-                NOVÝ</a>{% endif %}
+    <div class="grid grid-flow-col justify-end md:justify-start space-x-3 md:space-x-4 p-3">
+        {% if is_granted('CREATE') %}
+        <a href="{{ path('app_customer_new', {'company': company.id}) }}"
+           class="text-primary flex justify-start items-center space-x-1
+fixed bottom-20 right-20 md:relative md:bottom-auto md:right-auto">
+                <svg class="size-10  md:size-5">
+                    <use href="#plus-circle-fill"/>
+                </svg>
+                <span class="hidden md:block">NOVÝ</span>
+            </a>{% endif %}
     </div>
-    <table class="table table-striped table-hover">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Town</th>
-            <th>BankAccount</th>
-            <th>Ic</th>
-            <th>Dic</th>
-            <th>actions</th>
-        </tr>
-        </thead>
-        <tbody>
+
+    <div class="bg-background-secondary p-0 md:p-4">
+        <div class="bg-table-header text-text-primary/80 grid grid-cols-[1fr_1fr_50px] md:grid-cols-[2fr_1fr_1fr_1fr_50px]">
+            <div class="order-1 md:order-1 p-2 pb-1 md:p-2 sm:col-span-1">Name</div>
+            <div class="md:order-3 p-2 hidden">BankAccount</div>
+            <div class="order-2 md:order-4 p-2 pb-1 md:p-2 text-right">Ic</div>
+            <div class="order-4 md:order-2 px-2 pb-2 pt-0 md:p-2 text-xs font-light md:text-base md:font-normal">Town
+            </div>
+            <div class="order-5 md:order-5 px-2 pb-2 pt-0 md:p-2 text-right text-xs font-light md:text-base md:font-normal">
+                Dic
+            </div>
+            <div class="order-3 md:order-6 row-span-2 md:row-span-1 p-2"></div>
+        </div>
         {% for customer in customers %}
-            <tr>
-                <td>{% if is_granted('EDIT', customer) %}
+            <div class="grid grid-cols-[1fr_1fr_50px] md:grid-cols-[2fr_1fr_1fr_1fr_50px] border-b border-b-border">
+                <div class="order-1 md:order-1 p-2 pb-1 md:p-2">
+                    {% if is_granted('EDIT', customer) %}
                         <a href="{{ path('app_customer_edit', {'customer': customer.id, 'company':company.id}) }}"
                            class="text-decoration-none">{{ customer.name }}</a>{% else %}{{ customer.name }}{% endif %}
-                </td>
-                <td>{{ customer.town }}</td>
-                <td>{{ customer.bankAccount }}</td>
-                <td>{{ customer.companyNumber }}</td>
-                <td>{{ customer.vatNumber }}</td>
-                <td>{% if is_granted('EDIT', customer) %}
+                </div>
+                <div class="md:order-3 p-2 hidden">{{ customer.bankAccount }}</div>
+
+                <div class="order-2 md:order-4 p-2 pb-1 md:p-2 text-right">{{ customer.companyNumber }}</div>
+
+                <div class="order-4 md:order-2 px-2 pb-2 pt-0 md:p-2 text-xs font-light md:text-base md:font-normal">{{ customer.town }}</div>
+                <div class="order-5 md:order-5 px-2 pb-2 pt-0 md:p-2 text-right text-xs font-light md:text-base md:font-normal">{{ customer.vatNumber }}</div>
+                <div class="order-3 row-span-2 md:row-span-1 md:order-6 p-2 flex justify-end items-center space-x-2">{% if is_granted('EDIT', customer) %}
                     <a href="{{ path('app_customer_delete', {'company':company.id, 'customer': customer.id}) }}"
                        class="text-secondary icon-link-hover">
-                        <svg class="bi d-block mx-auto" width="20" height="20">
-                            <use href="#dash-circle-fill"/>
-                        </svg>
+                            <svg class="size-5">
+                                <use href="#dash-circle-fill"/>
+                            </svg>
                         </a>{% endif %}
-                </td>
-            </tr>
+                </div>
+            </div>
         {% else %}
-            <tr>
-                <td colspan="15">no records found</td>
-            </tr>
+            <p class="p-2">{{ 'NO_RECORD_FOUND'|trans }}</p>
         {% endfor %}
-        </tbody>
-    </table>
+    </div>
 {% endblock %}

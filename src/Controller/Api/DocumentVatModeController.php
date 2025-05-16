@@ -23,7 +23,7 @@ class DocumentVatModeController extends AbstractController
     ) {
     }
 
-    #[Route('/api/{company}/document-vat-mode/{customer}', name: 'api_company_registry_lookup')]
+    #[Route('/api/{company}/document-vat-mode/{customer}', name: 'api_document_vat_mode_lookup')]
     public function lookup(Company $company, Customer $customer): JsonResponse
     {
         $vatModes = $this->vatModeService->getAvailableVatModes($company, $customer);

@@ -22,7 +22,7 @@ class BankAccountController extends AbstractController
         private readonly StatusRepository $statusRepository,
     ) {}
 
-    #[Route('/{_locale}/{company}/bank-account/', name: 'app_bank_account_index', methods: ['GET'])]
+    #[Route('/{_locale}/{company}/bank-account/', name: 'app_setting_account_index', methods: ['GET'])]
     public function index(
         Company $company,
         BankAccountRepository $accountRepository
@@ -35,7 +35,7 @@ class BankAccountController extends AbstractController
         ]);
     }
 
-    #[Route('/{_locale}/{company}/bank-account/new', name: 'app_bank_account_new', methods: ['GET', 'POST'])]
+    #[Route('/{_locale}/{company}/bank-account/new', name: 'app_setting_account_new', methods: ['GET', 'POST'])]
     #[IsGranted('CREATE')]
     public function new(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
@@ -50,7 +50,7 @@ class BankAccountController extends AbstractController
             $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
             return $this->redirectToRoute(
-                'app_bank_account_index',
+                'app_setting_account_index',
                 ['company' => $company->getId()],
                 Response::HTTP_SEE_OTHER
             );
@@ -63,7 +63,7 @@ class BankAccountController extends AbstractController
         ]);
     }
 
-    #[Route('/{_locale}/{company}/bank-account/{bankAccount}/edit', name: 'app_bank_account_edit', methods: [
+    #[Route('/{_locale}/{company}/bank-account/{bankAccount}/edit', name: 'app_setting_account_edit', methods: [
         'GET',
         'POST',
     ])]
@@ -89,7 +89,7 @@ class BankAccountController extends AbstractController
             $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
             return $this->redirectToRoute(
-                'app_bank_account_index',
+                'app_setting_account_index',
                 ['company' => $company->getId()],
                 Response::HTTP_SEE_OTHER
             );
@@ -102,7 +102,7 @@ class BankAccountController extends AbstractController
         ]);
     }
 
-    #[Route('/{_locale}/{company}/bank-account/{bankAccount}/delete', name: 'app_bank_account_delete', methods: ['GET'])]
+    #[Route('/{_locale}/{company}/bank-account/{bankAccount}/delete', name: 'app_setting_account_delete', methods: ['GET'])]
     #[IsGranted('DELETE', subject: 'bankAccount')]
     public function delete(
         Company $company,
@@ -118,7 +118,7 @@ class BankAccountController extends AbstractController
         $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
         return $this->redirectToRoute(
-            'app_bank_account_index',
+            'app_setting_account_index',
             ['company' => $company->getId()],
             Response::HTTP_SEE_OTHER
         );

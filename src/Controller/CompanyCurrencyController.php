@@ -23,7 +23,7 @@ class CompanyCurrencyController extends AbstractController
     ) {
     }
 
-    #[Route('/{_locale}/{company}/currency', name: 'app_currency_edit', methods: ['GET', 'POST'])]
+    #[Route('/{_locale}/{company}/currency', name: 'app_setting_currency_edit', methods: ['GET', 'POST'])]
     public function currencies(Company $company, CurrencyRepository $currencyRepository): Response
     {
         $currencies = $currencyRepository->findBy([],['currencyCode' => 'ASC']);
@@ -46,9 +46,8 @@ class CompanyCurrencyController extends AbstractController
                 $this->addFlash('warning', 'CHANGES_HAVE_BEEN_REMOVED');
             }
 
-
-
-        return $this->redirectToRoute('app_currency_edit', ['company' => $company->getId()], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_setting_currency_edit', ['company' => $company->getId()],
+            Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{_locale}/{company}/currency/{currency}/remove/', name: 'app_company_remove_currency', methods: ['GET'])]
@@ -67,7 +66,7 @@ class CompanyCurrencyController extends AbstractController
             $this->addFlash('warning', 'CHANGES_HAVE_BEEN_REMOVED');
         }
 
-
-        return $this->redirectToRoute('app_currency_edit', ['company' => $company->getId()], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_setting_currency_edit', ['company' => $company->getId()],
+            Response::HTTP_SEE_OTHER);
     }
 }

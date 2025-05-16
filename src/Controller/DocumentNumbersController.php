@@ -20,7 +20,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 class DocumentNumbersController extends AbstractController
 {
-    #[Route('/{_locale}/{company}/document-numbers/', name: 'app_document_numbers_index', methods: ['GET'])]
+    #[Route('/{_locale}/{company}/document-numbers/', name: 'app_setting_document_numbers_index', methods: ['GET'])]
     public function index(
         Company $company,
         DocumentNumbersRepository $documentNumbersRepository,
@@ -60,7 +60,7 @@ class DocumentNumbersController extends AbstractController
         ]);
     }
 
-    #[Route('/{_locale}/{company}/document-numbers/{documentType}/new', name: 'app_document_numbers_new', methods: [
+    #[Route('/{_locale}/{company}/document-numbers/{documentType}/new', name: 'app_setting_document_numbers_new', methods: [
         'GET',
         'POST',
     ])]
@@ -78,7 +78,7 @@ class DocumentNumbersController extends AbstractController
             $entityManager->persist($documentNumber);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_document_numbers_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_setting_document_numbers_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('document_numbers/new.html.twig', [
@@ -89,7 +89,7 @@ class DocumentNumbersController extends AbstractController
         ]);
     }
 
-    #[Route('/{_locale}/{company}/document-numbers/{documentNumber}/edit', name: 'app_document_numbers_edit', methods: [
+    #[Route('/{_locale}/{company}/document-numbers/{documentNumber}/edit', name: 'app_setting_document_numbers_edit', methods: [
         'GET',
         'POST',
     ])]
@@ -105,7 +105,7 @@ class DocumentNumbersController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_document_numbers_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_setting_document_numbers_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('document_numbers/edit.html.twig', [

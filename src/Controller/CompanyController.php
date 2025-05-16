@@ -14,7 +14,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 class CompanyController extends AbstractController
 {
-    #[Route('/{_locale}/{company}/company/', name: 'app_company_edit', methods: ['GET', 'POST'])]
+    #[Route('/{_locale}/{company}/company/', name: 'app_setting_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(CompanyType::class, $company);
@@ -23,7 +23,7 @@ class CompanyController extends AbstractController
             $entityManager->flush();
             $this->addFlash('success', 'CHANGES_HAVE_BEEN_SAVED');
 
-            return $this->redirectToRoute('app_company_edit', ['company' => $company->getId()],
+            return $this->redirectToRoute('app_setting_edit', ['company' => $company->getId()],
                 Response::HTTP_SEE_OTHER);
         }
 

@@ -1,18 +1,19 @@
+{% form_theme form 'form/form_layout_horizontal.html.twig' %}
+{# ,{'attr':{'class':"grid grid-cols-[1fr] justify-items-center space-x-3 mb-5"}} #}
+<div class="bg-background-secondary p-2 mt-5 md:p-4">
 {{ form_start(form) }}
-<div class="row mb-5">
-    <div class="col-md-6">
+
         {{ form_row(form.name) }}
         {{ form_row(form.accountNumber) }}
         {{ form_row(form.iban) }}
         {{ form_row(form.token) }}
         {{ form_row(form.sequence) }}
-    </div>
-    <div class="col-md-6">
+
         {{ form_row(form.shortName) }}
         {{ form_row(form.bankCode) }}
         {{ form_row(form.bic) }}
         {{ form_row(form.routingNumber) }}
-    </div>
-    <button class="btn btn-success">{{ button_label|default('Save') }}</button>
-</div>
+
+        <button>{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}
+</div>
