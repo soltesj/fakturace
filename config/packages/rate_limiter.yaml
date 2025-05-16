@@ -1,0 +1,6 @@
+framework:
+  rate_limiter:
+    company_registry_lookup:
+      policy: 'token_bucket'
+      limit: 3
+      rate: { interval: '15 second', amount: 1 }

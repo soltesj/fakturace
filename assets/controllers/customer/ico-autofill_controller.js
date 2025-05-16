@@ -1,6 +1,8 @@
 import {Controller} from '@hotwired/stimulus'
 import {showAlert} from '../../utils/ShowAlert'
 
+const COMPANY_NUMBER_REGEX = /^\d{8}$/;
+
 export default class extends Controller {
     static targets = [
         'alertBox', 'companyNumberInput', 'nameInput', 'streetInput', 'houseNumberInput',
@@ -17,28 +19,46 @@ export default class extends Controller {
             return
         }
 
+        this.setButtonState(true)
         this.toggleButtonLoading(true)
-
         try {
-            const data = await this.fetchCompanyData(country, companyNumber)
+            const response = await this.fetchCompanyData(country, companyNumber);
+
+
+            if (response.status === 429) {
+                const retryAfter = parseInt(response.headers.get('X-RateLimit-Retry-After') || '1') + 1
+                this.showWarning(`Překročen limit. Zkus to znovu za ${retryAfter} s.`, retryAfter * 1000)
+
+                setTimeout(() => this.setButtonState(false), retryAfter * 1000)
+                return
+            }
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`)
+            }
+
+            const data = await response.json()
             this.fillForm(data)
             this.showInfo('Údaje byly úspěšně načteny.')
         } catch (error) {
-            this.showWarning('Společnost s tímto IČO nebyla nalezena.')
             console.error(error)
+            this.showWarning('Společnost s tímto IČO nebyla nalezena.')
         } finally {
             this.toggleButtonLoading(false)
         }
-    }
-
-    isValidCompanyNumber(ico) {
-        return /^\d{8}$/.test(ico)
+        this.setButtonState(false)
     }
 
     async fetchCompanyData(country, companyNumber) {
-        const response = await fetch(`/api/company-registry/${country}/${companyNumber}`)
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
-        return await response.json()
+        return fetch(this.buildUrl(country, companyNumber));
+    }
+
+    isValidCompanyNumber(companyNumber) {
+        return COMPANY_NUMBER_REGEX.test(companyNumber);
+    }
+
+    buildUrl(country, companyNumber) {
+        return `/api/company-registry/${country}/${companyNumber}`
     }
 
     fillForm(data) {
@@ -54,7 +74,10 @@ export default class extends Controller {
     toggleButtonLoading(isLoading) {
         this.buttonSpinnerTarget.classList.toggle('hidden', !isLoading)
         this.buttonLabelTarget.classList.toggle('hidden', isLoading)
-        this.lookupButtonTarget.disabled = isLoading
+    }
+
+    setButtonState(disabled) {
+        this.lookupButtonTarget.disabled = disabled
     }
 
     showWarning(message, timeout = 3000) {
