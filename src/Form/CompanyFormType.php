@@ -43,7 +43,6 @@ class CompanyFormType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
             ])
-            ->add('vatPayer')
         ;
     }
 

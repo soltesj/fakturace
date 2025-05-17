@@ -7,13 +7,13 @@ use App\Entity\Country;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 
-#[IsGranted('ROLE_USER')]
+
 class CompanyRegistryController extends AbstractController
 {
 
@@ -29,9 +29,9 @@ class CompanyRegistryController extends AbstractController
     }
 
     #[Route('/api/company-registry/{country}/{businessNumber}', name: 'api_company_registry_lookup')]
-    public function lookup(Country $country, string $businessNumber): JsonResponse
+    public function lookup(Request $request, Country $country, string $businessNumber): JsonResponse
     {
-        $userIdentifier = $this->getUser()->getUserIdentifier();
+        $userIdentifier = $this->getUser()?->getUserIdentifier() ?? $request->getClientIp();
         $limiter = $this->rateLimiter->create($userIdentifier);
         $limit = $limiter->consume();
         if (!$limit->isAccepted()) {
@@ -55,5 +55,4 @@ class CompanyRegistryController extends AbstractController
             return $this->json(['error' => $e->getMessage()], 400);
         }
     }
-
 }

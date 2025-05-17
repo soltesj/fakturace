@@ -61,12 +61,14 @@ class RegistrationController extends AbstractController
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
             $entityManager->persist($company);
             $entityManager->flush();
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())->from(new Address('registration@i-fakturace.eu',
-                    'registrace'))
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig'));
+            $address = new Address('registration@i-fakturace.eu', 'registrace');
+            $template = new TemplatedEmail()
+                ->from($address)
+                ->to($user->getEmail())
+                ->subject('Please Confirm your Email')
+                ->htmlTemplate('registration/confirmation_email.html.twig');
+            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user, $template
+            );
 
             return $userAuthenticator->authenticateUser($user, $authenticator, $request);
         }

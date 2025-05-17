@@ -3,20 +3,54 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
-
-    <h1>Register</h1>{{ form_errors(registrationForm) }}
-{#    {% form_theme registrationForm 'bootstrap_5_horizontal_layout.html.twig' %}#}
+    <h1 class="text-2xl mb-10">{{ 'RGISTRATION'|trans }}</h1>
+    {{ form_errors(registrationForm) }}
     {{ form_start(registrationForm) }}
-    <div class="row mb-5">
-        <div class="col-md-6 mb-3">{{ form_row(registrationForm.user) }}</div>
-        <div class="col-md-6 mb-3">{{ form_row(registrationForm.company) }}</div>
-        {{ form_row(registrationForm.agreeTerms) }}
+    <div {{ stimulus_controller('customer/ico-autofill',{}) }}>
+        <div {{ stimulus_target('customer/ico-autofill','alertBox') }}></div>
+        <div class="">
+            <div class="">
+                {{ form_row(registrationForm.user.email) }}
+                {{ form_row(registrationForm.user.plainPassword) }}
+                {{ form_row(registrationForm.user.name) }}
+                {{ form_row(registrationForm.user.surname) }}
+                {{ form_row(registrationForm.user.phone) }}
+            </div>
+            <div class="">
+                {{ form_row(registrationForm.company.country, { attr: { 'data-customer--ico-autofill-target': 'countryInput' }}) }}
+                <div class="">
+                    {{ form_label(registrationForm.company.businessId) }}
 
+                    {{ form_widget(registrationForm.company.businessId, { attr: { 'data-customer--ico-autofill-target': 'companyNumberInput' }}) }}
+                    <div class="col-span-4 col-start-2">
+                        <button class=" bg-background-secondary disabled:bg-gray-500 flex items-center justify-center p-2"
+                                type="button" id="button-addon"
+                                {{ stimulus_action('customer--ico-autofill','lookup') }}
+                                {{ stimulus_target('customer--ico-autofill','lookupButton') }}
+                        >Auto fill
+                            <svg class="animate-spin size-5 ml-3 hidden" {{ stimulus_target('customer--ico-autofill','buttonSpinner') }}>
+                                <use href="#spinner"/>
+                            </svg>
+                            <svg class="size-5 ml-3 text-secondary" {{ stimulus_target('customer--ico-autofill','buttonLabel') }}>
+                                <use href="#share"/>
+                            </svg>
+                        </button>
+                    </div>
+                    {{ form_row(registrationForm.company.name, { attr: { 'data-customer--ico-autofill-target': 'nameInput' } }) }}
+                    {{ form_row(registrationForm.company.street, { attr: { 'data-customer--ico-autofill-target': 'streetInput' } }) }}
+                    {{ form_row(registrationForm.company.buildingNumber, { attr: { 'data-customer--ico-autofill-target': 'houseNumberInput' } }) }}
+                    {{ form_row(registrationForm.company.city, { attr: { 'data-customer--ico-autofill-target': 'townInput' } }) }}
+                    {{ form_row(registrationForm.company.zipcode, { attr: { 'data-customer--ico-autofill-target': 'zipcodeInput' } }) }}
+                    {{ form_row(registrationForm.company.vatNumber, { attr: { 'data-customer--ico-autofill-target': 'vatNumberInput' } }) }}
+                    {{ form_row(registrationForm.company.isVatPayer,{ attr: { 'data-customer--ico-autofill-target': 'isVatPayerInput' } }) }}
+                    {{ form_row(registrationForm.company.isOss) }}
+                    {{ form_row(registrationForm.company.currency) }}
+                </div>
+            </div>
+        </div>
+        <div> {{ form_row(registrationForm.agreeTerms) }}
         <button type="submit" class="btn btn-success">Register</button>
-
-    </div> {{ form_end(registrationForm) }}
-
+        </div>
+        {{ form_end(registrationForm) }}
+    </div>
 {% endblock %}

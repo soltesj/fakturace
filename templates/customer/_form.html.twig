@@ -3,7 +3,7 @@
     <div {{ stimulus_target('customer/ico-autofill','alertBox') }}></div>
     <div class="flex justify-between">
         <div class="">
-        {{ form_row(form.country, { attr: { 'data-customer--ico-autofill-target': 'countryInput' } }) }}
+            {{ form_row(form.country, { attr: { 'data-customer--ico-autofill-target': 'countryInput' }}) }}
 
             <div class="mb-1 grid grid-cols-[12rem_1fr]">
             {{ form_label(form.companyNumber) }}
