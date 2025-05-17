@@ -45,7 +45,7 @@
 </head>
 <body class="bg-background text-secondary transition-colors duration-300">
 
-{% include 'svg-symbols.html.twig' %}
+
 {% if app.user and company|default(null) %}
     {% include 'header-user.html.twig' %}
 {% else %}
@@ -81,5 +81,6 @@
         document.documentElement.classList.toggle('dark')
     })
 </script>
+{% include 'svg-symbols.html.twig' %}
 </body>
 </html>
