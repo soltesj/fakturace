@@ -64,7 +64,7 @@ class DocumentController extends AbstractController
              * @var Customer|null $customer
              * @var string|null $state
              * */
-            list($query, $dateFrom, $dateTo, $customer, $state) = $filterFormService->handleFrom(
+            [$query, $dateFrom, $dateTo, $customer, $state] = $filterFormService->handleFrom(
                 $formFilter->getData(),
                 $dateFrom
             );
@@ -83,7 +83,7 @@ class DocumentController extends AbstractController
             $this->logger->error($e->getMessage(), $e->getTrace());
             $this->addFlash('danger', "DOCUMENT_LOADING_ERROR");
         }
-        if ($request->get('isAjax') === 'true') {
+        if ($request->isXmlHttpRequest()) {
             return $this->render('document/_list.html.twig', [
                 'documents' => $documents,
                 'company' => $company,

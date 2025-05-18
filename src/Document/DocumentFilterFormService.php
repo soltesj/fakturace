@@ -9,37 +9,32 @@ use DateTimeInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 
-class DocumentFilterFormService
+readonly class DocumentFilterFormService
 {
-    public function __construct(private readonly FormFactoryInterface $formFactory)
+    public function __construct(private FormFactoryInterface $formFactory)
     {
     }
 
     public function createForm(Company $company): FormInterface
     {
-        return $this->formFactory->createBuilder()->setMethod('GET')
+        return
+            $this->formFactory->createNamedBuilder('')->setMethod('GET')
+
             ->add('q', TextType::class, [
                 'label' => 'search',
                 'required' => false,
-                'attr' => [
-                    'placeholder' => 'search',
-                ],
             ])
             ->add('state', ChoiceType::class, [
                 'choices' => ['NO_PAID' => 'NO_PAID', 'PAID' => 'PAID', 'ALL' => 'ALL', 'OVERDUE' => 'OVERDUE'],
                 'data' => 'NO_PAID',
                 'label' => 'state',
                 'required' => true,
-                'attr' => [
-                    'placeholder' => 'state',
-                ],
             ])
             ->add('customer', EntityType::class, [
                 'class' => Customer::class,
@@ -52,23 +47,14 @@ class DocumentFilterFormService
                         ->setParameter('company', $company)
                         ->orderBy('customer.name', 'ASC');
                 },
-                'attr' => [
-                    'placeholder' => 'customer',
-                ],
             ])
             ->add('dateFrom', DateType::class, [
                 'label' => 'dateFrom',
                 'required' => false,
-                'attr' => [
-                    'placeholder' => 'dateFrom',
-                ],
             ])
             ->add('dateTo', DateType::class, [
                 'label' => 'dateTo',
                 'required' => false,
-                'attr' => [
-                    'placeholder' => 'dateTo',
-                ],
             ])
             ->getForm();
     }

@@ -12,39 +12,22 @@
         <span>Faktury - vydané</span>
     </h1>
 
-    <div {{ stimulus_controller('documents/filter',{}) }}>
-
-
+    <div {{ stimulus_controller('documents/filter') }}>
         {% form_theme formFilter 'form/form_layout.html.twig' %}
-        {{ form_start(formFilter,{'attr':{'class':"grid grid-flow-col justify-items-center space-x-3 mb-5"}}) }}
+        {{ form_start(formFilter,{'attr':{
+            'class':"grid grid-flow-col justify-items-center space-x-3 mb-5",
+            'data-documents--filter-target':'filterForm',
+            'data-action':'submit->documents--filter#submitForm'
+        }}) }}
         {{ form_errors(formFilter) }}
 
-        {{ form_row(formFilter.q, {'attr':{
-            'data-action':'documents--filter#onChange',
-        }}) }}
-
-        {{ form_row(formFilter.state, {'attr':{
-            'data-action':'documents--filter#submitForm',
-
-        }}) }}
-
-        {{ form_row(formFilter.customer, {'attr':{
-            'data-action':'documents--filter#submitForm',
-        }}) }}
-
-        {{ form_row(formFilter.dateFrom, {'attr':{
-            'data-action':'documents--filter#submitForm',
-        }}) }}
-
-
-        {{ form_row(formFilter.dateTo, {'attr':{
-            'data-action':'documents--filter#submitForm',
-        }}) }}
-
+        {% for field in ['q', 'state', 'customer', 'dateFrom', 'dateTo'] %}
+            {{ form_row(formFilter[field], {attr: {'data-action':'documents--filter#onChange'}}) }}
+        {% endfor %}
 
         <div>
             <label>&nbsp;</label>
-            <button class="" data-action="documents--filter#submitForm">{{ 'FILTER'|trans }}</button>
+            <button type="submit" {{ stimulus_action('documents/filter', 'submitForm', 'click') }}>{{ 'FILTER'|trans }}</button>
         </div>
 
         {{ form_end(formFilter) }}

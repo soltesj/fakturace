@@ -13,6 +13,7 @@
 - [ ] refactor the document bank account ⇒ remove all bank account columns and create a bank account in the bank account
   table with relations
 - [ ] remove transfer_tax from database it will be replaced by vat_mode ``VatMode::DOMESTIC_REVERSE_CHARGE``
+- [ ] fix stimulus document filter is doesnt send request via ajax when is submitted
 
 ## Installation
 adding czech font is necessary copy them from ``fonts`` to ``vendor/tecnickcom/tcpdf/fonts`` directory. Or use the TCPDF utility ``tools/tcpdf_addfont.php`` Specify the path to the font
