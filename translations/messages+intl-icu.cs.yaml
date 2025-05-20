@@ -62,3 +62,20 @@ invoice.no_record_found: 'Žádná faktura nebyla nalezena'
 registration.registration: Registrace
 currency.currencies: Měny
 customer.no_record_found: 'Žádný zákazník nebyl nalezen'
+company.billing_information: 'Fakturační údaje'
+company.changes_have_been_saved: 'Změny byli uloženy'
+form.company.is_vat_payer: 'Plátce DPH'
+form.company.is_oss: OSS
+form.company.name: Název
+form.company.contact: Kontakt
+form.company.street: Ulice
+form.company.building_number: 'Číslo popisné'
+form.company.city: Město
+form.company.zipcode: PSČ
+form.company.businessId: IČO
+form.company.vat_number: DIČ
+form.company.phone: Telefon
+form.company.email: Email
+form.company.website: Stránky
+form.company.email_invoice_message: 'Zpráva na faktuře'
+form.company.country: Stát

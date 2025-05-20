@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+use function Symfony\Component\Translation\t;
+
 #[IsGranted('ROLE_USER')]
 class CompanyController extends AbstractController
 {
@@ -21,7 +23,7 @@ class CompanyController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            $this->addFlash('success', 'CHANGES_HAVE_BEEN_SAVED');
+            $this->addFlash('success', 'company.changes_have_been_saved');
 
             return $this->redirectToRoute('app_setting_edit', ['company' => $company->getId()],
                 Response::HTTP_SEE_OTHER);
