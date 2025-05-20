@@ -19,7 +19,11 @@ module.exports = {
                 'input-border': 'rgba(var(--color-form-input-border))',
                 'input-border-focus': 'rgba(var(--color-form-input-border-focus))',
 
-            }
+            },
+            order: {
+                13: '13',
+                14: '14',
+            },
         },
     },
     plugins: [

@@ -77,7 +77,7 @@ export default class extends Controller {
     toggleDocumentWithWat() {
         const showVatElements = this.isVatModeEnabled();
 
-        this.toggleClassList(this.documentWithVatTargets, 'd-none', showVatElements);
+        this.toggleClassList(this.documentWithVatTargets, 'hidden', showVatElements);
 
         this.itemNameTargets.forEach(element => {
             element.classList.toggle('col-md-5', showVatElements);

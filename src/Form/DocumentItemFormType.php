@@ -18,11 +18,19 @@ class DocumentItemFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
-            ->add('quantity')
-            ->add('unit')
-            ->add('price')
-            ->add('vat', EntityType::class, [
+            ->add(child: 'name', options: ['attr' => ['placeholder' => 'ITEM_NAME']])
+            ->add(child: 'quantity', options: [
+                'data' => '1',
+                'attr' => [
+//                ''placeholder' => 'QUANTITY'
+                ],
+            ])
+            ->add(child: 'unit', options: [
+                'data' => 'ks',
+                'attr' => ['placeholder' => 'UNIT_OF_MEASURE'],
+            ])
+            ->add(child: 'price', options: ['attr' => ['placeholder' => 'PRICE_OF_UNIT_OF_MEASURE']])
+            ->add(child: 'vat', type: EntityType::class, options: [
                 'class' => VatLevel::class,
                 'query_builder' => function (EntityRepository $er): QueryBuilder {
                     return $er->createQueryBuilder('vat_level')

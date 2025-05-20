@@ -29,28 +29,11 @@ class DocumentFormType extends AbstractType
         /** @var Document $document */
         $document = $options['data'];
         $company = $document->getCompany();
-        $documentTypes = Types::INVOICE_OUTGOING_TYPES;
-        $builder->add('documentType', EntityType::class, [
-            'class' => DocumentType::class,
-            'choice_label' => 'name',
-            'query_builder' => function (EntityRepository $er) use ($documentTypes): QueryBuilder {
-                return $er->createQueryBuilder('document_type')
-                    ->andWhere('document_type in (:document_type)')
-                    ->setParameter('document_type',
-                        $documentTypes)
-                    ->orderBy('document_type.name', 'ASC');
-            },
-            'label' => 'document Type',
-            'attr' => [
-                'placeholder' => 'Document Type',
-            ],
-        ])
-            ->add('documentNumber', options: [
+        $builder->add('documentNumber', options: [
                 'label' => 'documentNumber',
                 'attr' => [
                     'placeholder' => 'documentNumber',
                     'readonly' => true,
-                    'class' => 'form-control-plaintext',
                 ],
             ])
             ->add('variableSymbol', options: [

@@ -11,10 +11,11 @@ export default class extends Controller {
     }
 
     toggleInfo(event) {
-        event.currentTarget.innerHTML = this.showInformation ? '<svg width="16" height="16" class="bi me-1"><use href="#plus-circle"/></svg>Více informací' : '<svg width="16" height="16" class="bi me-1"><use href="#minus-circle"/></svg> Méně informací';
+        console.log(event.currentTarget)
+        event.currentTarget.innerHTML = this.showInformation ? '<svg class="size-4 mt-1"><use href="#plus-circle"/></svg><span>MORE_OPTIONS</span>' : '<svg class="size-4 mt-1"><use href="#minus-circle"/></svg><span>LESS_OPTIONS</span>';
         this.showInformation = !this.showInformation;
         this.extendedInfoTargets.forEach((element) => {
-            element.classList.toggle('d-none');
+            element.classList.toggle('hidden');
         })
     }
 
