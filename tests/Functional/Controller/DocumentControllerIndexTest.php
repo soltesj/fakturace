@@ -4,10 +4,13 @@ namespace App\Tests\Functional\Controller;
 
 use App\DataFixtures\AppFixtures;
 use App\Repository\UserRepository;
+use App\Test\Translation\TranslationHelperTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DocumentControllerIndexTest extends WebTestCase
 {
+    use TranslationHelperTrait;
+
     public function testDocumentIndexWorks(): void
     {
         $client = static::createClient();
@@ -15,7 +18,7 @@ class DocumentControllerIndexTest extends WebTestCase
         $client->loginUser($user);
         $crawler = $client->request('GET', '/cs/1/document');
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', 'Faktury - vydané');
+        $this->assertSelectorTextContains('h1', $this->t('invoice.outgoing_invoices'));
     }
 
     public function testDocumentIndexUnauthorizedAccessRedirect(): void
@@ -35,7 +38,7 @@ class DocumentControllerIndexTest extends WebTestCase
         $client->loginUser($user);
         $crawler = $client->request('GET', '/cs/1/document/new');
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', 'Create new Document');
+        $this->assertSelectorTextContains('h1', $this->t('invoice.new_invoice_outgoing'));
     }
 
     public function testDocumentNewUnauthorizedAccessRedirect(): void

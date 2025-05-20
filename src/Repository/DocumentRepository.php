@@ -161,7 +161,7 @@ class DocumentRepository extends ServiceEntityRepository
             $sql .= ' AND document.customer_id = ?';
         }
         if ($query) {
-            $sql .= ' AND (document.tag LIKE ? OR document.document_number LIKE ? OR customer.name LIKE ? OR document.description LIKE ?)';
+            $sql .= ' AND (document.note LIKE ? OR document.document_number LIKE ? OR customer.name LIKE ? OR document.description LIKE ?)';
         }
         switch ($state) {
             case 'PAID':

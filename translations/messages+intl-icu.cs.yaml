@@ -1,0 +1,64 @@
+login.sign_in: 'Přihlási se'
+login.username: 'Přihlásovací email'
+login.password: Heslo
+login.remember_me: 'Zapamatuj si mě'
+login.forgotten_password: 'Zapomenuté heslo?'
+invoice.new_invoice_outgoing: 'Nova fakrura vydaná'
+invoice.item_name: Položka
+invoice.item_quantity: Množství
+invoice.item_unit_of_measure: je.m.
+invoice.item_price_of_unit_of_measure: 'j. cena'
+invoice.item_vat: DPH
+invoice.item_unit_price_total: 'Celkem s DPH'
+invoice.price_total_without_vat: 'Celkem bez DPH'
+invoice.price_total_vat: DPH
+invoice.price_total_with_vat: 'Cena celkem'
+invoice.edit_invoice_outgoing: 'Upravit fakruru vydanou'
+form.invoice.vat_mode: DPH
+form.invoice.document_number: 'Číslo dokladu'
+form.invoice.document_number.placeholder: 'Číslo dokladu'
+form.invoice.variable_symbol: 'Variabilní symbol'
+form.invoice.variable_symbol.placeholder: automaticky
+form.invoice.payment_type: 'Způsob platby'
+form.invoice.date_issue: 'Datum vystavení'
+form.invoice.date_issue.placeholder: 'Datum vystavení'
+form.invoice.date_taxable: 'Datum zd. plnění'
+form.invoice.date_taxable.placeholder: 'Datum zd. plnění'
+form.invoice.date_due: 'Datum splatnosti'
+form.invoice.date_due.placeholder: 'Datum splatnosti'
+form.invoice.bank_account: 'Bankovní účet'
+form.invoice.bankAccount.placeholder: 'Bankovní účet'
+form.invoice.customer: Oběratel
+form.invoice.customer.placeholder: Oběratel
+form.invoice.currency: Měna
+form.invoice.currency.placeholder: Měna
+form.invoice.currency_rate: Kurz
+form.invoice.currency_rate.placeholder: Kurz
+form.invoice.note: Poznámka
+form.invoice.note.placeholder: 'Interní poznámka nebude uvedena na faktuře'
+form.invoice.description: Test
+form.invoice.description.placeholder: 'Text bude uveden před položkami na faktuře'
+button.save: Uložit
+button.update: Upravit
+button.invoice.filter: Filtrovat
+button.invoice.new_invoice: 'NOVÁ FAKTURA'
+button.invoice.check_payment: 'PŘÍJMOUT PLATBY'
+button.invoice.export_list: 'EXPORT SEZNAMU'
+invoice.outgoing_invoices: 'Faktury - vydané'
+form.filter.query: Vyhledat
+form.filter.query_placeholder: 'Číslo dokladu, poznámka, Oběratel,'
+form.filter.state: Stav
+form.filter.customer: Oběratel
+form.filter.date_from: 'Datum od'
+form.filter.date_to: 'Datum do'
+state.no_paid: neuhrazené
+state.paid: uhrazené
+state.all: všechny
+state.overdue: přeplacené
+document_number.no_record_found: 'Žádné číslo dokladu nebylo nalezeno'
+bank_account.no_record_found: 'Žádný bamkovní účet nebyl nalezen'
+invoice.pdf.qr_payment: 'QR platba'
+invoice.no_record_found: 'Žádná faktura nebyla nalezena'
+registration.registration: Registrace
+currency.currencies: Měny
+customer.no_record_found: 'Žádný zákazník nebyl nalezen'

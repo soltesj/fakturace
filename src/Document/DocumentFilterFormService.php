@@ -14,32 +14,45 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
+use function Symfony\Component\Translation\t;
 
 readonly class DocumentFilterFormService
 {
-    public function __construct(private FormFactoryInterface $formFactory)
+    public function __construct(private FormFactoryInterface $formFactory, private TranslatorInterface $t)
     {
     }
 
     public function createForm(Company $company): FormInterface
     {
+        $a = [
+            'NO_PAID' => $this->t->trans('state.no_paid'),
+            'PAID' => $this->t->trans('state.paid'),
+            'ALL' => $this->t->trans('state.all'),
+            'OVERDUE' => $this->t->trans('state.overdue'),
+        ];
+
         return
             $this->formFactory->createNamedBuilder('')->setMethod('GET')
 
             ->add('q', TextType::class, [
-                'label' => 'search',
+                'label' => t('form.filter.query'),
                 'required' => false,
+                'attr' => [
+                    'placeholder' => t('form.filter.query_placeholder'),
+                ],
             ])
             ->add('state', ChoiceType::class, [
-                'choices' => ['NO_PAID' => 'NO_PAID', 'PAID' => 'PAID', 'ALL' => 'ALL', 'OVERDUE' => 'OVERDUE'],
+                'choices' => array_flip($a),
                 'data' => 'NO_PAID',
-                'label' => 'state',
+                'label' => t('form.filter.state'),
                 'required' => true,
             ])
             ->add('customer', EntityType::class, [
                 'class' => Customer::class,
                 'choice_label' => 'name',
-                'label' => 'customer',
+                'label' => t('form.filter.customer'),
                 'required' => false,
                 'query_builder' => function (EntityRepository $er) use ($company): QueryBuilder {
                     return $er->createQueryBuilder('customer')
@@ -49,11 +62,11 @@ readonly class DocumentFilterFormService
                 },
             ])
             ->add('dateFrom', DateType::class, [
-                'label' => 'dateFrom',
+                'label' => t('form.filter.date_from'),
                 'required' => false,
             ])
             ->add('dateTo', DateType::class, [
-                'label' => 'dateTo',
+                'label' => t('form.filter.date_to'),
                 'required' => false,
             ])
             ->getForm();

@@ -10,10 +10,6 @@
         font-size: large;
     }
 
-    .pb-5 {
-        padding-bottom: 50px;
-    }
-
     .pb-3 {
         padding-bottom: 30px;
     }
@@ -95,7 +91,7 @@
                 </tr>
             </table>
         </td>
-        <td><img src="{{ qrCodeBase64 }}" width="60" height="60" alt="{{ 'QR_PAIMENT'|trans }}"></td>
+        <td><img src="{{ qrCodeBase64 }}" width="60" height="60" alt="{{ 'invoice.pdf.qr_payment'|trans }}"></td>
         {% set countryCode = document.customer.country.sname?document.company.country.sname %}
 {#        {{ dump( document.dateIssue) }}#}
 

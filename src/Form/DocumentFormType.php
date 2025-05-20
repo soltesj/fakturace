@@ -2,15 +2,12 @@
 
 namespace App\Form;
 
-use App\Document\Types;
 use App\Entity\BankAccount;
 use App\Entity\Currency;
 use App\Entity\Customer;
 use App\Entity\Document;
-use App\Entity\DocumentType;
 use App\Entity\PaymentType;
 use App\Enum\VatMode;
-use App\Service\VatModeService;
 use App\Status\StatusValues;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -22,6 +19,8 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use function Symfony\Component\Translation\t;
+
 class DocumentFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -30,42 +29,40 @@ class DocumentFormType extends AbstractType
         $document = $options['data'];
         $company = $document->getCompany();
         $builder->add('documentNumber', options: [
-                'label' => 'documentNumber',
+            'label' => t('form.invoice.document_number'),
                 'attr' => [
-                    'placeholder' => 'documentNumber',
+                    'placeholder' => t('form.invoice.document_number.placeholder'),
                     'readonly' => true,
                 ],
             ])
             ->add('variableSymbol', options: [
-                'label' => 'variableSymbol',
+                'label' => t('form.invoice.variable_symbol'),
                 'attr' => [
-                    'placeholder' => 'variableSymbol',
+                    'placeholder' => t('form.invoice.variable_symbol.placeholder'),
                 ],
             ])
             ->add('paymentType', EntityType::class, [
                 'class' => PaymentType::class,
                 'choice_label' => 'name',
-                'label' => 'payment Type',
-                'attr' => [
-                    'placeholder' => 'payment Type',
-                ],
+                'label' => t('form.invoice.payment_type'),
+
             ])
             ->add('dateIssue', options: [
-                'label' => 'dateIssue',
+                'label' => t('form.invoice.date_issue'),
                 'attr' => [
-                    'placeholder' => 'dateIssue',
+                    'placeholder' => t('form.invoice.date_issue.placeholder'),
                 ],
             ])
             ->add('dateTaxable', options: [
-                'label' => 'dateTaxable',
+                'label' => t('form.invoice.date_taxable'),
                 'attr' => [
-                    'placeholder' => 'dateTaxable',
+                    'placeholder' => t('form.invoice.date_taxable.placeholder'),
                 ],
             ])
             ->add('dateDue', options: [
-                'label' => 'dateDue',
+                'label' => t('form.invoice.date_due'),
                 'attr' => [
-                    'placeholder' => 'dateDue',
+                    'placeholder' => t('form.invoice.date_due.placeholder'),
                 ],
             ])
             ->add('bankAccount', EntityType::class, [
@@ -79,9 +76,9 @@ class DocumentFormType extends AbstractType
                         ->orderBy('bank_account.sequence', 'ASC');
                 },
                 'choice_label' => 'name',
-                'label' => 'bankAccount',
+                'label' => t('form.invoice.bank_account'),
                 'attr' => [
-                    'placeholder' => 'bankAccount',
+                    'placeholder' => t('form.invoice.bankAccount.placeholder'),
                 ],
             ])
             ->add('customer', EntityType::class, [
@@ -95,8 +92,8 @@ class DocumentFormType extends AbstractType
                         ->setParameter('status', StatusValues::STATUS_ACTIVE)
                         ->orderBy('customer.name', 'ASC');
                 },
-                'label' => 'customer',
-                'placeholder' => '',
+                'label' => t('form.invoice.customer'),
+                'placeholder' => t('form.invoice.customer.placeholder'),
             ])
             ->add('currency', EntityType::class, [
                 'class' => Currency::class,
@@ -108,27 +105,27 @@ class DocumentFormType extends AbstractType
                         ->orderBy('currency.currencyCode', 'ASC');
                 },
                 'choice_label' => 'currencyCode',
-                'label' => 'currency',
+                'label' => t('form.invoice.currency'),
                 'attr' => [
-                    'placeholder' => 'currency',
+                    'placeholder' => t('form.invoice.currency.placeholder'),
                 ],
             ])
             ->add('rate', options: [
-                'label' => 'currency rate',
+                'label' => t('form.invoice.currency_rate'),
                 'attr' => [
-                    'placeholder' => 'currency rate',
+                    'placeholder' => t('form.invoice.currency_rate.placeholder'),
                 ],
             ])
             ->add('note', options: [
-                'label' => 'note',
+                'label' => t('form.invoice.note'),
                 'attr' => [
-                    'placeholder' => 'note',
+                    'placeholder' => t('form.invoice.note.placeholder'),
                 ],
             ])
             ->add('description', options: [
-                'label' => 'description',
+                'label' => t('form.invoice.description'),
                 'attr' => [
-                    'placeholder' => 'description',
+                    'placeholder' => t('form.invoice.description.placeholder'),
                 ],
             ])
             ->add('priceWithoutHighVat', HiddenType::class)
@@ -148,10 +145,10 @@ class DocumentFormType extends AbstractType
                 'choice_label' => fn(VatMode $mode) => $mode->label(),
                 'choice_value' => fn(?VatMode $mode) => $mode?->value,
 //                'data' => $this->vatModeService->getDefaultVatMode($company)->value,
-                'label' => 'VAT_MODE',
+                'label' => t('form.invoice.vat_mode'),
                 'required' => true,
                 'attr' => [
-                    'placeholder' => 'VAT_MODE',
+                    'placeholder' => t('form.invoice.vat_mode'),
                 ],
             ]);
     }

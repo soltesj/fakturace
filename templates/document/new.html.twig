@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'NEW_INVOICE_OUTGOING'|trans }}{% endblock %}
+{% block title %}{{ 'invoice.new_invoice_outgoing'|trans }}{% endblock %}
 
 {% block body %}
     <h1 class="mb-5 flex justify-start items-center text-xl space-x-3">
@@ -9,9 +9,8 @@
                 <use href="#arrow-left-circle"/>
             </svg>
         </a>
-        <span>{{ 'NEW_INVOICE_OUTGOING'|trans }}</span>
+        <span>{{ 'invoice.new_invoice_outgoing'|trans }}</span>
     </h1>
 
-    {{ include('document/_form.html.twig', {'button_label': 'SAVE'}) }}
-
+    {{ include('document/_form.html.twig', {'button_label': 'button.save'|trans}) }}
 {% endblock %}
