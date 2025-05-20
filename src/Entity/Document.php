@@ -159,7 +159,7 @@ class Document implements CompanyOwnedInterface
     private ?string $priceTotal = null;
 
     #[ORM\Column( type: Types::TEXT, length: 65535, nullable: true)]
-    private ?string $tag = null;
+    private ?string $note = null;
 
     #[ORM\Column(type: 'string', nullable: true, enumType: VatMode::class)]
     private ?VatMode $vatMode = null;
@@ -517,14 +517,14 @@ class Document implements CompanyOwnedInterface
         $this->priceTotal = $priceTotal;
     }
 
-    public function getTag(): string
+    public function getNote(): string
     {
-        return $this->tag;
+        return $this->note;
     }
 
-    public function setTag(string $tag): void
+    public function setNote(string $note): void
     {
-        $this->tag = $tag;
+        $this->note = $note;
     }
 
 

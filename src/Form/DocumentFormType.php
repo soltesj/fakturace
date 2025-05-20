@@ -119,10 +119,10 @@ class DocumentFormType extends AbstractType
                     'placeholder' => 'currency rate',
                 ],
             ])
-            ->add('tag', options: [
-                'label' => 'tag',
+            ->add('note', options: [
+                'label' => 'note',
                 'attr' => [
-                    'placeholder' => 'tag',
+                    'placeholder' => 'note',
                 ],
             ])
             ->add('description', options: [
