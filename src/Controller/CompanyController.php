@@ -23,7 +23,7 @@ class CompanyController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            $this->addFlash('success', 'company.changes_have_been_saved');
+            $this->addFlash('success', 'message.changes_have_been_saved');
 
             return $this->redirectToRoute('app_setting_edit', ['company' => $company->getId()],
                 Response::HTTP_SEE_OTHER);

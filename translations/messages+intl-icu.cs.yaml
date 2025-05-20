@@ -63,7 +63,7 @@ registration.registration: Registrace
 currency.currencies: Měny
 customer.no_record_found: 'Žádný zákazník nebyl nalezen'
 company.billing_information: 'Fakturační údaje'
-company.changes_have_been_saved: 'Změny byli uloženy'
+message.changes_have_been_saved: 'Změny byli uloženy'
 form.company.is_vat_payer: 'Plátce DPH'
 form.company.is_oss: OSS
 form.company.name: Název
@@ -79,3 +79,17 @@ form.company.email: Email
 form.company.website: Stránky
 form.company.email_invoice_message: 'Zpráva na faktuře'
 form.company.country: Stát
+bank_account.bank_accounts: 'Bankovní účty'
+bank_account.add_accounts: 'Přidat účet'
+bank_account.name: Název
+bank_account.number: 'Číslo účtu'
+bank_account.iban: IBAN
+bank_account.bic: BIC
+bank_account.name_short: 'Název zkrácený'
+bank_account.code: 'Kód banky'
+bank_account.swift: SWIFT
+bank_account.fio_api_token: 'Fio API Token'
+bank_account.routing_number: Routing
+bank_account.sequence: Pořadí
+bank_account.new_bank_account: Nový bankovní účet
+bank_account.edit_bank_account: Upravit bankovní účet

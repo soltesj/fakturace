@@ -1,17 +1,18 @@
 {% form_theme form 'form/form_layout_horizontal.html.twig' %}
 <div class="bg-background-secondary p-2 mt-5 md:p-4">
-{{ form_start(form) }}
-        {{ form_row(form.name) }}
-        {{ form_row(form.accountNumber) }}
-        {{ form_row(form.iban) }}
-        {{ form_row(form.token) }}
-        {{ form_row(form.sequence) }}
+    {{ form_start(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.accountNumber) }}
+    {{ form_row(form.iban) }}
+    {{ form_row(form.token) }}
+    {{ form_row(form.sequence) }}
 
-        {{ form_row(form.shortName) }}
-        {{ form_row(form.bankCode) }}
-        {{ form_row(form.bic) }}
-        {{ form_row(form.routingNumber) }}
+    {{ form_row(form.shortName) }}
+    {{ form_row(form.bankCode) }}
+    {{ form_row(form.bic) }}
+    {{ form_row(form.routingNumber) }}
 
-        <button>{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+    <button class="w-full mt-10 p-2 bg-green-700 hover:bg-green-500 text-green-100"
+            type="submit">{{ button_label|default('button.save')|trans }}</button>
+    {{ form_end(form) }}
 </div>

@@ -47,7 +47,7 @@ class BankAccountController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($bankAccount);
             $entityManager->flush();
-            $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
+            $this->addFlash('success', 'message.changes_have_been_saved');
 
             return $this->redirectToRoute(
                 'app_setting_account_index',
@@ -86,7 +86,7 @@ class BankAccountController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($bankAccountNew);
             $entityManager->flush();
-            $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
+            $this->addFlash('success', 'message.changes_have_been_saved');
 
             return $this->redirectToRoute(
                 'app_setting_account_index',
@@ -115,7 +115,7 @@ class BankAccountController extends AbstractController
             $bankAccount->setStatus($this->statusRepository->find(StatusValues::STATUS_DELETED));
         }
         $entityManager->flush();
-        $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
+        $this->addFlash('success', 'message.changes_have_been_saved');
 
         return $this->redirectToRoute(
             'app_setting_account_index',

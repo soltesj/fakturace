@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}BankAccount index{% endblock %}
+{% block title %}{{ 'bank_account.bank_accounts'|trans }}{% endblock %}
 
 {% block body %}
     <h1 class="mb-5 flex justify-start items-center text-xl space-x-3">
@@ -9,7 +9,7 @@
                 <use href="#arrow-left-circle"/>
             </svg>
         </a>
-        <span>Bank Account</span>
+        <span>{{ 'bank_account.bank_accounts'|trans }}</span>
     </h1>
 
     <div class="grid grid-flow-col justify-end md:justify-start space-x-3 md:space-x-4 p-3">
@@ -19,17 +19,17 @@ fixed bottom-20 right-20 md:relative md:bottom-auto md:right-auto">
                 <svg class="size-10  md:size-5">
                     <use href="#plus-circle-fill"/>
                 </svg>
-                <span class="hidden md:block">NOVÝ</span>
+            <span class="hidden md:block">{{ 'bank_account.add_accounts'|trans }}</span>
             </a>{% endif %}
     </div>
 
     <div class="bg-background-secondary p-0 md:p-4">
         <div class="bg-table-header text-text-primary/80 grid grid-cols-[40px_1fr_1fr_50px] md:grid-cols-[50px_1fr_2fr_2fr_1fr_50px]">
             <div class="p-2">#</div>
-            <div class="p-2">Name</div>
-            <div class="p-2">Number</div>
-            <div class="p-2 hidden md:block">Iban</div>
-            <div class="p-2 hidden md:block">Bic</div>
+            <div class="p-2">{{ 'bank_account.name'|trans }}</div>
+            <div class="p-2">{{ 'bank_account.number'|trans }}</div>
+            <div class="p-2 hidden md:block">{{ 'bank_account.iban'|trans }}</div>
+            <div class="p-2 hidden md:block">{{ 'bank_account.bic'|trans }}</div>
             <div class="p-2"></div>
         </div>
         <div class="grid grid-cols-[40px_1fr_1fr_50px] md:grid-cols-[40px_1fr_2fr_2fr_1fr_50px] border-b border-b-border">
