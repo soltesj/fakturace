@@ -13,6 +13,8 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Throwable;
 
+use function Symfony\Component\Translation\t;
+
 #[IsGranted('ROLE_USER')]
 class CompanyCurrencyController extends AbstractController
 {
@@ -30,21 +32,21 @@ class CompanyCurrencyController extends AbstractController
 
         return $this->render('currency/index.html.twig', [
             'company' => $company,
-            'currencies' =>$currencies,
+            'currencies' => $currencies,
         ]);
     }
 
     #[Route('/{_locale}/{company}/currency/{currency}/add/', name: 'app_company_add_currency', methods: ['GET'])]
-    public function add( Currency $currency, Company $company): Response
+    public function add(Currency $currency, Company $company): Response
     {
-            try {
-                $company->addCurrency($currency);
-                $this->entityManager->flush();
-                $this->addFlash('success', "Měna {$currency->getCurrencyCode()} byla přidána");
-            } catch (Throwable $e) {
-                $this->logger->error($e->getMessage(), $e->getTrace());
-                $this->addFlash('warning', 'CHANGES_HAVE_BEEN_REMOVED');
-            }
+        try {
+            $company->addCurrency($currency);
+            $this->entityManager->flush();
+            $this->addFlash('success', t('message.currency_have_been_added'));
+        } catch (Throwable $e) {
+            $this->logger->error($e->getMessage(), $e->getTrace());
+            $this->addFlash('warning', t('message.general_error'));
+        }
 
         return $this->redirectToRoute('app_setting_currency_edit', ['company' => $company->getId()],
             Response::HTTP_SEE_OTHER);
@@ -57,13 +59,13 @@ class CompanyCurrencyController extends AbstractController
             try {
                 $company->removeCurrency($currency);
                 $this->entityManager->flush();
-                $this->addFlash('success', "Měna {$currency->getCurrencyCode()} byla odebrána");
+                $this->addFlash('success', t('message.currency_have_been_removed'));
             } catch (Throwable $e) {
                 $this->logger->error($e->getMessage(), $e->getTrace());
-                $this->addFlash('warning', 'CHANGES_HAVE_BEEN_REMOVED');
+                $this->addFlash('warning', t('message.general_error'));
             }
         } else {
-            $this->addFlash('warning', 'CHANGES_HAVE_BEEN_REMOVED');
+            $this->addFlash('warning', t('message.general_error'));
         }
 
         return $this->redirectToRoute('app_setting_currency_edit', ['company' => $company->getId()],

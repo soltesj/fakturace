@@ -94,8 +94,13 @@ bank_account.sequence: Pořadí
 bank_account.new_bank_account: 'Nový bankovní účet'
 bank_account.edit_bank_account: 'Upravit bankovní účet'
 document_number.format: Format
-document_number.next_number: Pořadové č.
+document_number.next_number: 'Pořadové č.'
 document_number.add_number: Přidat
 document_number.document_numbers: 'Čísla dokladu'
 document_number.document_type: Rok
 document_number.edit_number: Upravit
+message.currency_have_been_added: 'Měna byla přidána'
+message.currency_have_been_removed: 'Měna byla odebrána'
+message.general_error: 'Došlo k chybě'
+currency.current_currencies: 'Vybrané měny'
+currency.available_currencies: 'Všechny měny'
