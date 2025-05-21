@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}DocumentNumbers index{% endblock %}
+{% block title %}{{ 'document_number.document_numbers'|trans }}{% endblock %}
 
 {% block body %}
     <h1 class="mb-5 flex justify-start items-center text-xl space-x-3">
@@ -9,14 +9,14 @@
                 <use href="#arrow-left-circle"/>
             </svg>
         </a>
-        <span>DocumentNumbers index</span>
+        <span>{{ 'document_number.document_numbers'|trans }}</span>
     </h1>
 
     <div class="bg-background-secondary p-0 md:p-4">
         <div class="bg-table-header text-text-primary/80 grid grid-cols-[1fr_1fr_1fr_50px]">
-            <div class="p-2">Year</div>
-            <div class="p-2">NumberFormat</div>
-            <div class="p-2">NextNumber</div>
+            <div class="p-2">{{ 'document_number.document_type'|trans }}</div>
+            <div class="p-2">{{ 'document_number.format'|trans }}</div>
+            <div class="p-2">{{ 'document_number.next_number'|trans }}</div>
             <div class="p-2"></div>
         </div>
         {% for documentTypeId,documentNumber in documentNumbers %}

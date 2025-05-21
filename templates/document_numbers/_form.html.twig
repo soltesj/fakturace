@@ -2,5 +2,6 @@
 {{ form_row(form.numberFormat) }}
 {{ form_row(form.nextNumber) }}
 
-<button class="btn btn-success" type="submit">{{ button_label|default('Save') }}</button>
+<button class="w-full mt-10 p-2 bg-green-700 hover:bg-green-500 text-green-100"
+        type="submit">{{ button_label|default('button.save') }}</button>
 {{ form_end(form) }}

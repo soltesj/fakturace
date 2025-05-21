@@ -78,7 +78,8 @@ class DocumentNumbersController extends AbstractController
             $entityManager->persist($documentNumber);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_setting_document_numbers_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_setting_document_numbers_index', ['company' => $company->getId()],
+                Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('document_numbers/new.html.twig', [
@@ -104,8 +105,10 @@ class DocumentNumbersController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
+            $this->addFlash('success', 'message.changes_have_been_saved');
 
-            return $this->redirectToRoute('app_setting_document_numbers_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_setting_document_numbers_index', ['company' => $company->getId()],
+                Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('document_numbers/edit.html.twig', [

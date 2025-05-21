@@ -91,5 +91,11 @@ bank_account.swift: SWIFT
 bank_account.fio_api_token: 'Fio API Token'
 bank_account.routing_number: Routing
 bank_account.sequence: Pořadí
-bank_account.new_bank_account: Nový bankovní účet
-bank_account.edit_bank_account: Upravit bankovní účet
+bank_account.new_bank_account: 'Nový bankovní účet'
+bank_account.edit_bank_account: 'Upravit bankovní účet'
+document_number.format: Format
+document_number.next_number: Pořadové č.
+document_number.add_number: Přidat
+document_number.document_numbers: 'Čísla dokladu'
+document_number.document_type: Rok
+document_number.edit_number: Upravit
