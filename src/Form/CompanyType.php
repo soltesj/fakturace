@@ -77,9 +77,9 @@ class CompanyType extends AbstractType
                 ],
             ])
             ->add(child: 'info', options: [
-                'label' => t('form.company.is_vat_payer'),
+                'label' => t('form.company.info'),
                 'attr' => [
-                    'placeholder' => t('form.company.is_vat_payer'),
+                    'placeholder' => t('form.company.info'),
                 ],
             ])
             ->add(child: 'phone', options: [

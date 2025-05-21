@@ -79,6 +79,7 @@ form.company.email: Email
 form.company.website: Stránky
 form.company.email_invoice_message: 'Zpráva na faktuře'
 form.company.country: Stát
+form.company.info: 'Zápis v rejstříku'
 bank_account.bank_accounts: 'Bankovní účty'
 bank_account.add_accounts: 'Přidat účet'
 bank_account.name: Název
