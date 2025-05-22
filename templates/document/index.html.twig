@@ -36,18 +36,19 @@
         <div class="grid grid-flow-col justify-items-center md:justify-start space-x-3 md:space-x-4 mb-3">
             {% if is_granted('CREATE') %}
                 <a href="{% if documentNumberExist %}{{ path('app_document_new', {'company': company.id}) }}{% else %}#{% endif %}"
-                   class="text-primary flex justify-start items-center space-x-1 {% if not documentNumberExist %}link-secondary pe-none{% endif %}">
+                   class="text-green-700 hover:text-green-500 font-bold ml-4 flex justify-start items-center space-x-1 {% if not documentNumberExist %}link-secondary pe-none{% endif %}">
                     <svg class="size-4">
                         <use href="#plus-circle-fill"/>
                     </svg>
                     <span>{{ 'button.invoice.new_invoice'|trans }}</span></a>
             {% endif %}
-            <a href="#" class="text-primary flex justify-start items-center space-x-1">
-                <svg class="size-4">
-                    <use href="#cash-coin"/>
-                </svg>
-                <span>{{ 'button.invoice.check_payment'|trans }}</span></a>
-            <a href="#" class="text-primary flex justify-start items-center space-x-1">
+            {#            <a href="#" class="text-primary flex justify-start items-center space-x-1"> #}
+            {#                <svg class="size-4"> #}
+            {#                    <use href="#cash-coin"/> #}
+            {#                </svg> #}
+            {#                <span>{{ 'button.invoice.check_payment'|trans }}</span></a> #}
+            <a href="#"
+               class="text-green-700 hover:text-green-500 font-bold ml-4 flex justify-start items-center space-x-1">
                 <svg class="size-4">
                     <use href="#download"/>
                 </svg>

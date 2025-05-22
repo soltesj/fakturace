@@ -10,6 +10,7 @@ use App\Entity\Document;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -179,5 +180,60 @@ class DocumentRepository extends ServiceEntityRepository
         $sql .= ' ORDER BY date_issue DESC, document_number DESC';
 
         return $sql;
+    }
+
+    /**
+     * @return string
+     */
+    public function getChartSql(): string
+    {
+        return <<<SQL
+WITH RECURSIVE months AS (
+    SELECT DATE_FORMAT(:from, '%Y-%m') AS month, DATE(:from) as first_day
+    UNION ALL
+    SELECT DATE_FORMAT(DATE_ADD(first_day, INTERVAL 1 MONTH), '%Y-%m'), DATE_ADD(first_day, INTERVAL 1 MONTH)
+    FROM months
+    WHERE first_day < :to
+)
+
+SELECT
+    m.month,
+    COALESCE(SUM(p.amount), 0) AS total_income
+FROM months m
+LEFT JOIN document d ON DATE_FORMAT(d.date_issue, '%Y-%m') = m.month AND d.company_id = :company_id
+LEFT JOIN document_price p ON p.document_id = d.id AND p.price_type_id = :price_type
+GROUP BY m.month
+ORDER BY m.month
+SQL;
+    }
+
+    /**
+     * Get chart data for given company and date range
+     *
+     * @param Company $company Company to get data for
+     * @param DateTime $dateFrom Start date
+     * @param DateTime $dateTo End date
+     * @return array{labels: array<string>, data: array<float>} Array with labels and data for chart
+     * @throws Exception When database query fails
+     */
+    public function getChart(
+        Company $company,
+        DateTime $dateFrom,
+        DateTime $dateTo
+    ): array {
+        $sql = $this->getChartSql();
+        $conn = $this->getEntityManager()->getConnection();
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue('from', $dateFrom->format('Y-m-d'), ParameterType::STRING);
+        $stmt->bindValue('to', $dateTo->format('Y-m-d'), ParameterType::STRING);
+        $stmt->bindValue('company_id', $company->getId(), ParameterType::INTEGER);
+        $stmt->bindValue('price_type', PriceTypes::TOTAL_PRICE, ParameterType::INTEGER);
+        $result = $stmt->executeQuery();
+        $keyValue = $result->fetchAllKeyValue();
+
+        return [
+            'labels' => array_keys($keyValue),
+            'data' => array_map('floatval', array_values($keyValue)),
+        ];
     }
 }

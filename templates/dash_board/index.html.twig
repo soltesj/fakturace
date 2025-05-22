@@ -3,390 +3,110 @@
 {% block title %}Hello DashBoardController!{% endblock %}
 
 {% block body %}
+    {% if is_granted('CREATE') %}
+        <a href="{% if documentNumberExist %}{{ path('app_document_new', {'company': company.id}) }}{% else %}#{% endif %}"
+           class="text-green-700 hover:text-green-500 mb-4 flex justify-start items-center space-x-1 {% if not documentNumberExist %}link-secondary pe-none{% endif %}">
+            <svg class="size-8">
+                <use href="#plus-circle-fill"/>
+            </svg>
+            <span>{{ 'button.invoice.new_invoice'|trans }}</span></a>
+    {% endif %}
+    <div class="mb-2" {{ stimulus_controller('dashboard/masonry') }}>
 
-    <div class="bg-background-secondary p-4">
-        <h1>Hello DashBoardController!</h1>
-        <table>
-            <thead class="bg-table-header text-text-primary">
-            <tr>
-                <td class="p-2">Header</td>
-                <td class="p-2">Header</td>
-                <td class="p-2">Header</td>
-                <td class="p-2">Header</td>
-            </tr>
-            </thead>
-            <tbody class="text-text-secondary">
-            <tr class="border-b border-b-border">
-                <td>Data</td>
-                <td>data</td>
-                <td>Data</td>
-                <td>data</td>
-            </tr>
-            <tr class="border-b border-b-border">
-                <td>Data</td>
-                <td>data</td>
-                <td>Data</td>
-                <td>data</td>
-            </tr>
-            </tbody>
-        </table>
-
-        <div class="bg-table-header text-text-primary/80 grid grid-cols-2 md:grid-cols-6 lg:grid-cols-7">
-            <div class="p-2 pb-1 md:p-2 md:order-1 sm:col-span-1">Č. dokladu</div>
-            <div class="p-2 pb-1 md:p-2 md:order-6 text-right">Zbývá uhradit</div>
-            <div class="px-2 pb-2 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-normal md:col-span-2 lg:col-span-3">
-                Zákazník
-            </div>
-            <div class="px-2 pb-2 pt-0 md:p-2 md:order-3 text-xs font-light md:text-base md:font-normal text-right">
-                Splatnost
-            </div>
-            {#        <div class="p-2 md:order-4 hidden lg:block">Cena bez DPH</div> #}
-            {#        <div class="p-2 md:order-5 hidden md:block">Cena s DPH</div> #}
-            <div class="p-2 md:order-7 col-span-2 sm:col-span-1 hidden md:block"></div>
+        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary">
+            <table class="w-full mb-4">
+                <thead>
+                <tr>
+                    <td class="text-xl font-semibold mb-4 p-2 bg-table-header text-text-primary"
+                        colspan="2">{{ 'dashboard.account_balance'|trans }}</td>
+                </tr>
+                </thead>
+                <tbody class="text-text-secondary">
+                <tr class="border-b border-b-border">
+                    <td class="p-2">Fio</td>
+                    <td class="p-2 text-right">10 000 Kč</td>
+                </tr>
+                <tr class="border-b border-b-border">
+                    <td class="p-2">Air bank</td>
+                    <td class="p-2 text-right">99 000 Kč</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-6 lg:grid-cols-7 border-b border-b-border">
-            <div class="p-2 pb-1 md:p-2 sm:col-span-1 md:order-1 text-lg font-medium md:text-base md:font-normal text-text-primary/60">
-                <a href="#">2024110001</a></div>
-            <div class="p-2 pb-1 md:p-2 md:order-6 text-right text-lg font-medium md:text-base md:font-normal text-text-primary/60">
-                2 500,00
-            </div>
-            <div class="px-2 pb-2 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-normal sm:col-span-1 ">
-                Top race agency, z.s.
-            </div>
-            <div class="px-2 pb-2 pt-0 md:p-2 md:order-3 text-xs font-light md:text-base md:font-normal md:text-md text-right">
-                06.11.24
-            </div>
-            <div class="p-2 hidden lg:block md:order-4">2 500,00</div>
-            <div class="p-2 hidden md:block md:order-5">3 025,00</div>
-            <div class="p-2 col-span-2 md:col-span-1 text-right md:order-7">[X] [X] [X]</div>
+        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary">
+            <h2 class="text-xl font-semibold mb-4 p-2 bg-table-header text-text-primary">{{ 'dashboard.sales_overview'|trans }}</h2>
+            <canvas
+                    class=""
+                    {{ stimulus_controller('dashboard/chart') }}
+                    data-dashboard--chart-type-value="bar"
+                    data-dashboard--chart-data-value='{{ chartData|json_encode }}'
+            ></canvas>
         </div>
-        <div class="grid grid-cols-2 md:grid-cols-6 lg:grid-cols-7 border-b border-b-border">
-            <div class="p-2 pb-1 md:p-2 sm:col-span-1 md:order-1 text-lg font-medium md:text-base md:font-normal text-text-primary/60">
-                <a href="#">2024110001</a></div>
-            <div class="p-2 pb-1 md:p-2 md:order-6 text-right text-lg font-medium md:text-base md:font-normal text-text-primary/60">
-                2 500,00
-            </div>
-            <div class="px-2 pb-2 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-normal sm:col-span-1 ">
-                Top race agency, z.s.
-            </div>
-            <div class="px-2 pb-2 pt-0 md:p-2 md:order-3 text-xs font-light md:text-base md:font-normal md:text-md text-right">
-                06.11.24
-            </div>
-            <div class="p-2 hidden lg:block md:order-4">2 500,00</div>
-            <div class="p-2 hidden md:block md:order-5">3 025,00</div>
-            <div class="p-2 col-span-2 md:col-span-1 text-right md:order-7">[X] [X] [X]</div>
+        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary">
+            <table class="w-full mb-4">
+                <thead>
+                <tr>
+                    <td class="text-xl font-semibold mb-4 p-2 bg-table-header text-text-primary"
+                        colspan="2">{{ 'dashboard.vat_records'|trans }}</td>
+                </tr>
+                </thead>
+                <tbody class="text-text-secondary">
+                <tr class="border-b border-b-border">
+                    <td class="p-2">Tento měsíc</td>
+                    <td class="p-2 text-right">10 000kč</td>
+                </tr>
+                <tr class="border-b border-b-border">
+                    <td class="p-2">Minulý měsíc</td>
+                    <td class="p-2 text-right">10 000kč</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-        <div class="grid grid-cols-2 md:grid-cols-6 lg:grid-cols-7 border-b border-b-border">
-            <div class="p-2 pb-1 md:p-2 sm:col-span-1 md:order-1 text-lg font-medium md:text-base md:font-normal text-text-primary/60">
-                <a href="#">2024110001</a></div>
-            <div class="p-2 pb-1 md:p-2 md:order-6 text-right text-lg font-medium md:text-base md:font-normal text-text-primary/60">
-                2 500,00
-            </div>
-            <div class="px-2 pb-2 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-normal sm:col-span-1 ">
-                Top race agency, z.s.
-            </div>
-            <div class="px-2 pb-2 pt-0 md:p-2 md:order-3 text-xs font-light md:text-base md:font-normal md:text-md text-right">
-                06.11.24
-            </div>
-            <div class="p-2 hidden lg:block md:order-4">2 500,00</div>
-            <div class="p-2 hidden md:block md:order-5">3 025,00</div>
-            <div class="p-2 col-span-2 md:col-span-1 text-right md:order-7">[X] [X] [X]</div>
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-6 lg:grid-cols-7 border-b border-b-border">
-            <div class="p-2 pb-1 md:p-2 sm:col-span-1 md:order-1 text-lg font-medium md:text-base md:font-normal text-text-primary/60">
-                <a href="#">2024110001</a></div>
-            <div class="p-2 pb-1 md:p-2 md:order-6 text-right text-lg font-medium md:text-base md:font-normal text-text-primary/60">
-                2 500,00
-            </div>
-            <div class="px-2 pb-2 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-normal sm:col-span-1 ">
-                Top race agency, z.s.
-            </div>
-            <div class="px-2 pb-2 pt-0 md:p-2 md:order-3 text-xs font-light md:text-base md:font-normal md:text-md text-right">
-                06.11.24
-            </div>
-            <div class="p-2 hidden lg:block md:order-4">2 500,00</div>
-            <div class="p-2 hidden md:block md:order-5">3 025,00</div>
-            <div class="p-2 col-span-2 md:col-span-1 text-right md:order-7">[X] [X] [X]</div>
-        </div>
-
-        <hr class="my-10"/>
-
-        <div class="bg-table-header text-text-primary/80 grid grid-cols-2 md:grid-cols-6">
-            <div class="md:order-1 p-2 pb-1 md:p-2 sm:col-span-1">Name</div>
-            <div class="md:order-3 p-2 md:block hidden">BankAccount</div>
-            <div class="md:order-4 p-2 pb-1 md:p-2 text-right">Ic</div>
-            <div class="md:order-2 px-2 pb-2 pt-0 md:p-2 text-xs font-light md:text-base md:font-normal">Town</div>
-            <div class="md:order-5 px-2 pb-2 pt-0 md:p-2 text-right text-xs font-light md:text-base md:font-normal">
-                Dic
-            </div>
-            <div class="md:order-6 p-2 md:block hidden">[x]</div>
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-6 border-b border-b-border">
-            <div class="md:order-1 p-2 pb-1 md:p-2 sm:col-span-1">Name</div>
-            <div class="md:order-3 p-2 md:block hidden">BankAccount</div>
-            <div class="md:order-4 p-2 pb-1 md:p-2 text-right">Ic</div>
-            <div class="md:order-2 px-2 pb-2 pt-0 md:p-2 text-xs font-light md:text-base md:font-normal">Town</div>
-            <div class="md:order-5 px-2 pb-2 pt-0 md:p-2 text-right text-xs font-light md:text-base md:font-normal">
-                Dic
-            </div>
-            <div class="md:order-6 p-2 col-span-2 md:col-span-1 flex justify-end items-center space-x-2">[x]</div>
-        </div>
-
-    </div>
-
-
-    <div class="px-6 text-gray-900 antialiased">
-        <div class="mx-auto max-w-xl divide-y py-12 md:max-w-4xl">
-            <div class="py-8">
-                <h1 class="text-4xl font-bold">@tailwindcss/forms examples</h1>
-                <p class="mt-2 text-lg text-gray-600">
-                    An opinionated form reset designed to make form elements easy to style with utility
-                    classes.
-                </p>
-                <div class="mt-4 flex space-x-4">
-                    <a class="text-lg underline" href="https://github.com/tailwindlabs/tailwindcss-forms"
-                    >Documentation</a
-                    >
-                    <a class="text-lg underline" href="/kitchen-sink.html">Kitchen Sink</a>
+        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary">
+            <div class="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-6">
+                <div class="md:order-1 col-span-2 md:col-span-5 lg:col-span-6"><h2
+                            class="text-xl font-semibold p-2 bg-table-header text-text-primary">{{ 'dashboard.unpaid_invoices'|trans }}</h2>
                 </div>
             </div>
-            <div class="py-12">
-                <h2 class="text-2xl font-bold">Unstyled</h2>
-                <p class="mt-2 text-lg text-gray-600">This is how form elements look out of the box.</p>
-                <div class="mt-8 max-w-md">
-                    <div class="grid grid-cols-1 gap-6">
-                        <label class="block">
-                            <span class="text-gray-700">Full name</span>
-                            <input type="text" class="mt-1 block w-full" placeholder=""/>
-                        </label>
-                        <label class="block">
-                            <span class="text-gray-700">Email address</span>
-                            <input type="email" class="mt-1 block w-full" placeholder="john@example.com"/>
-                        </label>
-                        <label class="block">
-                            <span class="text-gray-700">When is your event?</span>
-                            <input type="date" class="mt-1 block w-full"/>
-                        </label>
-                        <label class="block">
-                            <span class="text-gray-700">What type of event is it?</span>
-                            <select class="mt-1 block w-full">
-                                <option>Corporate event</option>
-                                <option>Wedding</option>
-                                <option>Birthday</option>
-                                <option>Other</option>
-                            </select>
-                        </label>
-                        <label class="block">
-                            <span class="text-gray-700">Additional details</span>
-                            <textarea class="mt-1 block w-full" rows="3"></textarea>
-                        </label>
-                        <div class="block">
-                            <div class="mt-2">
-                                <div>
-                                    <label class="inline-flex items-center">
-                                        <input type="checkbox" checked/>
-                                        <span class="ml-2">Email me news and special offers</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-6 border-b border-b-border">
+                <div class="p-2 pb-1 md:p-2 sm:col-span-1 md:order-1 text-lg font-medium md:text-base md:font-normal text-text-primary/60">
+                    <a href="/cs/1/document/4622/edit" class="text-decoration-none">2510000004</a></div>
+                <div class="p-2 pb-1 md:p-2 md:order-6 text-right text-lg font-medium md:text-base md:font-normal text-text-primary/60">
+                    121.00
+                </div>
+                <div class="px-2 pb-1 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-normal md:col-span-2 lg:col-span-3">
+                    AURES Holdings a.s.
+                </div>
+                <div class="px-2 pb-1 pt-0 md:p-2 md:order-3 text-xs font-light md:text-base md:font-normal md:text-md text-right">
+                    2025-05-15
+                </div>
+
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-6 border-b border-b-border">
+                <div class="p-2 pb-1 md:p-2 sm:col-span-1 md:order-1 text-lg font-medium md:text-base md:font-normal text-text-primary/60">
+                    <a href="/cs/1/document/4621/edit" class="text-decoration-none">2510000003</a></div>
+                <div class="p-2 pb-1 md:p-2 md:order-6 text-right text-lg font-medium md:text-base md:font-normal text-text-primary/60">
+                    200.00
+                </div>
+                <div class="px-2 pb-1 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-normal md:col-span-2 lg:col-span-3">
+                    AURES Holdings a.s.
+                </div>
+                <div class="px-2 pb-1 pt-0 md:p-2 md:order-3 text-xs font-light md:text-base md:font-normal md:text-md text-right">
+                    2025-05-13
                 </div>
             </div>
-            <div class="py-12">
-                <h2 class="text-2xl font-bold">Simple</h2>
-                <div class="mt-8 max-w-md">
-                    <div class="grid grid-cols-1 gap-6">
-                        <label class="block">
-                            <span class="text-gray-700">Full name</span>
-                            <input
-                                    type="text"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                    placeholder=""
-                            />
-                        </label>
-                        <label class="block">
-                            <span class="text-gray-700">Email address</span>
-                            <input
-                                    type="email"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                    placeholder="john@example.com"
-                            />
-                        </label>
-                        <label class="block">
-                            <span class="text-gray-700">When is your event?</span>
-                            <input
-                                    type="date"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                            />
-                        </label>
-                        <label class="block">
-                            <span class="text-gray-700">What type of event is it?</span>
-                            <select
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                            >
-                                <option>Corporate event</option>
-                                <option>Wedding</option>
-                                <option>Birthday</option>
-                                <option>Other</option>
-                            </select>
-                        </label>
-                        <label class="block">
-                            <span class="text-gray-700">Additional details</span>
-                            <textarea
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                    rows="3"
-                            ></textarea>
-                        </label>
-                        <div class="block">
-                            <div class="mt-2">
-                                <div>
-                                    <label class="inline-flex items-center">
-                                        <input
-                                                type="checkbox"
-                                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 focus:ring-offset-0"
-                                                checked
-                                        />
-                                        <span class="ml-2">Email me news and special offers</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="py-12">
-                <h2 class="text-2xl font-bold">Underline</h2>
-                <div class="mt-8 max-w-md">
-                    <div class="grid grid-cols-1 gap-6 bg-blue-100 p-2">
-                        <label class="block">
-                            <span class="text-gray-700">Full name</span>
-                            <input
-                                    type="text"
-                                    class="mt-0 block w-full border-0 border-b-2 border-gray-200 px-0.5 focus:border-black focus:ring-0"
-                                    placeholder=""
-                            />
-                        </label>
-                        <label class="block">
-                            <span class="text-gray-700">Email address</span>
-                            <input
-                                    type="email"
-                                    class="mt-0 block w-full border-0 border-b-2 border-gray-200 px-0.5 focus:border-black focus:ring-0"
-                                    placeholder="john@example.com"
-                            />
-                        </label>
-                        <label class="block">
-                            <span class="text-gray-700">When is your event?</span>
-                            <input
-                                    type="date"
-                                    class=" mt-0 block w-full border-0 border-b-2 border-gray-200 px-0.5 focus:border-black focus:ring-0"
-                            />
-                        </label>
-                        <label class="block">
-                            <span class="text-gray-700">What type of event is it?</span>
-                            <select
-                                    class="mt-0 block w-full border-0 border-b-2 border-gray-200 pl-0.5 pr-10 focus:border-black focus:ring-0"
-                            >
-                                <option>Corporate event</option>
-                                <option>Wedding</option>
-                                <option>Birthday</option>
-                                <option>Other</option>
-                            </select>
-                        </label>
-                        <label class="block">
-                            <span class="text-gray-700">Additional details</span>
-                            <textarea
-                                    class="mt-0 block w-full border-0 border-b-2 border-gray-200 px-0.5 focus:border-black focus:ring-0"
-                                    rows="2"
-                            ></textarea>
-                        </label>
-                        <div class="block">
-                            <div class="mt-2">
-                                <div>
-                                    <label class="inline-flex items-center">
-                                        <input
-                                                type="checkbox"
-                                                class="border-2 border-gray-300 text-black focus:border-gray-300 focus:ring-black"
-                                        />
-                                        <span class="ml-2">Email me news and special offers</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="py-12">
-                <h2 class="text-2xl font-bold">Solid</h2>
-                <div class="mt-8 max-w-md">
-                    <div class="grid grid-cols-1 gap-6">
-                        <label class="block">
-                            <span class="text-gray-700">Full name</span>
-                            <input
-                                    type="text"
-                                    class="mt-1 block w-full rounded-md border-transparent bg-gray-100 focus:border-gray-500 focus:bg-white focus:ring-0"
-                                    placeholder=""
-                            />
-                        </label>
-                        <label class="block">
-                            <span class="text-gray-700">Email address</span>
-                            <input
-                                    type="email"
-                                    class="mt-1 block w-full rounded-md border-transparent bg-gray-100 focus:border-gray-500 focus:bg-white focus:ring-0"
-                                    placeholder="john@example.com"
-                            />
-                        </label>
-                        <label class="block">
-                            <span class="text-gray-700">When is your event?</span>
-                            <input
-                                    type="date"
-                                    class="mt-1 block w-full rounded-md border-transparent bg-gray-100 focus:border-gray-500 focus:bg-white focus:ring-0"
-                            />
-                        </label>
-                        <label class="block">
-                            <span class="text-gray-700">What type of event is it?</span>
-                            <select
-                                    class="mt-1 block w-full rounded-md border-transparent bg-gray-100 focus:border-gray-500 focus:bg-white focus:ring-0"
-                            >
-                                <option>Corporate event</option>
-                                <option>Wedding</option>
-                                <option>Birthday</option>
-                                <option>Other</option>
-                            </select>
-                        </label>
-                        <label class="block">
-                            <span class="text-gray-700">Additional details</span>
-                            <textarea
-                                    class="mt-1 block w-full rounded-md border-transparent bg-gray-100 focus:border-gray-500 focus:bg-white focus:ring-0"
-                                    rows="3"
-                            ></textarea>
-                        </label>
-                        <div class="block">
-                            <div class="mt-2">
-                                <div>
-                                    <label class="inline-flex items-center">
-                                        <input
-                                                type="checkbox"
-                                                class="rounded border-transparent bg-gray-200 text-gray-700 focus:border-transparent focus:bg-gray-200 focus:ring-1 focus:ring-gray-500 focus:ring-offset-2"
-                                        />
-                                        <span class="ml-2">Email me news and special offers</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        </div>
 
 
-            <div class="inline-flex items-center space-x-2">
-                <label class="" for="aa">Email me news and special offers</label>
-                <input id="aa"
-                       type="checkbox"
-                       class="border-2 bg-input-bg text-secondary border-input-border px-1 focus:border-input-border-focus  focus:ring-0"
-                />
-            </div>
+        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary ">
+            <h2 class="text-xl font-semibold  p-2 bg-table-header text-text-primary">{{ 'dashboard.best_customers'|trans }}</h2>
+
+            <p class="p-2">
+                Data<br>
+                Data<br>
+                data<br>
+                Data<br>
+                data</p>
         </div>
     </div>
 {% endblock %}
