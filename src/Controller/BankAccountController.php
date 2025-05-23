@@ -7,6 +7,7 @@ use App\Entity\Company;
 use App\Form\BankAccountType;
 use App\Repository\BankAccountRepository;
 use App\Repository\StatusRepository;
+use App\Service\InboxIdentifierGenerator;
 use App\Status\StatusValues;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,7 +21,9 @@ class BankAccountController extends AbstractController
 {
     public function __construct(
         private readonly StatusRepository $statusRepository,
-    ) {}
+        private InboxIdentifierGenerator $inboxIdentifierGenerator,
+    ) {
+    }
 
     #[Route('/{_locale}/{company}/bank-account/', name: 'app_setting_account_index', methods: ['GET'])]
     public function index(
@@ -28,6 +31,9 @@ class BankAccountController extends AbstractController
         BankAccountRepository $accountRepository
     ): Response {
         $bankAccounts = $accountRepository->findByCompany($company);
+        if ($company->getCompanyInbox()->count() === 0) {
+            $this->inboxIdentifierGenerator->generateForCompany($company);
+        }
 
         return $this->render('bank_account/index.html.twig', [
             'bank_accounts' => $bankAccounts,

@@ -17,6 +17,10 @@ recreate:
 migrate:
 	docker exec fakturace_app php bin/console doctrine:migrations:migrate --no-interaction --quiet
 
+.PHONY .SILENT: migration
+migration:
+	docker exec fakturace_app php bin/console make:migration
+
 .PHONY .SILENT: install
 install: ## Installs composer packages
 	docker exec fakturace_app composer install

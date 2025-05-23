@@ -84,6 +84,12 @@ class Company
     #[ORM\Column(type: Types::INTEGER, nullable: true)]
     private ?int $maturityDays = null;
 
+    /**
+     * @var Collection<int,CompanyInbox>
+     */
+    #[ORM\OneToMany(targetEntity: CompanyInbox::class, mappedBy: 'company')]
+    private Collection $companyInbox;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -330,4 +336,13 @@ class Company
         return $this;
     }
 
+    public function getCompanyInbox(): Collection
+    {
+        return $this->companyInbox;
+    }
+
+    public function setCompanyInbox(Collection $companyInbox): void
+    {
+        $this->companyInbox = $companyInbox;
+    }
 }
