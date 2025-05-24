@@ -42,7 +42,7 @@ class Document implements CompanyOwnedInterface
     private ?Customer $customer = null;
 
     #[ORM\ManyToOne]
-    private ?PaymentType $paymentType = null;
+    private ?DocumentPaymentType $paymentType = null;
 
     #[ORM\ManyToOne]
     private ?Currency $currency = null;
@@ -177,12 +177,12 @@ class Document implements CompanyOwnedInterface
         return $this->id;
     }
 
-    public function getPaymentType(): ?PaymentType
+    public function getPaymentType(): ?DocumentPaymentType
     {
         return $this->paymentType;
     }
 
-    public function setPaymentType(?PaymentType $paymentType): void
+    public function setPaymentType(?DocumentPaymentType $paymentType): void
     {
         $this->paymentType = $paymentType;
     }

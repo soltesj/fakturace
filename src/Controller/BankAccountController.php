@@ -31,7 +31,7 @@ class BankAccountController extends AbstractController
         BankAccountRepository $accountRepository
     ): Response {
         $bankAccounts = $accountRepository->findByCompany($company);
-        if ($company->getCompanyInbox()->count() === 0) {
+        if ($company->getIdentifier()->count() === 0) {
             $this->inboxIdentifierGenerator->generateForCompany($company);
         }
 

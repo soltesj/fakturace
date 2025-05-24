@@ -6,7 +6,7 @@ use App\Repository\PaymentTypeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PaymentTypeRepository::class)]
-class PaymentType
+class DocumentPaymentType
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

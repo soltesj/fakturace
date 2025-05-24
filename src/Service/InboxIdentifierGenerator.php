@@ -3,7 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Company;
-use App\Entity\CompanyInbox;
+use App\Entity\CompanyInboxIdentifier;
 use App\Repository\CompanyInboxRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;
@@ -20,9 +20,9 @@ readonly class InboxIdentifierGenerator
     public function generateForCompany(Company $company): string
     {
         $identifier = $this->generateUniqueIdentifier();
-        $inbox = new CompanyInbox();
+        $inbox = new CompanyInboxIdentifier();
         $inbox->setCompany($company);
-        $inbox->setInboxIdentifier($identifier);
+        $inbox->setIdentifier($identifier);
         $this->em->persist($inbox);
         $this->em->flush();
 

@@ -6,9 +6,8 @@ use App\Repository\CompanyInboxRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CompanyInboxRepository::class)]
-#[ORM\Table(name: 'company_inboxes')]
-#[ORM\UniqueConstraint(name: 'uniq_inbox_identifier', columns: ['inbox_identifier'])]
-class CompanyInbox
+#[ORM\UniqueConstraint(name: 'uniq_inbox_identifier', columns: ['identifier'])]
+class CompanyInboxIdentifier implements CompanyOwnedInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,9 +15,9 @@ class CompanyInbox
     private ?int $id = null;
 
     #[ORM\Column(length: 20, unique: true)]
-    private string $inboxIdentifier;
+    private string $identifier;
 
-    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'companyInbox')]
+    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'identifiers')]
     #[ORM\JoinColumn(nullable: false)]
     private Company $company;
 
@@ -27,14 +26,14 @@ class CompanyInbox
         return $this->id;
     }
 
-    public function getInboxIdentifier(): string
+    public function getIdentifier(): string
     {
-        return $this->inboxIdentifier;
+        return $this->identifier;
     }
 
-    public function setInboxIdentifier(string $inboxIdentifier): void
+    public function setIdentifier(string $identifier): void
     {
-        $this->inboxIdentifier = $inboxIdentifier;
+        $this->identifier = $identifier;
     }
 
     public function getCompany(): Company

@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use DateTimeImmutable;
-use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -15,28 +14,36 @@ class BankAccountBalance
     #[ORM\Column]
     protected ?int $id = null;
 
-    #[ORM\Column(type: Types::INTEGER, nullable: false)]
-    private int $bankAccountId;
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private BankAccount $bankAccount;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: false)]
     private DateTimeImmutable $date;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: false)]
-    private string $closingBalance;
+    private string $balance;
+
+    public function __construct(BankAccount $bankAccount, string $balance, ?DateTimeImmutable $date = null)
+    {
+        $this->bankAccount = $bankAccount;
+        $this->balance = $balance;
+        $this->date = $date ?? new DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getBankAccountId(): ?int
+    public function getBankAccount(): BankAccount
     {
-        return $this->bankAccountId;
+        return $this->bankAccount;
     }
 
-    public function setBankAccountId(int $bankAccountId): void
+    public function setBankAccount(BankAccount $bankAccount): void
     {
-        $this->bankAccountId = $bankAccountId;
+        $this->bankAccount = $bankAccount;
     }
 
     public function getDate(): ?DateTimeImmutable
@@ -49,16 +56,13 @@ class BankAccountBalance
         $this->date = $date;
     }
 
-    public function getClosingBalance(): ?string
+    public function getBalance(): ?string
     {
-        return $this->closingBalance;
+        return $this->balance;
     }
 
-    public function setClosingBalance(string $closingBalance): void
+    public function setBalance(string $balance): void
     {
-        $this->closingBalance = $closingBalance;
+        $this->balance = $balance;
     }
-
-
-
 }

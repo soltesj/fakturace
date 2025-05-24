@@ -21,6 +21,18 @@ class CompanyRepository extends ServiceEntityRepository
         parent::__construct($registry, Company::class);
     }
 
+    public function findOneByIdentifier(string $identifier): ?Company
+    {
+        $queryBuilder = $this->createQueryBuilder('company')
+            ->leftJoin('company.identifiers', 'identifiers')
+            ->andWhere('identifiers.identifier = :identifier')
+            ->setParameter('identifier', $identifier)
+            ->getQuery();
+
+//        dump($queryBuilder->getDQL());
+        return $queryBuilder->getOneOrNullResult();
+    }
+
 //    /**
 //     * @return Company[] Returns an array of Company objects
 //     */
@@ -35,7 +47,6 @@ class CompanyRepository extends ServiceEntityRepository
 //            ->getResult()
 //        ;
 //    }
-
 //    public function findOneBySomeField($value): ?Company
 //    {
 //        return $this->createQueryBuilder('a')

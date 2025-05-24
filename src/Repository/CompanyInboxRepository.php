@@ -1,24 +1,25 @@
 <?php
 
+
 namespace App\Repository;
 
-use App\Entity\CompanyInbox;
+use App\Entity\CompanyInboxIdentifier;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<CompanyInbox>
+ * @extends ServiceEntityRepository<CompanyInboxIdentifier>
  *
- * @method CompanyInbox|null find($id, $lockMode = null, $lockVersion = null)
- * @method CompanyInbox|null findOneBy(array $criteria, array $orderBy = null)
- * @method CompanyInbox[]    findAll()
- * @method CompanyInbox[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method CompanyInboxIdentifier|null find($id, $lockMode = null, $lockVersion = null)
+ * @method CompanyInboxIdentifier|null findOneBy(array $criteria, array $orderBy = null)
+ * @method CompanyInboxIdentifier[]    findAll()
+ * @method CompanyInboxIdentifier[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class CompanyInboxRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, CompanyInbox::class);
+        parent::__construct($registry, CompanyInboxIdentifier::class);
     }
 
 //    /**

@@ -85,10 +85,10 @@ class Company
     private ?int $maturityDays = null;
 
     /**
-     * @var Collection<int,CompanyInbox>
+     * @var Collection<int,CompanyInboxIdentifier>
      */
-    #[ORM\OneToMany(targetEntity: CompanyInbox::class, mappedBy: 'company')]
-    private Collection $companyInbox;
+    #[ORM\OneToMany(targetEntity: CompanyInboxIdentifier::class, mappedBy: 'company')]
+    private Collection $identifiers;
 
     public function __construct()
     {
@@ -336,13 +336,13 @@ class Company
         return $this;
     }
 
-    public function getCompanyInbox(): Collection
+    public function getIdentifier(): Collection
     {
-        return $this->companyInbox;
+        return $this->identifiers;
     }
 
-    public function setCompanyInbox(Collection $companyInbox): void
+    public function setIdentifier(Collection $identifier): void
     {
-        $this->companyInbox = $companyInbox;
+        $this->identifiers = $identifier;
     }
 }

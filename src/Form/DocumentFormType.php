@@ -6,7 +6,7 @@ use App\Entity\BankAccount;
 use App\Entity\Currency;
 use App\Entity\Customer;
 use App\Entity\Document;
-use App\Entity\PaymentType;
+use App\Entity\DocumentPaymentType;
 use App\Enum\VatMode;
 use App\Status\StatusValues;
 use Doctrine\ORM\EntityRepository;
@@ -42,7 +42,7 @@ class DocumentFormType extends AbstractType
                 ],
             ])
             ->add('paymentType', EntityType::class, [
-                'class' => PaymentType::class,
+                'class' => DocumentPaymentType::class,
                 'choice_label' => 'name',
                 'label' => t('form.invoice.payment_type'),
 

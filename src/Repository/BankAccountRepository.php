@@ -38,6 +38,26 @@ class BankAccountRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+
+    public function findActiveByAccountNumberAndInboxIdentifier(
+        string $accountNumber,
+        string $identifier,
+        int $statusId = 1
+    ): ?BankAccount {
+        $query = $this->createQueryBuilder('bank_account')
+            ->leftJoin('bank_account.company', 'company')
+            ->leftJoin('company.identifiers', 'company_identifiers')
+            ->where('bank_account.accountNumber = :accountNumber')
+            ->andWhere('bank_account.status = :statusId')
+            ->andWhere('company_identifiers.identifier = :identifier')
+            ->setParameter('accountNumber', $accountNumber)
+            ->setParameter('statusId', $statusId)
+            ->setParameter('identifier', $identifier)
+            ->getQuery();
+
+        return $query->getOneOrNullResult();
+    }
+
 //    public function findOneBySomeField($value): ?BankAccount
 //    {
 //        return $this->createQueryBuilder('a')

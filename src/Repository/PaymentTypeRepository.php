@@ -2,23 +2,23 @@
 
 namespace App\Repository;
 
-use App\Entity\PaymentType;
+use App\Entity\DocumentPaymentType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<PaymentType>
+ * @extends ServiceEntityRepository<DocumentPaymentType>
  *
- * @method PaymentType|null find($id, $lockMode = null, $lockVersion = null)
- * @method PaymentType|null findOneBy(array $criteria, array $orderBy = null)
- * @method PaymentType[]    findAll()
- * @method PaymentType[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method DocumentPaymentType|null find($id, $lockMode = null, $lockVersion = null)
+ * @method DocumentPaymentType|null findOneBy(array $criteria, array $orderBy = null)
+ * @method DocumentPaymentType[]    findAll()
+ * @method DocumentPaymentType[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class PaymentTypeRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, PaymentType::class);
+        parent::__construct($registry, DocumentPaymentType::class);
     }
 
 //    /**

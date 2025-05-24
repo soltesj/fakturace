@@ -208,11 +208,6 @@ SQL;
     }
 
     /**
-     * Get chart data for given company and date range
-     *
-     * @param Company $company Company to get data for
-     * @param DateTime $dateFrom Start date
-     * @param DateTime $dateTo End date
      * @return array{labels: array<string>, data: array<float>} Array with labels and data for chart
      * @throws Exception When database query fails
      */
@@ -235,5 +230,22 @@ SQL;
             'labels' => array_keys($keyValue),
             'data' => array_map('floatval', array_values($keyValue)),
         ];
+    }
+
+
+    public function findByCompanyAndVariableSymbolAndSpecificSymbol(
+        Company $company,
+        string $variableSymbol,
+        string $specificSymbol
+    ): ?Document {
+        return $this->createQueryBuilder('document')
+            ->andWhere('document.company = :company')
+            ->setParameter('company', $company)
+            ->andWhere('document.variableSymbol = :variableSymbol')
+            ->setParameter('variableSymbol', $variableSymbol)
+            ->andWhere('document.specificSymbol = :specificSymbol')
+            ->setParameter('specificSymbol', $specificSymbol)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

@@ -48,3 +48,11 @@ services:
     App\Document\Price\PriceCalculatorResolver:
         arguments:
             $strategies: !tagged_iterator app.price_calculator
+
+    App\BankAccount\EmailParser\:
+        resource: '../src/BankAccount/EmailParser/*'
+        tags: [ 'app.email_parser' ]
+
+    App\BankAccount\EmailParserResolver:
+        arguments:
+            $strategies: !tagged_iterator app.email_parser
