@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 
 #[ORM\Entity]
+#[ORM\Index(name: 'idx_document_company_date', columns: ['company_id', 'date_issue'])]
 #[UniqueConstraint(name: "UX_company_id_document_number", columns: ['company_id','document_number'])]
 class Document implements CompanyOwnedInterface
 {

@@ -189,21 +189,30 @@ class DocumentRepository extends ServiceEntityRepository
     {
         return <<<SQL
 WITH RECURSIVE months AS (
-    SELECT DATE_FORMAT(:from, '%Y-%m') AS month, DATE(:from) as first_day
+    SELECT
+        DATE(:from) AS start_date,
+        DATE(:fromNext) AS end_date,
+        DATE_FORMAT(:from, '%Y-%m') AS month
     UNION ALL
-    SELECT DATE_FORMAT(DATE_ADD(first_day, INTERVAL 1 MONTH), '%Y-%m'), DATE_ADD(first_day, INTERVAL 1 MONTH)
+    SELECT
+        DATE_ADD(start_date, INTERVAL 1 MONTH),
+        DATE_ADD(end_date, INTERVAL 1 MONTH),
+        DATE_FORMAT(DATE_ADD(start_date, INTERVAL 1 MONTH), '%Y-%m')
     FROM months
-    WHERE first_day < :to
+    WHERE start_date < :to
 )
 
 SELECT
     m.month,
     COALESCE(SUM(p.amount), 0) AS total_income
 FROM months m
-LEFT JOIN document d ON DATE_FORMAT(d.date_issue, '%Y-%m') = m.month AND d.company_id = :company_id
-LEFT JOIN document_price p ON p.document_id = d.id AND p.price_type_id = :price_type
+         LEFT JOIN document d
+                   ON d.date_issue >= m.start_date AND d.date_issue < m.end_date
+                       AND d.company_id = :company_id
+         LEFT JOIN document_price p
+                   ON p.document_id = d.id AND p.price_type_id = :price_type
 GROUP BY m.month
-ORDER BY m.month
+ORDER BY m.month;
 SQL;
     }
 
@@ -219,8 +228,9 @@ SQL;
         $sql = $this->getChartSql();
         $conn = $this->getEntityManager()->getConnection();
         $stmt = $conn->prepare($sql);
-        $stmt->bindValue('from', $dateFrom->format('Y-m-d'), ParameterType::STRING);
-        $stmt->bindValue('to', $dateTo->format('Y-m-d'), ParameterType::STRING);
+        $stmt->bindValue('from', $dateFrom->format('Y-m-d'));
+        $stmt->bindValue('fromNext', $dateFrom->modify('+1 month ')->format('Y-m-d'));
+        $stmt->bindValue('to', $dateTo->format('Y-m-d'));
         $stmt->bindValue('company_id', $company->getId(), ParameterType::INTEGER);
         $stmt->bindValue('price_type', PriceTypes::TOTAL_PRICE, ParameterType::INTEGER);
         $result = $stmt->executeQuery();

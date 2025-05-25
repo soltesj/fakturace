@@ -6,6 +6,7 @@ use App\Repository\DocumentPriceRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Index(name: 'idx_document_price_docid_type', columns: ['document_id', 'price_type_id'])]
 #[ORM\Entity(repositoryClass: DocumentPriceRepository::class)]
 class DocumentPrice
 {

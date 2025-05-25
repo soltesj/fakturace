@@ -6,6 +6,7 @@ use App\Repository\DocumentNumbersRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Index(name: 'idx_year', columns: ['year'])]
 #[ORM\Entity(repositoryClass: DocumentNumbersRepository::class)]
 class DocumentNumbers implements CompanyOwnedInterface
 {

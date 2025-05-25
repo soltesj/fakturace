@@ -6,7 +6,6 @@ use App\Dashboard\ChartService;
 use App\Document\Types;
 use App\DocumentNumber\DocumentNumberGenerator;
 use App\Entity\Company;
-use App\Enum\NotificationType;
 use DateTime;
 use Doctrine\DBAL\Exception;
 use Psr\Log\LoggerInterface;
@@ -28,7 +27,6 @@ class DashBoardController extends AbstractController
     #[Route('/{_locale}/{company}/dashboard', name: 'app_dash_board')]
     public function index(Company $company): Response
     {
-        dump(NotificationType::BALANCE->isTransaction());
         try {
             $chartData = $this->chartService->getChart($company, (int)new DateTime()->format('Y'));
         } catch (Exception $e) {
