@@ -7,9 +7,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'app:db-log-slow',
@@ -34,7 +32,7 @@ class DbLogSlowCommand extends Command
             'on' => $this->enableLogging($output),
             'off' => $this->disableLogging($output),
             'status' => $this->showStatus($output),
-            default => $output->writeln('<error>Neznámá akce. Použij on|off|status.</error>'),
+            default => $output->writeln('Unknown action. Use on|off|status.'),
         };
 
         return Command::SUCCESS;
@@ -45,14 +43,15 @@ class DbLogSlowCommand extends Command
         $this->connection->executeStatement("SET GLOBAL slow_query_log = 'ON'");
         $this->connection->executeStatement("SET GLOBAL long_query_time = 0.002");
         $this->connection->executeStatement("SET GLOBAL log_queries_not_using_indexes = 'ON'");
-        $output->writeln('<info>Slow query log zapnut.</info>');
+        $this->connection->executeStatement("SET GLOBAL slow_query_log_file = 'slow.log'");
+        $output->writeln('Slow query log is enabled.');
     }
 
     private function disableLogging(OutputInterface $output): void
     {
         $this->connection->executeStatement("SET GLOBAL slow_query_log = 'OFF'");
         $this->connection->executeStatement("SET GLOBAL log_queries_not_using_indexes = 'OFF'");
-        $output->writeln('<info>Slow query log vypnut.</info>');
+        $output->writeln('Slow query log is disabled.');
     }
 
     private function showStatus(OutputInterface $output): void
@@ -67,7 +66,7 @@ class DbLogSlowCommand extends Command
         ];
         foreach ($vars as $var) {
             $value = $this->connection->fetchAssociative("SHOW VARIABLES LIKE '$var'");
-            $output->writeln("$var: <comment>{$value['Value']}</comment>");
+            $output->writeln("$var: {$value['Value']}");
         }
     }
 }
