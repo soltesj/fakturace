@@ -110,3 +110,6 @@ dashboard.unpaid_invoices: 'Neuhrazené faktury'
 dashboard.best_customers: 'Top 5 odběratelé'
 dashboard.account_balance: 'Zůstatky na účtech'
 dashboard.vat_records: 'Evidence DPH'
+dashboard.overview: Přehledy
+dashboard.fast_action: Rychlé akce
+

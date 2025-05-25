@@ -3,16 +3,44 @@
 {% block title %}Hello DashBoardController!{% endblock %}
 
 {% block body %}
-    {% if is_granted('CREATE') %}
-        <a href="{% if documentNumberExist %}{{ path('app_document_new', {'company': company.id}) }}{% else %}#{% endif %}"
-           class="text-green-700 hover:text-green-500 mb-4 flex justify-start items-center space-x-1 {% if not documentNumberExist %}link-secondary pe-none{% endif %}">
-            <svg class="size-8">
-                <use href="#plus-circle-fill"/>
-            </svg>
-            <span>{{ 'button.invoice.new_invoice'|trans }}</span></a>
-    {% endif %}
-    <div class="mb-2" {{ stimulus_controller('dashboard/masonry') }}>
+    <h1 class="mb-5 flex justify-start items-center text-xl space-x-3">
+        <span>{{ 'dashboard.overview'|trans }}</span>
+    </h1>
 
+    <div class="mb-2" {{ stimulus_controller('dashboard/masonry') }}>
+        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary">
+            <table class="w-full">
+                <thead>
+                <tr>
+                    <td class="text-xl font-semibold mb-4 p-2 bg-table-header text-text-primary"
+                    >{{ 'dashboard.fast_action'|trans }}</td>
+                </tr>
+                </thead>
+                <tbody class="text-text-secondary">
+                <tr>
+                    <td class="px-2 py-4">
+                        {% if is_granted('CREATE') %}
+                            <a href="{% if documentNumberExist %}{{ path('app_document_new', {'company': company.id}) }}{% else %}#{% endif %}"
+                               class="text-green-700 hover:text-green-500 flex justify-start items-center space-x-1 {% if not documentNumberExist %}link-secondary pe-none{% endif %}">
+                                <svg class="size-4">
+                                    <use href="#plus-circle-fill"/>
+                                </svg>
+                                <span>{{ 'button.invoice.new_invoice'|trans }}</span></a>
+                        {% endif %}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary">
+            <h2 class="text-xl font-semibold mb-4 p-2 bg-table-header text-text-primary">{{ 'dashboard.sales_overview'|trans }}</h2>
+            <canvas
+                    class=""
+                    {{ stimulus_controller('dashboard/chart') }}
+                    data-dashboard--chart-type-value="bar"
+                    data-dashboard--chart-data-value='{{ chartData|json_encode }}'
+            ></canvas>
+        </div>
         <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary">
             <table class="w-full mb-4">
                 <thead>
@@ -32,15 +60,6 @@
                 </tr>
                 </tbody>
             </table>
-        </div>
-        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary">
-            <h2 class="text-xl font-semibold mb-4 p-2 bg-table-header text-text-primary">{{ 'dashboard.sales_overview'|trans }}</h2>
-            <canvas
-                    class=""
-                    {{ stimulus_controller('dashboard/chart') }}
-                    data-dashboard--chart-type-value="bar"
-                    data-dashboard--chart-data-value='{{ chartData|json_encode }}'
-            ></canvas>
         </div>
         <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary">
             <table class="w-full mb-4">
