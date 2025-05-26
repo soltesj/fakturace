@@ -6,6 +6,9 @@ use App\BankAccount\EmailParser\ParserInterface;
 
 class EmailParserResolver
 {
+    /**
+     * @param ParserInterface[] $strategies
+     */
     public function __construct(private readonly iterable $strategies)
     {
     }

@@ -146,7 +146,7 @@ class ProcessEmailNotificationCommand extends Command
     ): void {
         $balance = $parsedNotification->balance;
         $date = $parsedNotification->date;
-        $bankAccountBalance = new BankAccountBalance($bankAccount, $balance, $date);
+        $bankAccountBalance = new BankAccountBalance($bankAccount, (string)$balance, $date);
         $this->entityManager->persist($bankAccountBalance);
         $this->entityManager->flush();
     }

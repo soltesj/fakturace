@@ -7,10 +7,12 @@ use App\Entity\User;
 use App\Repository\CompanyRepository;
 use App\Service\AuthorizationService;
 use Doctrine\Common\Collections\ArrayCollection;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class AuthorizationServiceTest extends TestCase
 {
+    /** @var MockObject&CompanyRepository */
     private CompanyRepository $companyRepository;
     private AuthorizationService $authorizationService;
 

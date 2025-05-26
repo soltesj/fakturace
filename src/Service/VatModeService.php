@@ -44,7 +44,7 @@ class VatModeService
 
 
     /**
-     * @return VatMode[]
+     * @return array<string,string>
      */
     public function getAvailableVatModes(Company $company, ?Customer $customer = null): array
     {

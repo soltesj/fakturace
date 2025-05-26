@@ -39,7 +39,6 @@ class AirBankParser implements ParserInterface
                 account: str_replace('/', '', $m[3]), // můžeš to upravit podle potřeby
                 balance: (float)str_replace(',', '.', $m[4]),
                 date: $date,
-            // Případně rozšířit DTO o měnu a datetime, pokud je budeš chtít mít samostatně
             );
         }
         throw new InvalidArgumentException('message.no_parsable_body');

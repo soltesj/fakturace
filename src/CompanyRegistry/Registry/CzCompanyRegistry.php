@@ -29,17 +29,97 @@ class CzCompanyRegistry implements CompanyRegistryInterface
         return $this->getCompanyDTO($data);
     }
 
+    /**
+     * @var array{
+     *      ico: string,
+     *      obchodniJmeno: string,
+     *      sidlo: array{
+     *          kodStatu: string,
+     *          nazevStatu: string,
+     *          kodKraje: int,
+     *          nazevKraje: string,
+     *          kodOkresu: int,
+     *          nazevOkresu: string,
+     *          kodObce: int,
+     *          nazevObce: string,
+     *          kodUlice: int,
+     *          nazevUlice: string,
+     *          cisloDomovni: int,
+     *          kodCastiObce: int,
+     *          nazevCastiObce: string,
+     *          kodAdresnihoMista: int,
+     *          psc: int,
+     *          textovaAdresa: string,
+     *          standardizaceAdresy: bool,
+     *          typCisloDomovni: int
+     *      },
+     *      pravniForma: string,
+     *      financniUrad: string,
+     *      datumVzniku: string,
+     *      datumAktualizace: string,
+     *      icoId: string,
+     *      adresaDorucovaci: array{
+     *          radekAdresy1: string
+     *      },
+     *      seznamRegistraci: array{
+     *          stavZdrojeVr: string,
+     *          stavZdrojeRes: string,
+     *          stavZdrojeRzp: string,
+     *          stavZdrojeNrpzs: string,
+     *          stavZdrojeRpsh: string,
+     *          stavZdrojeRcns: string,
+     *          stavZdrojeSzr: string,
+     *          stavZdrojeDph: string,
+     *          stavZdrojeSd: string,
+     *          stavZdrojeIr: string,
+     *          stavZdrojeCeu: string,
+     *          stavZdrojeRs: string,
+     *          stavZdrojeRed: string,
+     *          stavZdrojeMonitor: string
+     *      },
+     *      primarniZdroj: string,
+     *      dalsiUdaje: array<int, array{
+     *          obchodniJmeno?: array<int|string, mixed>,
+     *          sidlo?: array<int, array{
+     *              sidlo: array{
+     *                  kodStatu: string,
+     *                  nazevStatu: string,
+     *                  kodKraje: int,
+     *                  nazevKraje: string,
+     *                  kodOkresu: int,
+     *                  nazevOkresu: string,
+     *                  kodObce: int,
+     *                  nazevObce: string,
+     *                  kodUlice: int,
+     *                  nazevUlice: string,
+     *                  cisloDomovni: int,
+     *                  kodCastiObce: int,
+     *                  nazevCastiObce: string,
+     *                  kodAdresnihoMista: int,
+     *                  psc: int,
+     *                  textovaAdresa: string,
+     *                  standardizaceAdresy: bool,
+     *                  typCisloDomovni: int
+     *              },
+     *              primarniZaznam: bool
+     *          }>,
+     *          pravniForma?: string,
+     *          datovyZdroj?: string
+     *      }>,
+     *      czNace: array<int, mixed>
+     *  } $data
+     */
     public function getCompanyDTO(array $data): CompanyDTO
     {
-        $sidlo = $data['sidlo'];
-        $houseNumber = $this->mekeHouseNumber($sidlo);
-        $town = $this->makeTownName($sidlo);
+        $residence = $data['sidlo'];
+        $houseNumber = $this->mekeHouseNumber($residence);
+        $town = $this->makeTownName($residence);
         $isVatPayer = $this->isVatPayer($data);
         $name = $data['obchodniJmeno'] ?? '';
         $vatNumber = $data['dic'] ?? '';
-        $street = $sidlo['nazevUlice'] ?? '';
+        $street = $residence['nazevUlice'] ?? '';
         $companyDTO = new CompanyDTO($name, $vatNumber, $street, $houseNumber, $town,
-            $sidlo['psc'], $isVatPayer);
+            $residence['psc'], $isVatPayer);
 
         return $companyDTO;
     }

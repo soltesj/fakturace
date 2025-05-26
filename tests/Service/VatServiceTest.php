@@ -6,10 +6,12 @@ use App\Entity\Company;
 use App\Entity\Country;
 use App\Repository\VatLevelRepository;
 use App\Service\VatService;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class VatServiceTest extends TestCase
 {
+    /** @var MockObject&VatLevelRepository */
     private VatLevelRepository $vatLevelRepository;
     private VatService $vatService;
 

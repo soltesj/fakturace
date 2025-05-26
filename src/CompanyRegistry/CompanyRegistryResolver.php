@@ -6,6 +6,9 @@ use App\CompanyRegistry\Registry\CompanyRegistryInterface;
 
 class CompanyRegistryResolver
 {
+    /**
+     * @param CompanyRegistryInterface[] $strategies
+     */
     public function __construct(private readonly iterable $strategies)
     {
     }

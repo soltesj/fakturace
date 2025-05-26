@@ -59,7 +59,10 @@ class VatLevelRepository extends ServiceEntityRepository
             ->orderBy('vat_level.vatAmount', 'DESC')
             ->getQuery();
 
-        return $dbal->executeQuery($query->getSQL(), [$country->getId(), (new DateTime())->format('Y-m-d')])
+        return $dbal->executeQuery($query->getSQL(), [
+            $country->getId(),
+            new DateTime()->format('Y-m-d'),
+        ])
             ->fetchAllKeyValue();
     }
 }

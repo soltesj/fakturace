@@ -65,8 +65,11 @@ class DbLogSlowCommand extends Command
             'log_queries_not_using_indexes',
         ];
         foreach ($vars as $var) {
+            /** @var array<string,string> $value */
             $value = $this->connection->fetchAssociative("SHOW VARIABLES LIKE '$var'");
-            $output->writeln("$var: {$value['Value']}");
+            if ($value !== false) {
+                $output->writeln("$var: {$value['Value']}");
+            }
         }
     }
 }

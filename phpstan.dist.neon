@@ -2,10 +2,11 @@ parameters:
     phpVersion: 80400
     level: 7
     paths:
-        - bin/
-        - config/
-        - public/
-        - src/
-        - tests/
+        - src
+    excludePaths:
+        - src/Test
     ignoreErrors:
         - '#PHPDoc tag @implements contains generic type Symfony\\Component\\Security\\Core\\User\\PasswordUpgraderInterface<App\\Entity\\User> but interface Symfony\\Component\\Security\\Core\\User\\PasswordUpgraderInterface is not generic.#'
+
+    doctrine:
+            objectManagerLoader: phpstan/object-manager-loader.php

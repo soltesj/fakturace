@@ -35,13 +35,13 @@ class Payment implements CompanyOwnedInterface
     private DateTimeImmutable $date;
 
     #[ORM\Column(type: Types::FLOAT, precision: 10, scale: 2, nullable: false)]
-    private string $price;
+    private float $price;
 
     public function __construct(
         Company $company,
         PaymentType $type,
         DateTimeImmutable $date,
-        string $price,
+        float $price,
         ?Document $document = null,
         ?BankAccount $bankAccount = null
     ) {
@@ -103,12 +103,12 @@ class Payment implements CompanyOwnedInterface
         $this->date = $date;
     }
 
-    public function getPrice(): ?string
+    public function getPrice(): ?float
     {
         return $this->price;
     }
 
-    public function setPrice(?string $price): void
+    public function setPrice(?float $price): void
     {
         $this->price = $price;
     }

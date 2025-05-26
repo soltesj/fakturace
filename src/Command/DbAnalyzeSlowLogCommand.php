@@ -31,8 +31,6 @@ class DbAnalyzeSlowLogCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $limit = (int)$input->getOption('limit');
-        $o = shell_exec("pt-query-digest --limit={$limit} /var/log/mysql/slow.log");
-        $output->writeln($o);
         $exists = shell_exec('which pt-query-digest');
         if (!$exists) {
             $io->error('pt-query-digest not found');
