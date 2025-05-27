@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Enum\VatMode;
+use App\Repository\DocumentRepository;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,9 +11,9 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: DocumentRepository::class)]
 #[ORM\Index(name: 'idx_document_company_date', columns: ['company_id', 'date_issue'])]
-#[UniqueConstraint(name: "UX_company_id_document_number", columns: ['company_id','document_number'])]
+#[UniqueConstraint(name: "UX_company_id_document_number", columns: ['company_id', 'document_number'])]
 class Document implements CompanyOwnedInterface
 {
     #[ORM\Id]
@@ -78,7 +79,7 @@ class Document implements CompanyOwnedInterface
     #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
     private ?string $specificSymbol = null;
 
-    #[ORM\ManyToOne(inversedBy:"documents")]
+    #[ORM\ManyToOne(inversedBy: "documents")]
     private ?BankAccount $bankAccount = null;
 
     /**
@@ -90,7 +91,7 @@ class Document implements CompanyOwnedInterface
     /**
      * @var Collection<int,DocumentPrice>
      */
-    #[ORM\OneToMany( targetEntity: DocumentPrice::class, mappedBy: 'document', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: DocumentPrice::class, mappedBy: 'document', cascade: ['persist', 'remove'])]
     private Collection $documentPrices;
 
     #[ORM\Column(name: 'bank_routing', type: Types::STRING, length: 32, nullable: true)]
@@ -147,23 +148,28 @@ class Document implements CompanyOwnedInterface
     #[ORM\Column(type: Types::BOOLEAN, nullable: true)]
     private ?bool $vatLow = null;
 
-    #[ORM\Column( type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $priceWithoutHighVat = null;
 
-    #[ORM\Column( type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $priceWithoutLowVat = null;
 
-    #[ORM\Column( type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $priceNoVat = null;
 
-    #[ORM\Column( type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $priceTotal = null;
 
-    #[ORM\Column( type: Types::TEXT, length: 65535, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, length: 65535, nullable: true)]
     private ?string $note = null;
 
     #[ORM\Column(type: 'string', nullable: true, enumType: VatMode::class)]
     private ?VatMode $vatMode = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: false)]
+    private string $totalAmount = '0.00';
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: false)]
+    private string $remainingAmount = '0.00';
 
     public function __construct(Company $company)
     {
@@ -698,4 +704,26 @@ class Document implements CompanyOwnedInterface
     {
         $this->vatMode = $vatMode;
     }
+
+    public function getTotalAmount(): float
+    {
+        return $this->totalAmount;
+    }
+
+    public function setTotalAmount(string $totalAmount): void
+    {
+        $this->totalAmount = $totalAmount;
+    }
+
+    public function getRemainingAmount(): string
+    {
+        return $this->remainingAmount;
+    }
+
+    public function setRemainingAmount(string $remainingAmount): void
+    {
+        $this->remainingAmount = $remainingAmount;
+    }
+
+
 }

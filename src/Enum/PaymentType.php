@@ -4,15 +4,15 @@ namespace App\Enum;
 
 enum PaymentType: string
 {
-    case OUTCOMING = 'payment_outcoming';
-    case INCOMING = 'payment_incoming';
+    case EXPENSE = 'payment_outcoming';
+    case INCOME = 'payment_incoming';
 
 
     public function label(): string
     {
         return match ($this) {
-            self::OUTCOMING => 'notification_type.transaction_outcoming',
-            self::INCOMING => 'notification_type.transaction_incoming',
+            self::EXPENSE => 'notification_type.transaction_outcoming',
+            self::INCOME => 'notification_type.transaction_incoming',
         };
     }
 }

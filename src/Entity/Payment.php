@@ -3,12 +3,12 @@
 namespace App\Entity;
 
 use App\Enum\PaymentType;
+use App\Repository\PaymentRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: PaymentRepository::class)]
 class Payment implements CompanyOwnedInterface
 {
     #[ORM\Id]
@@ -37,20 +37,52 @@ class Payment implements CompanyOwnedInterface
     #[ORM\Column(type: Types::FLOAT, precision: 10, scale: 2, nullable: false)]
     private float $price;
 
+    #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
+    private ?string $variableSymbol;
+
+    #[ORM\Column(type: Types::STRING, length: 4, nullable: true)]
+    private ?string $constantSymbol;
+
+    #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
+    private ?string $specificSymbol;
+
+    #[ORM\Column(type: Types::STRING, length: 32, nullable: true)]
+    private ?string $counterAccount;
+
+    #[ORM\Column(type: Types::STRING, length: 32, nullable: true)]
+    private ?string $message = null;
+
+    #[ORM\Column(type: Types::STRING, length: 32, nullable: true)]
+    private ?string $transactionId = null;
+
+
     public function __construct(
         Company $company,
         PaymentType $type,
-        DateTimeImmutable $date,
         float $price,
+        ?DateTimeImmutable $date = null,
         ?Document $document = null,
-        ?BankAccount $bankAccount = null
+        ?BankAccount $bankAccount = null,
+        ?string $variableSymbol = null,
+        ?string $constantSymbol = null,
+        ?string $specificSymbol = null,
+        ?string $counterAccount = null,
+        ?string $message = null,
+        ?string $transactionId = null,
     ) {
+
         $this->company = $company;
         $this->type = $type;
-        $this->date = $date;
         $this->document = $document;
         $this->price = $price;
         $this->bankAccount = $bankAccount;
+        $this->variableSymbol = $variableSymbol;
+        $this->constantSymbol = $constantSymbol;
+        $this->specificSymbol = $specificSymbol;
+        $this->counterAccount = $counterAccount;
+        $this->message = $message;
+        $this->transactionId = $transactionId;
+        $this->date = $date ?: new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -111,5 +143,65 @@ class Payment implements CompanyOwnedInterface
     public function setPrice(?float $price): void
     {
         $this->price = $price;
+    }
+
+    public function getVariableSymbol(): ?string
+    {
+        return $this->variableSymbol;
+    }
+
+    public function setVariableSymbol(?string $variableSymbol): void
+    {
+        $this->variableSymbol = $variableSymbol;
+    }
+
+    public function getConstantSymbol(): ?string
+    {
+        return $this->constantSymbol;
+    }
+
+    public function setConstantSymbol(?string $constantSymbol): void
+    {
+        $this->constantSymbol = $constantSymbol;
+    }
+
+    public function getSpecificSymbol(): ?string
+    {
+        return $this->specificSymbol;
+    }
+
+    public function setSpecificSymbol(?string $specificSymbol): void
+    {
+        $this->specificSymbol = $specificSymbol;
+    }
+
+    public function getCounterAccount(): ?string
+    {
+        return $this->counterAccount;
+    }
+
+    public function setCounterAccount(?string $counterAccount): void
+    {
+        $this->counterAccount = $counterAccount;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): void
+    {
+        $this->message = $message;
+    }
+
+    public function getTransactionId(): ?string
+    {
+        return $this->transactionId;
+    }
+
+    public function setTransactionId(?string $transactionId): void
+    {
+        $this->transactionId = $transactionId;
     }
 }

@@ -11,7 +11,7 @@ class ParsedNotificationDto
     public function __construct(
         public NotificationType $type,
         public string $account,
-        public float $balance,
+        public ?float $balance = null,
         public ?float $amount = null,
         public ?string $vs = null,
         public ?string $us = null,
@@ -19,6 +19,8 @@ class ParsedNotificationDto
         public ?string $ks = null,
         public ?string $counterparty = null,
         public ?DateTimeImmutable $date = null,
+        public ?string $message = null,
+        public ?string $transactionId = null,
     ) {
     }
 }

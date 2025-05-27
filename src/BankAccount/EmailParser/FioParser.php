@@ -15,14 +15,15 @@ class FioParser implements ParserInterface
 
     public function parse(string $subject, string $body): ParsedNotificationDto
     {
+        //$body = quoted_printable_decode($body);
         if (str_contains($subject, 'zustatek konta')) {
             return $this->parseBalance($body);
         }
         if (str_contains($subject, 'vydaj na konte')) {
-            return $this->parseOutgoingTransaction($body);
+            return $this->parseTransaction(NotificationType::TRANSACTION_OUTCOMING, $body);
         }
         if (str_contains($subject, 'prijem na konte')) {
-            return $this->parseIngoingTransaction($body);
+            return $this->parseTransaction(NotificationType::TRANSACTION_INCOMING, $body);
         }
         throw new Exception('message.no_parsable_subject');
     }
@@ -39,24 +40,25 @@ class FioParser implements ParserInterface
         throw new Exception('message.no_parsable_body');
     }
 
-    private function parseOutgoingTransaction(string $body): ParsedNotificationDto
-    {
-        return new ParsedNotificationDto(
-            type: NotificationType::TRANSACTION_OUTCOMING,
-            account: $this->match('/Výdaj na kontě:\s*(\d+)/', $body),
-            balance: $this->matchFloat('/Aktuální zůstatek:\s*([\d,]+)/', $body),
-            amount: $this->matchFloat('/Částka:\s*([\d,]+)/', $body),
-            vs: $this->match('/VS:\s*(\d+)/', $body),
-            us: $this->match('/US:\s*(\S+)/', $body),
-            ss: $this->match('/SS:\s*(\S+)/', $body),
-            ks: $this->match('/KS:\s*(\S+)/', $body),
-            counterparty: $this->match('/Protiúčet:\s*(.+)/', $body),
-        );
-    }
+//    private function parseTransaction(NotificationType $type, string $body): ParsedNotificationDto
+//    {
+//        return new ParsedNotificationDto(
+//            type: $type,
+//            account: $this->match('/(Příjem na kontě:|Výdaj na kontě:)\s*(\S*)/', $body),
+//            balance: $this->matchFloat('/Aktuální zůstatek:\s*([\d,]*)/', $body),
+//            amount: $this->matchFloat('/Částka:\s*(\S*)/', $body),
+//            vs: $this->match('/VS:\s*(\S*)/', $body),
+//            us: $this->match('/US:\s*(\S*)/', $body),
+//            ss: $this->match('/SS:\s*(\S*)/', $body),
+//            ks: $this->match('/KS:\s*(\S*)/', $body),
+//            counterparty: $this->match('/Protiúčet:\s*(.*)/', $body),
+//            message: $this->match('/Zpráva příjemci:\s*(.*)/', $body),
+//        );
+//    }
 
     private function match(string $pattern, string $text): ?string
     {
-        return preg_match($pattern, $text, $m) ? trim($m[1]) : null;
+        return preg_match($pattern, $text, $m) ? trim(end($m)) : null;
     }
 
     private function matchFloat(string $pattern, string $text): ?float
@@ -65,18 +67,19 @@ class FioParser implements ParserInterface
             ? (float)str_replace(',', '.', trim($m[1])) : null;
     }
 
-    private function parseIngoingTransaction(string $body): ParsedNotificationDto
+    private function parseTransaction(NotificationType $type, string $body): ParsedNotificationDto
     {
         return new ParsedNotificationDto(
-            type: NotificationType::TRANSACTION_OUTCOMING,
-            account: $this->match('/Příjem na kontě:\s*(\d+)/', $body),
-            balance: $this->matchFloat('/Aktuální zůstatek:\s*([\d,]+)/', $body),
-            amount: $this->matchFloat('/Částka:\s*([\d,]+)/', $body),
-            vs: $this->match('/VS:\s*(\d+)/', $body),
-            us: $this->match('/US:\s*(\S+)/', $body),
-            ss: $this->match('/SS:\s*(\S+)/', $body),
-            ks: $this->match('/KS:\s*(\S+)/', $body),
-            counterparty: $this->match('/Protiúčet:\s*(.+)/', $body),
+            type: $type,
+            account: $this->match('/(Příjem na kontě:|Výdaj na kontě:)\s*(\S*)/', $body),
+            balance: $this->matchFloat('/Aktuální zůstatek:\s*([\d,]*)/', $body),
+            amount: $this->matchFloat('/Částka:\s*(\S*)/', $body),
+            vs: $this->match('/VS:\s*(\S*)/', $body),
+            us: $this->match('/US:\s*(\S*)/', $body),
+            ss: $this->match('/SS:\s*(\S*)/', $body),
+            ks: $this->match('/KS:\s*(\S*)/', $body),
+            counterparty: $this->match('/Protiúčet:\s*(.*)/', $body),
+            message: $this->match('/Zpráva příjemci:\s*(.*)/', $body),
         );
     }
 }

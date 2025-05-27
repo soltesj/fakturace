@@ -13,6 +13,10 @@ adding czech font is necessary copy them from ``fonts`` to ``vendor/tecnickcom/t
 > 
 >``php tcpdf_addfont.php -b -t OpenSans -f 32 -i /open_sans/static/OpenSans-Regular.ttf,/open_sans/static/OpenSans-Bold.ttf``
 
+Javascript compile
+> ``npm run watch``
+>
+> ``npm run build``
 ## important
 
 git commit 625085c312a909ef2efd12f175eb0f6470de6205 is fixing migration be careful  

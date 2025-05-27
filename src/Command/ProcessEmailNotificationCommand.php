@@ -7,14 +7,15 @@ use App\BankAccount\ParsedNotificationDto;
 use App\Entity\BankAccount;
 use App\Entity\BankAccountBalance;
 use App\Entity\Company;
+use App\Entity\Document;
 use App\Entity\Payment;
 use App\Enum\NotificationType;
 use App\Enum\PaymentType;
 use App\Repository\BankAccountRepository;
 use App\Repository\CompanyRepository;
 use App\Repository\DocumentRepository;
+use App\Repository\PaymentRepository;
 use App\Service\InboxEmailParser;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use eXorus\PhpMimeMailParser\Parser;
@@ -33,7 +34,7 @@ use Symfony\Component\Mime\Address;
 )]
 class ProcessEmailNotificationCommand extends Command
 {
-    private const TRUSTED_EMAILS = ['automat@fio.cz', 'info@airbank.cz'];//
+    private const array TRUSTED_EMAILS = ['automat@fio.cz', 'info@airbank.cz'];//
 
     public function __construct(
         private readonly InboxEmailParser $emailAddressParser,
@@ -43,6 +44,7 @@ class ProcessEmailNotificationCommand extends Command
         private readonly CompanyRepository $companyRepository,
         private readonly DocumentRepository $documentRepository,
         private readonly EntityManagerInterface $entityManager,
+        private readonly PaymentRepository $paymentRepository,
     ) {
         parent::__construct();
     }
@@ -55,16 +57,21 @@ class ProcessEmailNotificationCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $io = new SymfonyStyle($input, $output);
         try {
-            $io = new SymfonyStyle($input, $output);
             $rawEmail = $this->loadEmail($input);
             list($from, $to, $subject, $body) = $this->parseEmail($rawEmail);
             $identifier = $this->emailAddressParser->parseIdentifier($to);
+            if (!$identifier) {
+                //TODO: Make a notification to the Administrator that the identifier doesnt exist
+                throw new Exception('identifier not found : '.$identifier);
+            }
             $company = $this->companyRepository->findOneByIdentifier($identifier);
             if (!$company) {
                 throw new Exception('Company not found for identifier: '.$identifier);
             }
             $parsedNotification = $this->emailParserDispatcher->dispatch($from, $subject, $body);
+//            dump($parsedNotification);
             $bankAccount = $this->accountRepository->findActiveByAccountNumberAndInboxIdentifier(
                 $parsedNotification->account,
                 $identifier
@@ -78,7 +85,7 @@ class ProcessEmailNotificationCommand extends Command
             } else {
                 $this->processBalance($parsedNotification, $bankAccount);
             }
-            $io->success('E-mail byl úspěšně zpracován.');
+            $io->success('Email was successfully processed.');
 
             return self::SUCCESS;
         } catch (Exception $exception) {
@@ -89,6 +96,9 @@ class ProcessEmailNotificationCommand extends Command
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function loadEmail(InputInterface $input): string
     {
         $source = $input->getArgument('source');
@@ -114,7 +124,7 @@ class ProcessEmailNotificationCommand extends Command
         $from = strtolower(Address::create($fromHeader)->getAddress());
         if (!in_array($from, self::TRUSTED_EMAILS, true)) {
             //TODO: save the email for manual check
-            throw new Exception("Unrecognized email notification from: {$from}");
+            throw new Exception("Unrecognized email notification from: $from");
         }
         $to = $parser->getHeader('to');
         $subject = $parser->getHeader('subject');
@@ -129,13 +139,30 @@ class ProcessEmailNotificationCommand extends Command
         BankAccount $bankAccount
     ): void {
         $price = $parsedNotification->amount;
-        $paymentType = $parsedNotification->type === NotificationType::TRANSACTION_INCOMING ? PaymentType::INCOMING : PaymentType::OUTCOMING;
+        $paymentType = $parsedNotification->type === NotificationType::TRANSACTION_INCOMING ? PaymentType::INCOME : PaymentType::EXPENSE;
         $document = $this->documentRepository->findByCompanyAndVariableSymbolAndSpecificSymbol(
             $company,
-            $parsedNotification->vs, $parsedNotification->ss
+            $parsedNotification->vs,
         );
-        $payment = new Payment($company, $paymentType, new DateTimeImmutable(), $price, $document,
-            $bankAccount);
+        $payment = $this->paymentRepository->findMatchingPayment(
+            $company,
+            $paymentType,
+            $price,
+            $parsedNotification->date,
+            $document,
+            $bankAccount,
+            $parsedNotification->vs,
+            $parsedNotification->ks,
+            $parsedNotification->ss,
+            $parsedNotification->counterparty,
+            $parsedNotification->message,
+            $parsedNotification->transactionId);
+        $documentToPay = (count($payment) > 0) ? null : $document;
+        $documentToPay = $document;
+        $payment = new Payment($company, $paymentType, $price, $parsedNotification->date, $documentToPay, $bankAccount,
+            $parsedNotification->vs, $parsedNotification->ks, $parsedNotification->ss,
+            $parsedNotification->counterparty, $parsedNotification->message, $parsedNotification->transactionId
+        );
         $this->entityManager->persist($payment);
         $this->entityManager->flush();
     }

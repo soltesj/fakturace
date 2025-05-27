@@ -246,16 +246,24 @@ SQL;
     public function findByCompanyAndVariableSymbolAndSpecificSymbol(
         Company $company,
         string $variableSymbol,
-        string $specificSymbol
+        ?string $specificSymbol = null,
+        ?string $constantSymbol = null,
     ): ?Document {
-        return $this->createQueryBuilder('document')
+        $qb = $this->createQueryBuilder('document')
             ->andWhere('document.company = :company')
             ->setParameter('company', $company)
             ->andWhere('document.variableSymbol = :variableSymbol')
-            ->setParameter('variableSymbol', $variableSymbol)
-            ->andWhere('document.specificSymbol = :specificSymbol')
-            ->setParameter('specificSymbol', $specificSymbol)
-            ->getQuery()
+            ->setParameter('variableSymbol', $variableSymbol);
+        if ($specificSymbol) {
+            $qb->andWhere('document.specificSymbol = :specificSymbol')
+                ->setParameter('specificSymbol', $specificSymbol);
+        }
+        if ($constantSymbol) {
+            $qb->andWhere('document.constantSymbol = :constantSymbol')
+                ->setParameter('constantSymbol', $constantSymbol);
+        }
+
+        return $qb->getQuery()
             ->getOneOrNullResult();
     }
 }
