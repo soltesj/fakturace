@@ -19,4 +19,7 @@ Javascript compile
 > ``npm run build``
 ## important
 
-git commit 625085c312a909ef2efd12f175eb0f6470de6205 is fixing migration be careful  
+git commit 625085c312a909ef2efd12f175eb0f6470de6205 is fixing migration be careful
+
+Features
+sen email notification of payment to php bin/console app:p email/income.automat@fio.cz.eml
