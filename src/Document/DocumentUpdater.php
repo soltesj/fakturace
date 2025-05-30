@@ -25,6 +25,7 @@ readonly class DocumentUpdater
         $this->removeUnassociatedItems($originalItems, $document);
         [$vatPrices, $priceTotal] = $this->priceCalculatorService->calculate($document);
         $this->updateExistingPrices($document, $vatPrices, $priceTotal);
+        $document->setTotalAmount($priceTotal);
         $this->createMissingPrices($document, $vatPrices);
         $this->entityManager->flush();
     }

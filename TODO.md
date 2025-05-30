@@ -13,6 +13,9 @@
 
 ## 🔧 Refactoring
 
+- [ ] update payment of all odl documents transfer them to table payment
+- [ ] chat sql can nou take the price fom document table
+
 ## ✅ Done
 
 - [x] make migration for Vat values

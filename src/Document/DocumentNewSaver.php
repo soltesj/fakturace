@@ -7,9 +7,7 @@ use App\DocumentPrice\Types as PriceTypes;
 use App\Entity\Document;
 use App\Entity\DocumentPrice;
 use App\Entity\VatLevel;
-use App\Enum\VatMode;
 use App\Repository\DocumentPriceTypeRepository;
-use App\Service\VatModeService;
 use Doctrine\ORM\EntityManagerInterface;
 
 readonly class DocumentNewSaver
@@ -27,6 +25,7 @@ readonly class DocumentNewSaver
         $this->documentNumberManager->generate($document);
         [$vatPrices, $priceTotal] = $this->priceCalculatorService->calculate($document);
         $this->createDocumentPrices($document, $vatPrices, $priceTotal);
+        $document->setTotalAmount($priceTotal);
         $this->entityManager->persist($document);
         $this->entityManager->flush();
     }
