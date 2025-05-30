@@ -15,6 +15,7 @@
 
 - [ ] update payment of all odl documents transfer them to table payment
 - [ ] chat sql can nou take the price fom document table
+- [ ] QR payment has to be refactored do to all countries have their own standard
 
 ## ✅ Done
 

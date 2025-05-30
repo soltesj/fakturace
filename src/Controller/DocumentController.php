@@ -121,7 +121,7 @@ class DocumentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->documentNewSaver->save($document);
-                $this->addFlash('success', 'INVOICE_STORED');
+                $this->addFlash('success', 'message.invoice.stored');
 
                 return $this->redirectToRoute(
                     'app_document_index',
@@ -129,7 +129,7 @@ class DocumentController extends AbstractController
                     Response::HTTP_SEE_OTHER
                 );
             } catch (Throwable $e) {
-                $this->addFlash('danger', 'INVOICE_NOT_STORED');
+                $this->addFlash('danger', 'message.invoice.not_stored');
                 $this->logger->error($e->getMessage(), $e->getTrace());
             }
         }
@@ -159,7 +159,7 @@ class DocumentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->documentUpdater->update($document, $originalItems);
-                $this->addFlash('success', 'INVOICE_STORED');
+                $this->addFlash('success', 'message.invoice.stored');
 
                 return $this->redirectToRoute(
                     'app_document_index',
@@ -167,7 +167,7 @@ class DocumentController extends AbstractController
                     Response::HTTP_SEE_OTHER
                 );
             } catch (Throwable $e) {
-                $this->addFlash('danger', 'INVOICE_NOT_STORED');
+                $this->addFlash('danger', 'message.invoice.not_stored');
                 $this->logger->error($e->getMessage(), $e->getTrace());
             }
         }

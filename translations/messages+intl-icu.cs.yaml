@@ -14,6 +14,8 @@ invoice.price_total_without_vat: 'Celkem bez DPH'
 invoice.price_total_vat: DPH
 invoice.price_total_with_vat: 'Cena celkem'
 invoice.edit_invoice_outgoing: 'Upravit fakruru vydanou'
+message.invoice.stored: 'Fakruru byla uložena'
+message.invoice.not_stored: 'Fakruru nebyla uložena'
 form.invoice.vat_mode: DPH
 form.invoice.document_number: 'Číslo dokladu'
 form.invoice.document_number.placeholder: 'Číslo dokladu'
