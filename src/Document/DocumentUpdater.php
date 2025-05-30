@@ -9,6 +9,7 @@ use App\Entity\DocumentItem;
 use App\Entity\DocumentPrice;
 use App\Entity\DocumentPriceType;
 use App\Entity\VatLevel;
+use App\Repository\PaymentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -17,6 +18,7 @@ readonly class DocumentUpdater
     public function __construct(
         private EntityManagerInterface $entityManager,
         private PriceCalculatorService $priceCalculatorService,
+        private PaymentRepository $paymentRepository,
     ) {
     }
 
@@ -26,6 +28,8 @@ readonly class DocumentUpdater
         [$vatPrices, $priceTotal] = $this->priceCalculatorService->calculate($document);
         $this->updateExistingPrices($document, $vatPrices, $priceTotal);
         $document->setTotalAmount($priceTotal);
+        $total = $this->paymentRepository->findCurrentTotalForDocument($document);
+        $document->setRemainingAmount($priceTotal - $total);
         $this->createMissingPrices($document, $vatPrices);
         $this->entityManager->flush();
     }

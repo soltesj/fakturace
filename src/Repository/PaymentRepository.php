@@ -124,4 +124,15 @@ class PaymentRepository extends ServiceEntityRepository
 
         return array_column($qb->getQuery()->getResult(), 'total', 'documentId');
     }
+
+    public function findCurrentTotalForDocument(Document $document)
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('COALESCE(SUM(CASE WHEN p.type = :income THEN p.amount ELSE -p.amount END), 0) as total')
+            ->where('p.document = (:document)')
+            ->setParameter('income', PaymentType::INCOME->value)
+            ->setParameter('document', $document);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }

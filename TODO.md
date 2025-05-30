@@ -1,5 +1,9 @@
 # 🧠 TODO List
 
+## 📦 Bugs
+
+- [ ] fix reseting filter
+
 ## 📦 New features
 
 - [ ] default texts (email, invoice description, ...) management

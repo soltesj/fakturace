@@ -26,6 +26,7 @@ readonly class DocumentNewSaver
         [$vatPrices, $priceTotal] = $this->priceCalculatorService->calculate($document);
         $this->createDocumentPrices($document, $vatPrices, $priceTotal);
         $document->setTotalAmount($priceTotal);
+        $document->setRemainingAmount($priceTotal);
         $this->entityManager->persist($document);
         $this->entityManager->flush();
     }

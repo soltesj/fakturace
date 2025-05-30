@@ -13,10 +13,9 @@ use App\Entity\Company;
 use App\Entity\Customer;
 use App\Entity\Document;
 use App\Entity\User;
-use App\Enum\VatMode;
 use App\Form\DocumentFormType;
+use App\Repository\DocumentRepository;
 use App\Service\Date;
-use App\Service\DocumentService;
 use App\Service\VatService;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -39,9 +38,9 @@ class DocumentController extends AbstractController
         private readonly LoggerInterface $logger,
         private readonly VatService $vatService,
         private readonly DocumentFactory $documentFactory,
-        private readonly DocumentService $documentService,
         private readonly DocumentUpdater $documentUpdater,
         private readonly DocumentNewSaver $documentNewSaver,
+        private readonly DocumentRepository $documentRepository,
     ) {
     }
 
@@ -70,15 +69,14 @@ class DocumentController extends AbstractController
             );
         }
         try {
-            $documents = $this->documentService->getDocumentToPay(
-                $company,
+            $documents = $this->documentRepository->filtered($company,
                 Types::INVOICE_OUTGOING_TYPES,
                 $dateFrom,
                 $dateTo,
                 $query,
                 $customer,
-                $state
-            );
+                $state);
+
         } catch (Exception|DBALException $e) {
             $this->logger->error($e->getMessage(), $e->getTrace());
             $this->addFlash('danger', "DOCUMENT_LOADING_ERROR");
@@ -95,7 +93,7 @@ class DocumentController extends AbstractController
             (int)(new DateTime)->format('Y')
         );
         if (!$documentNumberExist) {
-            $this->addFlash('danger', 'NO_DOCUMENT_NUMBER_EXIST');
+            $this->addFlash('error', 'NO_DOCUMENT_NUMBER_EXIST');
         }
 
         return $this->render('document/index.html.twig', [
@@ -167,7 +165,8 @@ class DocumentController extends AbstractController
                     Response::HTTP_SEE_OTHER
                 );
             } catch (Throwable $e) {
-                $this->addFlash('danger', 'message.invoice.not_stored');
+                $this->addFlash('error', 'message.invoice.not_stored');
+                $this->addFlash('error', $e->getMessage());
                 $this->logger->error($e->getMessage(), $e->getTrace());
             }
         }

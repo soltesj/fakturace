@@ -13,6 +13,9 @@ use Doctrine\ORM\Mapping\UniqueConstraint;
 
 #[ORM\Entity(repositoryClass: DocumentRepository::class)]
 #[ORM\Index(name: 'idx_document_company_date', columns: ['company_id', 'date_issue'])]
+#[ORM\Index(name: 'idx_document_company_date_due', columns: ['company_id', 'date_due'])]
+#[ORM\Index(name: 'idx_document_remaining_amount', columns: ['remaining_amount'])]
+#[ORM\Index(name: 'idx_document_remaining_amount', columns: ['remaining_amount'])]
 #[UniqueConstraint(name: "UX_company_id_document_number", columns: ['company_id', 'document_number'])]
 class Document implements CompanyOwnedInterface
 {
