@@ -29,10 +29,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Mime\Address;
 
 #[AsCommand(
-    name: 'app:process-email',
+    name: 'app:process-email-payment-notification',
     description: 'Process payment or bank account balance from email ',
 )]
-class ProcessEmailNotificationCommand extends Command
+class ProcessEmailPaymentNotificationCommand extends Command
 {
     private const array TRUSTED_EMAILS = ['automat@fio.cz', 'info@airbank.cz'];//
 
@@ -113,7 +113,7 @@ class ProcessEmailNotificationCommand extends Command
     }
 
     /**
-     * @return array{string, string, string, string}
+     * @return string[]
      * @throws Exception
      */
     public function parseEmail(string $rawEmail): array
@@ -158,7 +158,6 @@ class ProcessEmailNotificationCommand extends Command
             $parsedNotification->message,
             $parsedNotification->transactionId);
         $documentToPay = (count($payment) > 0) ? null : $document;
-        $documentToPay = $document;
         $payment = new Payment($company, $paymentType, $price, $parsedNotification->date, $documentToPay, $bankAccount,
             $parsedNotification->vs, $parsedNotification->ks, $parsedNotification->ss,
             $parsedNotification->counterparty, $parsedNotification->message, $parsedNotification->transactionId

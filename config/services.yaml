@@ -56,13 +56,3 @@ services:
     App\BankAccount\EmailParserResolver:
         arguments:
             $strategies: !tagged_iterator app.email_parser
-
-    App\EventSubscriber\Doctrine\PaymentSubscriber:
-        public: true
-        autowire: true
-        autoconfigure: true
-        tags:
-            - name: doctrine.event_subscriber,
-              event: 'onFlush'
-              priority: 100,
-              connection: default

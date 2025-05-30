@@ -9,6 +9,7 @@ use App\Entity\Payment;
 use App\Enum\PaymentType;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -32,7 +33,7 @@ class PaymentRepository extends ServiceEntityRepository
     public function findMatchingPayment(
         Company $company,
         PaymentType $paymentType,
-        float $price,
+        float $amount,
         ?DateTimeImmutable $date,
         ?Document $document,
         ?BankAccount $bankAccount,
@@ -46,10 +47,10 @@ class PaymentRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('p')
             ->andWhere('p.company = :company')
             ->andWhere('p.type = :type')
-            ->andWhere('p.price = :price')
+            ->andWhere('p.amount = :amount')
             ->setParameter('company', $company)
             ->setParameter('type', $paymentType)
-            ->setParameter('price', $price);
+            ->setParameter('amount', $amount);
         if ($date !== null) {
             $qb->andWhere('p.date = :date')
                 ->setParameter('date', $date);
@@ -97,7 +98,7 @@ class PaymentRepository extends ServiceEntityRepository
     public function getNetPaymentSumForDocument(Document $document): float
     {
         $qb = $this->createQueryBuilder('p')
-            ->select('SUM(CASE WHEN p.type = :income THEN p.price ELSE 0 END) - SUM(CASE WHEN p.type = :expense THEN p.price ELSE 0 END) AS netTotal')
+            ->select('SUM(CASE WHEN p.type = :income THEN p.amount ELSE 0 END) - SUM(CASE WHEN p.type = :expense THEN p.amount ELSE 0 END) AS netTotal')
             ->where('p.document = :document')
             ->setParameter('document', $document)
             ->setParameter('income', PaymentType::INCOME)
@@ -107,27 +108,20 @@ class PaymentRepository extends ServiceEntityRepository
     }
 
 
-//    /**
-//     * @return Payment[] Returns an array of Payment objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-//    public function findOneBySomeField($value): ?Payment
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /**
+     * @param Document[] $documents
+     * @return array<int, float>
+     */
+    public function findCurrentTotalsForDocuments(array $documents, string $incomeType): array
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('IDENTITY(p.document) as documentId, 
+                     SUM(CASE WHEN p.type = :income THEN p.amount ELSE -p.amount END) as total')
+            ->where('p.document IN (:documents)')
+            ->groupBy('p.document')
+            ->setParameter('income', $incomeType)
+            ->setParameter('documents', $documents);
+
+        return array_column($qb->getQuery()->getResult(), 'total', 'documentId');
+    }
 }

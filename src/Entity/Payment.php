@@ -35,7 +35,7 @@ class Payment implements CompanyOwnedInterface
     private DateTimeImmutable $date;
 
     #[ORM\Column(type: Types::FLOAT, precision: 10, scale: 2, nullable: false)]
-    private float $price;
+    private float $amount;
 
     #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
     private ?string $variableSymbol;
@@ -59,7 +59,7 @@ class Payment implements CompanyOwnedInterface
     public function __construct(
         Company $company,
         PaymentType $type,
-        float $price,
+        float $amount,
         ?DateTimeImmutable $date = null,
         ?Document $document = null,
         ?BankAccount $bankAccount = null,
@@ -74,7 +74,7 @@ class Payment implements CompanyOwnedInterface
         $this->company = $company;
         $this->type = $type;
         $this->document = $document;
-        $this->price = $price;
+        $this->amount = $amount;
         $this->bankAccount = $bankAccount;
         $this->variableSymbol = $variableSymbol;
         $this->constantSymbol = $constantSymbol;
@@ -135,14 +135,14 @@ class Payment implements CompanyOwnedInterface
         $this->date = $date;
     }
 
-    public function getPrice(): ?float
+    public function getAmount(): ?float
     {
-        return $this->price;
+        return $this->amount;
     }
 
-    public function setPrice(?float $price): void
+    public function setAmount(?float $amount): void
     {
-        $this->price = $price;
+        $this->amount = $amount;
     }
 
     public function getVariableSymbol(): ?string
