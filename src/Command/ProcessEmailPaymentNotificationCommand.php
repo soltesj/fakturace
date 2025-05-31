@@ -27,6 +27,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 #[AsCommand(
     name: 'app:process-email-payment-notification',
@@ -57,6 +58,8 @@ class ProcessEmailPaymentNotificationCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $stopwatch = new Stopwatch();
+        $stopwatch->start('email-payment-notification-command');
         $io = new SymfonyStyle($input, $output);
         try {
             $rawEmail = $this->loadEmail($input);
@@ -86,6 +89,9 @@ class ProcessEmailPaymentNotificationCommand extends Command
                 $this->processBalance($parsedNotification, $bankAccount);
             }
             $io->success('Email was successfully processed.');
+            $event = $stopwatch->stop('email-payment-notification-command');
+            $durationMs = $event->getDuration();
+            $io->comment(sprintf('Command executed in %.2f seconds', $durationMs / 1000));
 
             return self::SUCCESS;
         } catch (Exception $exception) {
