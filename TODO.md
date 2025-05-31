@@ -8,6 +8,7 @@
 ## 📦 New features
 
 - [ ] default texts (email, invoice description, ...) management
+- [ ] Add a notification system (new payment, not assigned payment, messages from the system ...)
 
 ## 🔧 Refactoring
 
