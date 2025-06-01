@@ -34,7 +34,9 @@ readonly class DocumentFilterFormService
         ];
 
         return
-            $this->formFactory->createNamedBuilder('')->setMethod('GET')
+            $this->formFactory->createNamedBuilder(name: '', options: [
+                'csrf_protection' => false,
+            ])->setMethod('GET')
 
             ->add('q', TextType::class, [
                 'label' => t('form.filter.query'),

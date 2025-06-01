@@ -1,0 +1,54 @@
+<div class="bg-background-secondary p-0 md:p-4">
+    <div class="bg-table-header text-text-primary/80 grid grid-cols-2 md:grid-cols-6 lg:grid-cols-7">
+        <div class="p-2 pb-1 md:p-2 md:order-1 sm:col-span-1">{{ 'payment.document'|trans }}</div>
+        <div class="p-2 pb-1 md:p-2 md:order-6 text-right">{{ 'payment.amount'|trans }}</div>
+        <div class="px-2 pb-2 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-normal md:col-span-2 lg:col-span-3">
+            {{ 'payment.bank'|trans }}
+        </div>
+        <div class="px-2 pb-2 pt-0 md:p-2 md:order-3 text-xs font-light md:text-base md:font-normal text-right">
+            {{ 'payment.date'|trans }}
+        </div>
+        <div class="p-2 md:order-7 col-span-2 sm:col-span-1 hidden md:block"></div>
+    </div>
+    {% for payment in payments %}
+        <div class="grid grid-cols-2 md:grid-cols-6 lg:grid-cols-7 border-b border-b-border">
+            <div class="p-2 pb-1 md:p-2 sm:col-span-1 md:order-1 text-lg {{ payment.document?'font-medium md:font-bold':'font-light' }} md:text-base text-text-primary/60 flex items-center">{% if is_granted('EDIT',payment) %}
+                    <svg class="size-4 {{ payment.type.value == enum('App\\Enum\\PaymentType').EXPENSE.value?'text-red-800':'text-green-800' }}">
+                        <use href="#dollar-sign"/>
+                    </svg>
+                    <a
+                    href="{{ path('app_payment_edit', {'company': company.id, 'payment': payment.id}) }}"
+                    class="text-decoration-none">{{ payment.document.documentNumber|default('payment.no_document_assigned')|trans }}</a>{% else %}
+                    {{ payment.document.documentNumber|default('payment.no_document_assigned')|trans }}
+                {% endif %}
+            </div>
+            <div class="p-2 pb-1 md:p-2 md:order-6 text-right text-lg font-medium md:text-base md:font-normal text-text-primary/60">
+                {{ payment.amount }}&nbsp;{{ payment.currency?payment.currency.symbol:'' }}
+            </div>
+            <div class="px-2 pb-1 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-semibold md:col-span-2 lg:col-span-3">
+                {{ payment.bankAccount.name|default('payment.not_bank_movement')|trans }} <span
+                        class="font-light text-xs">{{ payment.variableSymbol|default('') }}</span></div>
+            <div class="px-2 pb-1 pt-0 md:p-2 md:order-3 text-xs font-bold md:text-base md:font-semibold md:text-md text-right">
+                <span title="{{ 'payment.received'|trans }} {{ payment.date|format_date }}">{{ payment.date|diff_for_humans }}</span>
+            </div>
+            <div class="px-2 pb-3 pt-1 md:p-2 col-span-2 md:col-span-1 text-right md:order-7  flex justify-end items-center space-x-2">
+                {#                <svg class="size-5"> #}
+                {#                    <use href="#envelope-arrow-up-fill"/> #}
+                {#                </svg> #}
+
+                {#                <a href="{{ path('app_payment_print',{'payment':payment.id,'company':payment.id}) }}" #}
+                {#                   target="_blank" class="text-primary"> #}
+                {#                    <svg class="size-5"> #}
+                {#                        <use href="#filetype-pdf"/> #}
+                {#                    </svg> #}
+                {#                </a> #}
+
+                {#                <svg class="size-5"> #}
+                {#                    <use href="#check-circle-fill"/> #}
+                {#                </svg> #}
+            </div>
+        </div>
+    {% else %}
+        <p class="p-2">{{ 'invoice.no_record_found'|trans }}</p>
+    {% endfor %}
+</div>

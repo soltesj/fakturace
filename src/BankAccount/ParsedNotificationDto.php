@@ -13,6 +13,7 @@ class ParsedNotificationDto
         public string $account,
         public ?float $balance = null,
         public ?float $amount = null,
+        public ?string $currency = null,
         public ?string $vs = null,
         public ?string $us = null,
         public ?string $ss = null,

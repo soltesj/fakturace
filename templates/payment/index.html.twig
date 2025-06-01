@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'payment.payments'|trans }}{% endblock %}
+
+{% block body %}
+    <h1 class="mb-5 flex justify-start items-center text-xl space-x-3">
+        <a href="{{ path('app_dash_board',{'company': company.id}) }}">
+            <svg class="size-8">
+                <use href="#arrow-left-circle"/>
+            </svg>
+        </a>
+        <span>{{ 'payment.payments'|trans }}</span>
+    </h1>
+
+    <div {{ stimulus_controller('documents/filter') }}>
+        {#        {% form_theme formFilter 'form/form_layout.html.twig' %}
+        {{ form_start(formFilter,{'attr':{
+            'class':"grid grid-flow-col justify-items-center space-x-3 mb-5",
+            'data-documents--filter-target':'filterForm',
+            'data-action':'submit->documents--filter#submitForm'
+        }}) }}
+        {{ form_errors(formFilter) }}
+
+        {% for field in ['q', 'state', 'customer', 'dateFrom', 'dateTo'] %}
+            {{ form_row(formFilter[field], {attr: {'data-action':'documents--filter#onChange'}}) }}
+        {% endfor %}
+
+        <div class="mb-4 pt-6">
+            <button type="reset" class="bg-red-800 hover:bg-red-600 text-red-100 p-2 flex items-center">
+                <svg class="size-4 text-red-100 mr-2">
+                    <use href="#square-xmark"/>
+                </svg>
+                <span>{{ 'invoice.reset_filter'|trans }}</span>
+            </button>
+        </div>
+
+        {{ form_end(formFilter) }} #}
+
+        <div class="grid grid-flow-col justify-items-center md:justify-start space-x-3 md:space-x-4 mb-3">
+            {% if is_granted('CREATE') %}
+                {#                <a href="{% if documentNumberExist %}{{ path('app_document_new', {'company': company.id}) }}{% else %}#{% endif %}" #}
+                {#                   class="text-green-700 hover:text-green-500 font-bold ml-4 flex justify-start items-center space-x-1 {% if not documentNumberExist %}link-secondary pe-none{% endif %}"> #}
+                {#                    <svg class="size-4"> #}
+                {#                        <use href="#plus-circle-fill"/> #}
+                {#                    </svg> #}
+                {#                    <span>{{ 'button.invoice.new_invoice'|trans }}</span></a> #}
+            {% endif %}
+            {#            <a href="#" class="text-primary flex justify-start items-center space-x-1"> #}
+            {#                <svg class="size-4"> #}
+            {#                    <use href="#cash-coin"/> #}
+            {#                </svg> #}
+            {#                <span>{{ 'button.invoice.check_payment'|trans }}</span></a> #}
+        </div>
+        <div data-documents--filter-target="documentList">
+            {{ include('payment/_list.html.twig') }}
+        </div>
+    </div>
+{% endblock %}

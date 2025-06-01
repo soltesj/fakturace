@@ -115,4 +115,12 @@ dashboard.account_balance: 'Zůstatky na účtech'
 dashboard.vat_records: 'Evidence DPH'
 dashboard.overview: Přehledy
 dashboard.fast_action: Rychlé akce
-
+payment.not_bank_movement: 'Nebankovní pohyb'
+payment.no_document_assigned: 'Nepřiřazeno'
+payment.document: 'Doklad'
+payment.amount: 'Částka'
+payment.bank: 'Banka'
+payment.date: 'Datum'
+payment.payments: 'Platby'
+payment.received: 'Platba přijata'
+#payment.: ''

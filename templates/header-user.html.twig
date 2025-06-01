@@ -50,7 +50,7 @@
                             <a href="#"
                                class="rounded-sm px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Faktury
                                 přijaté</a>
-                            <a href="#"
+                            <a href="{{ path('app_payment_index', {'company': company.id}) }}"
                                class="rounded-sm px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Platby</a>
                             <a href="{{ path('app_customer_index',{'company': company.id}) }}"
                                class="rounded-sm {% if app.current_route starts with 'app_customer' %}bg-gray-900{% endif %} px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Adresář</a>

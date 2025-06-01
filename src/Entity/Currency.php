@@ -14,51 +14,51 @@ class Currency
     protected ?int $id = null;
 
     #[ORM\Column(length: 3)]
-    private string $currencyCode;
+    private string $code;
 
     #[ORM\Column(length: 255)]
-    private string $currencyName;
+    private string $name;
 
     #[ORM\Column(length: 50)]
-    private string $currencySymbol;
+    private string $symbol;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getCurrencyCode(): ?string
+    public function getCode(): ?string
     {
-        return $this->currencyCode;
+        return $this->code;
     }
 
-    public function setCurrencyCode(string $currencyCode): static
+    public function setCode(string $code): static
     {
-        $this->currencyCode = $currencyCode;
+        $this->code = $code;
 
         return $this;
     }
 
-    public function getCurrencyName(): ?string
+    public function getName(): ?string
     {
-        return $this->currencyName;
+        return $this->name;
     }
 
-    public function setCurrencyName(string $currencyName): static
+    public function setName(string $name): static
     {
-        $this->currencyName = $currencyName;
+        $this->name = $name;
 
         return $this;
     }
 
-    public function getCurrencySymbol(): ?string
+    public function getSymbol(): ?string
     {
-        return $this->currencySymbol;
+        return $this->symbol;
     }
 
-    public function setCurrencySymbol(string $currencySymbol): static
+    public function setSymbol(string $symbol): static
     {
-        $this->currencySymbol = $currencySymbol;
+        $this->symbol = $symbol;
 
         return $this;
     }

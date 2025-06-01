@@ -145,6 +145,7 @@ class ProcessEmailPaymentNotificationCommand extends Command
         BankAccount $bankAccount
     ): void {
         $price = $parsedNotification->amount;
+        $currency = $parsedNotification->currency;
         $paymentType = $parsedNotification->type === NotificationType::TRANSACTION_INCOMING ? PaymentType::INCOME : PaymentType::EXPENSE;
         $document = $this->documentRepository->findByCompanyAndVariableSymbolAndSpecificSymbol(
             $company,
@@ -154,6 +155,7 @@ class ProcessEmailPaymentNotificationCommand extends Command
             $company,
             $paymentType,
             $price,
+            $currency,
             $parsedNotification->date,
             $document,
             $bankAccount,
@@ -164,7 +166,8 @@ class ProcessEmailPaymentNotificationCommand extends Command
             $parsedNotification->message,
             $parsedNotification->transactionId);
         $documentToPay = (count($payment) > 0) ? null : $document;
-        $payment = new Payment($company, $paymentType, $price, $parsedNotification->date, $documentToPay, $bankAccount,
+        $payment = new Payment($company, $paymentType, $price, $parsedNotification->currency, $parsedNotification->date,
+            $documentToPay, $bankAccount,
             $parsedNotification->vs, $parsedNotification->ks, $parsedNotification->ss,
             $parsedNotification->counterparty, $parsedNotification->message, $parsedNotification->transactionId
         );

@@ -37,6 +37,10 @@ class Payment implements CompanyOwnedInterface
     #[ORM\Column(type: Types::FLOAT, precision: 10, scale: 2, nullable: false)]
     private float $amount;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Currency $currency;
+
     #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
     private ?string $variableSymbol;
 
@@ -60,6 +64,7 @@ class Payment implements CompanyOwnedInterface
         Company $company,
         PaymentType $type,
         float $amount,
+        ?Currency $currency = null,
         ?DateTimeImmutable $date = null,
         ?Document $document = null,
         ?BankAccount $bankAccount = null,
@@ -75,6 +80,7 @@ class Payment implements CompanyOwnedInterface
         $this->type = $type;
         $this->document = $document;
         $this->amount = $amount;
+        $this->currency = $currency;
         $this->bankAccount = $bankAccount;
         $this->variableSymbol = $variableSymbol;
         $this->constantSymbol = $constantSymbol;
@@ -144,6 +150,18 @@ class Payment implements CompanyOwnedInterface
     {
         $this->amount = $amount;
     }
+
+    public function getCurrency(): ?Currency
+    {
+        return $this->currency;
+    }
+
+    public function setCurrency(?Currency $currency): void
+    {
+        $this->currency = $currency;
+    }
+
+
 
     public function getVariableSymbol(): ?string
     {

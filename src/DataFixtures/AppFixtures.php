@@ -83,9 +83,9 @@ class AppFixtures extends Fixture
     public function createCurrency(): Currency
     {
         $currency = new Currency();
-        $currency->setCurrencyCode('CZK');
-        $currency->setCurrencyName('Czech Republic Koruna');
-        $currency->setCurrencySymbol('Kč');
+        $currency->setCode('CZK');
+        $currency->setName('Czech Republic Koruna');
+        $currency->setSymbol('Kč');
 
         return $currency;
     }

@@ -4,12 +4,13 @@ namespace App\Repository;
 
 use App\Entity\BankAccount;
 use App\Entity\Company;
+use App\Entity\Currency;
 use App\Entity\Document;
 use App\Entity\Payment;
 use App\Enum\PaymentType;
+use DateTime;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -34,6 +35,7 @@ class PaymentRepository extends ServiceEntityRepository
         Company $company,
         PaymentType $paymentType,
         float $amount,
+        ?Currency $currency,
         ?DateTimeImmutable $date,
         ?Document $document,
         ?BankAccount $bankAccount,
@@ -51,6 +53,10 @@ class PaymentRepository extends ServiceEntityRepository
             ->setParameter('company', $company)
             ->setParameter('type', $paymentType)
             ->setParameter('amount', $amount);
+        if ($currency !== null) {
+            $qb->andWhere('p.currency = :currency')
+                ->setParameter('currency', $currency);
+        }
         if ($date !== null) {
             $qb->andWhere('p.date = :date')
                 ->setParameter('date', $date);
@@ -134,5 +140,42 @@ class PaymentRepository extends ServiceEntityRepository
             ->setParameter('document', $document);
 
         return $qb->getQuery()->getSingleScalarResult();
+    }
+
+
+    /**
+     * @return Payment[]
+     */
+    public function filtered(
+        Company $company,
+        ?PaymentType $paymentType,
+        ?DateTime $dateFrom,
+        ?DateTime $dateTo,
+        ?BankAccount $bankAccount,
+    ): array {
+        $qb = $this->createQueryBuilder('payment');
+        $qb->select('payment')
+            ->leftJoin('payment.currency', 'c')
+            ->addSelect('c')
+            ->where('payment.company = :company')
+            ->setParameter('company', $company);
+        if ($paymentType !== null) {
+            $qb->andWhere('payment.type = :paymentType')
+                ->setParameter('paymentType', $paymentType);
+        }
+        if ($dateFrom !== null) {
+            $qb->andWhere('payment.date >= :dateFrom')
+                ->setParameter('dateFrom', $dateFrom);
+        }
+        if ($dateTo !== null) {
+            $qb->andWhere('payment.date <= :dateTo')
+                ->setParameter('dateTo', $dateTo);
+        }
+        if ($bankAccount !== null) {
+            $qb->andWhere('payment.bankAccount = :bankAccount')
+                ->setParameter('bankAccount', $bankAccount);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 }

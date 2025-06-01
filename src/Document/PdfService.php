@@ -54,7 +54,7 @@ class PdfService
         );
         $writer = new Writer($renderer);
         $msg = "PLATBA FAKTURY {$document->getDocumentNumber()} QR KODEM";
-        $qrCode = $writer->writeString("SPD*1.0*ACC:{$document->getBankAccount()->getIban()}*AM:{$document->getTotalAmount()}*CC:{$document->getCurrency()->getCurrencyCode()}*MSG:$msg*X-VS:{$document->getVariableSymbol()}");
+        $qrCode = $writer->writeString("SPD*1.0*ACC:{$document->getBankAccount()->getIban()}*AM:{$document->getTotalAmount()}*CC:{$document->getCurrency()->getCode()}*MSG:$msg*X-VS:{$document->getVariableSymbol()}");
 
 
         return 'data:image/png;base64,' . base64_encode($qrCode);
