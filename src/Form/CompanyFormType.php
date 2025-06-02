@@ -18,7 +18,6 @@ class CompanyFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-
             ->add('name',TextType::class)
             ->add('street')
             ->add('buildingNumber')
@@ -36,10 +35,10 @@ class CompanyFormType extends AbstractType
                 'class' => Currency::class,
                 'query_builder' => function (EntityRepository $er): QueryBuilder {
                     return $er->createQueryBuilder('currency')
-                        ->orderBy('currency.currencyName', 'ASC');
+                        ->orderBy('currency.name', 'ASC');
 
                 },
-                'choice_label' => 'currencyName',
+                'choice_label' => 'name',
                 'multiple' => true,
                 'expanded' => true,
             ])

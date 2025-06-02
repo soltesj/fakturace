@@ -102,9 +102,9 @@ class DocumentFormType extends AbstractType
                         ->andWhere('currency.id in( :companyCurrencies)')
                         ->setParameter('companyCurrencies',
                             $company->getCurrency())
-                        ->orderBy('currency.currencyCode', 'ASC');
+                        ->orderBy('currency.code', 'ASC');
                 },
-                'choice_label' => 'currencyCode',
+                'choice_label' => 'code',
                 'label' => t('form.invoice.currency'),
                 'attr' => [
                     'placeholder' => t('form.invoice.currency.placeholder'),

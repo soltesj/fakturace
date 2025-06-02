@@ -159,7 +159,9 @@
     </tr>
     <tr>
         <td colspan="3"><p><strong>CELKEM K ÚHRADĚ</strong></p></td>
-        <td class="text-end"><p><strong>{{ document.priceTotal|number_format(2,',',' ') }} {{ document.currency.currencyCode }}</strong></p></td>
+        <td class="text-end"><p>
+                <strong>{{ document.priceTotal|number_format(2,',',' ') }} {{ document.currency.code }}</strong></p>
+        </td>
     </tr>
     <tr>
         <td colspan="4" class="text-end"><p>Konečná částka je včetně zaokrouhlení.</p></td>

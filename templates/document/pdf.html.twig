@@ -201,7 +201,7 @@
                 <tr>
                     <td colspan="3" class="final-price">CELKEM K ÚHRADĚ</td>
                     <td class="text-end final-price">
-                        {{ documentPrice.amount|default(0)|number_format(2,',',' ') }}  {{ document.currency.currencyCode }}
+                        {{ documentPrice.amount|default(0)|number_format(2,',',' ') }}  {{ document.currency.code }}
                     </td>
                 </tr>
             {% endif %}
@@ -226,7 +226,7 @@
                             {% if documentPrice.priceType.id == 2 %}
                                 <tr>
                                     <td>{{ documentPrice.vatLevel ? documentPrice.vatLevel.name }}</td>
-                                    <td class="text-end">{{ documentPrice.amount|default(0)|number_format(2,',',' ') }} {{ document.currency.currencyCode }}</td>
+                                    <td class="text-end">{{ documentPrice.amount|default(0)|number_format(2,',',' ') }} {{ document.currency.code }}</td>
                                 </tr>
                             {% endif %}
                         {% endfor %}

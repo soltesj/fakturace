@@ -28,7 +28,7 @@ class CompanyCurrencyController extends AbstractController
     #[Route('/{_locale}/{company}/currency', name: 'app_setting_currency_edit', methods: ['GET', 'POST'])]
     public function currencies(Company $company, CurrencyRepository $currencyRepository): Response
     {
-        $currencies = $currencyRepository->findBy([],['currencyCode' => 'ASC']);
+        $currencies = $currencyRepository->findBy([], ['code' => 'ASC']);
 
         return $this->render('currency/index.html.twig', [
             'company' => $company,
