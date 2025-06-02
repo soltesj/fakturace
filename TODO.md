@@ -21,6 +21,7 @@
 - [ ] refactor the document bank account ⇒ remove all bank account columns and create a bank account in the bank account
   table with relations
 - [ ] remove transfer_tax from the database it will be replaced by vat_mode ``VatMode::DOMESTIC_REVERSE_CHARGE``
+- [ ] make the document filter responsible
 
 ## ✅ Done
 

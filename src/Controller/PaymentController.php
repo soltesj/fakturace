@@ -2,24 +2,16 @@
 
 namespace App\Controller;
 
-use App\Document\DocumentFactory;
 use App\Document\DocumentFilterFormService;
-use App\Document\DocumentNewSaver;
-use App\Document\DocumentUpdater;
-use App\Document\Types;
-use App\DocumentNumber\DocumentNumberGenerator;
 use App\Entity\Company;
-use App\Entity\Customer;
 use App\Entity\Document;
+use App\Entity\Payment;
 use App\Entity\User;
 use App\Enum\PaymentType;
-use App\Form\DocumentFormType;
-use App\Repository\DocumentRepository;
+use App\Form\PaymentTypeForm;
+use App\Payment\PaymentService;
 use App\Repository\PaymentRepository;
 use App\Service\Date;
-use App\Service\VatService;
-use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception as DBALException;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -37,6 +29,7 @@ class PaymentController extends AbstractController
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly PaymentRepository $paymentRepository,
+        private readonly PaymentService $paymentService,
     ) {
     }
 
@@ -102,40 +95,42 @@ class PaymentController extends AbstractController
     #[IsGranted('CREATE')]
     public function new(Request $request, Company $company): Response
     {
-//        /** @var User $user */
-//        $user = $this->getUser();
-//        $vatsDomestic = $this->vatService->getValidVatsByCompany($company);
-//        $vats['domestic'] = $vatsDomestic;
-//        $vats['domestic_reverse_charge'] = $vatsDomestic;
-//        $document = $this->documentFactory->createInvoiceOutgoing($company, $user);
-//        $form = $this->createForm(DocumentFormType::class, $document);
-//        $form->handleRequest($request);
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            try {
-//                $this->documentNewSaver->save($document);
-//                $this->addFlash('success', 'message.invoice.stored');
-//
-//                return $this->redirectToRoute(
-//                    'app_payment_index',
-//                    ['company' => $company->getId()],
-//                    Response::HTTP_SEE_OTHER
-//                );
-//            } catch (Throwable $e) {
-//                $this->addFlash('danger', 'message.invoice.not_stored');
-//                $this->logger->error($e->getMessage(), $e->getTrace());
-//            }
-//        }
-//
-//        return $this->render('document/new.html.twig', [
-//            'document' => $document,
-//            'form' => $form->createView(),
-//            'company' => $company,
-//            'vats' => $vats,
-//            'vatMode' => $document->getVatMode()->value,
-//        ]);
+        /** @var User $user */
+        $user = $this->getUser();
+        $payment = new Payment($company, PaymentType::INCOME, 0);
+        $form = $this->createForm(PaymentTypeForm::class, $payment);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $this->paymentService->processForm($form, $payment);
+                if ($request->isXmlHttpRequest()) {
+                    return $this->json(['paymentId' => $payment->getId()]);
+                }
+                $this->addFlash('success', 'message.invoice.stored');
+
+                return $this->redirectToRoute(
+                    'app_payment_index',
+                    ['company' => $company->getId()],
+                    Response::HTTP_SEE_OTHER
+                );
+            } catch (Throwable $e) {
+                if ($request->isXmlHttpRequest()) {
+                    return $this->json(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+                }
+                $this->addFlash('danger', 'message.invoice.not_stored');
+                $this->logger->error($e->getMessage(), $e->getTrace());
+            }
+        }
+
+        return $this->render('payment/new.html.twig', [
+            'document' => $payment,
+            'form' => $form->createView(),
+            'company' => $company,
+        ]);
     }
 
-    #[Route('/{_locale}/{company}/payment/{payment}/edit', name: 'app_payment_edit', methods: ['GET', 'POST'])]
+    #[
+        Route('/{_locale}/{company}/payment/{payment}/edit', name: 'app_payment_edit', methods: ['GET', 'POST'])]
     #[IsGranted('EDIT', subject: 'payment')]
     public function edit(Request $request, Company $company, Document $document): Response
     {
@@ -173,4 +168,6 @@ class PaymentController extends AbstractController
 //            'vatMode' => $document->getVatMode()->value,
 //        ]);
     }
+
+
 }

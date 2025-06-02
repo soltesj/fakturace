@@ -1,12 +1,12 @@
 <div class="bg-background-secondary p-0 md:p-4">
     <div class="bg-table-header text-text-primary/80 grid grid-cols-2 md:grid-cols-6 lg:grid-cols-7">
-        <div class="p-2 pb-1 md:p-2 md:order-1 sm:col-span-1">Č. dokladu</div>
-        <div class="p-2 pb-1 md:p-2 md:order-6 text-right">Zbývá uhradit</div>
+        <div class="p-2 pb-1 md:p-2 md:order-1 sm:col-span-1">{{ 'invoice.document_number'|trans }}</div>
+        <div class="p-2 pb-1 md:p-2 md:order-6 text-right">{{ 'invoice.to_pay'|trans }}</div>
         <div class="px-2 pb-2 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-normal md:col-span-2 lg:col-span-3">
-            Zákazník
+            {{ 'invoice.customer'|trans }}
         </div>
         <div class="px-2 pb-2 pt-0 md:p-2 md:order-3 text-xs font-light md:text-base md:font-normal text-right">
-            Splatnost
+            {{ 'invoice.date_due'|trans }}
         </div>
         {#        <div class="p-2 md:order-4 hidden lg:block">Cena bez DPH</div> #}
         {#        <div class="p-2 md:order-5 hidden md:block">Cena s DPH</div> #}
@@ -20,16 +20,16 @@
                     href="{{ path('app_document_edit', {'company': company.id, 'document': document.id}) }}"
                     class="text-decoration-none">{{ document.documentNumber }}</a>{% else %}{{ document.documentNumber }}{% endif %}
                 {% if diff > 0 %}
-                    <svg class="size-3.5 ml-2 {{ diff > 5 ?' text-red-800' : '' }}">
+                    <svg class="size-3.5 ml-2 {% if (diff > 0) and (diff < 7) %} text-yellow-500 {% endif %} {{ diff >= 7 ?' text-red-500' : '' }}">
                         <use href="#triangle-exclamation"/>
                     </svg>
                 {% endif %}
             </div>
             <div class="p-2 pb-1 md:p-2 md:order-6 text-right text-lg font-medium md:text-base md:font-normal text-text-primary/60">{{ document.remainingAmount }}</div>
             <div class="px-2 pb-1 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-semibold md:col-span-2 lg:col-span-3">{{ document.customer.name|default('') }}</div>
-            <div class="px-2 pb-1 pt-0 md:p-2 md:order-3 text-xs font-bold md:text-base md:font-semibold md:text-md text-right {{ diff > 5 ?' text-red-800' : '' }}">
-
-                {{ document.dateDue|diff_for_humans }}
+            <div class="px-2 pb-1 pt-0 md:p-2 md:order-3 text-xs font-normal md:text-base md:font-normal md:text-md text-right
+                {% if (diff > 0) and (diff < 7) %} text-yellow-500 {% endif %} {{ diff >= 7 ?' text-red-500' : '' }}">
+                <span title="{{ 'invoice.date_due'|trans }} {{ document.dateDue|format_date }}">{{ document.dateDue|diff_for_humans }}</span>
             </div>
             {#        <div class="p-2 hidden lg:block md:order-4">2 500,00</div> #}
             {#        <div class="p-2 hidden md:block md:order-5">3 025,00</div> #}
@@ -39,15 +39,21 @@
                 </svg>
 
                 <a href="{{ path('app_document_print',{'document':document.id,'company':company.id}) }}"
-                   target="_blank" class="text-primary">
+                   target="_blank" class="hover:text-primary cursor-pointer">
                     <svg class="size-5">
                         <use href="#filetype-pdf"/>
                     </svg>
                 </a>
-
-                <svg class="size-5">
-                    <use href="#check-circle-fill"/>
-                </svg>
+                <button
+                        {#                        {{ stimulus_controller('payment/payment') }} #}
+                        {{ stimulus_action('payment--payment','open') }}
+                        data-payment-document-id="{{ document.id }}"
+                        data-payment-amount="{{ document.remainingAmount }}"
+                        class="hover:text-primary cursor-pointer">
+                    <svg class="size-5">
+                        <use href="#check-circle-fill"/>
+                    </svg>
+                </button>
             </div>
         </div>
     {% else %}

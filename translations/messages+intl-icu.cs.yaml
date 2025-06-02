@@ -15,6 +15,11 @@ invoice.price_total_vat: DPH
 invoice.price_total_with_vat: 'Cena celkem'
 invoice.edit_invoice_outgoing: 'Upravit fakruru vydanou'
 invoice.reset_filter: 'Zrusit filter'
+invoice.document_number: 'Č. dokladu'
+invoice.to_pay: 'Zbývá uhradit'
+invoice.customer: 'Zákazník'
+invoice.date_due: 'Splatnost'
+invoice.cash: 'Hotovostní příjem'
 message.invoice.stored: 'Fakruru byla uložena'
 message.invoice.not_stored: 'Fakruru nebyla uložena'
 form.invoice.vat_mode: DPH

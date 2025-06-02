@@ -12,7 +12,8 @@
         <span>{{ 'invoice.outgoing_invoices'|trans }}</span>
     </h1>
 
-    <div {{ stimulus_controller('documents/filter') }}>
+    <div data-controller="documents--filter payment--payment"
+         data-action="payment--payment:document:paid->documents--filter#onChange">
         {% form_theme formFilter 'form/form_layout.html.twig' %}
         {{ form_start(formFilter,{'attr':{
             'class':"grid grid-flow-col justify-items-center space-x-3 mb-5",
@@ -61,6 +62,50 @@
         </div>
         <div data-documents--filter-target="documentList">
             {{ include('document/_list.html.twig') }}
+        </div>
+
+
+        <div
+                class="fixed inset-0 z-10
+                bg-black bg-opacity-50 backdrop-blur-[1px] flex items-center justify-center
+         opacity-0 scale-95 transition-opacity transition-transform duration-500 pointer-events-none
+"
+                {{ stimulus_target('payment/payment', 'modal') }} >
+            <div class="bg-white rounded-sm shadow-lg w-full md:max-w-md transition duration-500 ease-in-out">
+                <div class="bg-table-header text-text-primary/80 p-4 flex items-center place-content-between">
+                    <h2 class="text-xl font-bold">Zadat platbu</h2>
+                    <button {{ stimulus_action('payment--payment','close') }}>
+                        <svg class="size-6">
+                            <use href="#xmark"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-4 bg-background-secondary text-center">
+                    {{ form_start(formPayment, {
+                        'attr':{
+                            'data-payment--payment-target':'form' ,
+                        }
+                    }) }}
+                    {{ form_widget(formPayment.documentId,{
+                        'attr' : { 'data-payment--payment-target':'documentId',}
+                    }) }}
+                    {{ form_widget(formPayment.date,{
+                        'attr': {'class':'text-2xl text-center border-border bg-background-secondary mb-4 w-full border-0 border-b-2'}
+                    }) }}
+                    {{ form_widget(formPayment.bankAccount,{
+                        'attr' : {
+                            'class':'text-2xl text-center border-border bg-background-secondary mb-4 w-full border-0 border-b-2'}
+                    }) }}
+                    {{ form_widget(formPayment.amount,{
+                        'attr' : {
+                            'data-payment--payment-target':'amount' ,
+                            'class':'text-2xl text-center border-border bg-background-secondary mb-6 w-full border-0 border-b-2'}
+                    }) }}
+
+                    <button class="w-full p-2 bg-green-700 hover:bg-green-500 text-green-100">Uhradit</button>
+                    {{ form_end(formPayment) }}
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

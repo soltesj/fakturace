@@ -180,4 +180,12 @@ SQL;
         return $qb->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findOneById(int $id): Document
+    {
+        return $this->createQueryBuilder('document')
+            ->andWhere('document.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()->getSingleResult();
+    }
 }

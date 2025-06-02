@@ -12,8 +12,11 @@ use App\DocumentNumber\DocumentNumberGenerator;
 use App\Entity\Company;
 use App\Entity\Customer;
 use App\Entity\Document;
+use App\Entity\Payment;
 use App\Entity\User;
+use App\Enum\PaymentType;
 use App\Form\DocumentFormType;
+use App\Form\PaymentTypeForm;
 use App\Repository\DocumentRepository;
 use App\Service\Date;
 use App\Service\VatService;
@@ -53,6 +56,8 @@ class DocumentController extends AbstractController
         $customer = null;
         $query = null;
         $state = null;
+        $payment = new Payment($company, PaymentType::INCOME, 0);
+        $formPayment = $this->createForm(PaymentTypeForm::class, $payment);
         $formFilter = $filterFormService->createForm($company);
         $formFilter->handleRequest($request);
         if ($formFilter->isSubmitted() && $formFilter->isValid()) {
@@ -100,6 +105,7 @@ class DocumentController extends AbstractController
             'documents' => $documents,
             'company' => $company,
             'formFilter' => $formFilter->createView(),
+            'formPayment' => $formPayment->createView(),
             'documentNumberExist' => $documentNumberExist,
         ]);
     }
