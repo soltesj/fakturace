@@ -119,7 +119,7 @@ dashboard.best_customers: 'Top 5 odběratelé'
 dashboard.account_balance: 'Zůstatky na účtech'
 dashboard.vat_records: 'Evidence DPH'
 dashboard.overview: Přehledy
-dashboard.fast_action: Rychlé akce
+dashboard.fast_action: 'Rychlé akce'
 payment.not_bank_movement: 'Nebankovní pohyb'
 payment.no_document_assigned: 'Nepřiřazeno'
 payment.document: 'Doklad'
@@ -128,4 +128,11 @@ payment.bank: 'Banka'
 payment.date: 'Datum'
 payment.payments: 'Platby'
 payment.received: 'Platba přijata'
-#payment.: ''
+customer.company_number: 'IČO'
+customer.vat_number: 'DIČ'
+document.date_issue: Vystaveno
+document.date_due: Splatnost
+document.date_taxable: DUZP
+document.payment_type: Způsob úhrady
+document.date_paid: Zaplaceno
+document.variable_symbol: VS

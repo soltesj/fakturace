@@ -110,6 +110,20 @@ class DocumentController extends AbstractController
         ]);
     }
 
+    #[Route('/{_locale}/{company}/document/{document}', name: 'app_document_show', methods: ['GET'])]
+    #[IsGranted('VIEW', subject: 'document')]
+    public function show(Document $document, Company $company): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        return $this->render('document/show.html.twig', [
+            'document' => $document,
+            'company' => $company,
+        ]);
+    }
+
+
     #[Route('/{_locale}/{company}/document/new', name: 'app_document_new', methods: ['GET', 'POST'])]
     #[IsGranted('CREATE')]
     public function new(Request $request, Company $company): Response
