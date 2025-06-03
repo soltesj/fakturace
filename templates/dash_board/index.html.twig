@@ -3,35 +3,47 @@
 {% block title %}Hello DashBoardController!{% endblock %}
 
 {% block body %}
-    <h1 class="mb-5 flex justify-start items-center text-xl space-x-3">
-        <span>{{ 'dashboard.overview'|trans }}</span>
-    </h1>
+    {#    <h1 class="mb-5 flex justify-start items-center text-xl space-x-3 px-2"> #}
+    {#        <span>{{ 'dashboard.overview'|trans }}</span> #}
+    {#    </h1> #}
 
+    <div class="mt-8 md:mb-8 gap-4 flex fixed bottom-0 left-0 justify-center w-full md:relative md:justify-start bg-gray-900 md:bg-transparent py-2 z-10">
+        {% if is_granted('CREATE') %}
+            <a href="{% if documentNumberExist %}{{ path('app_document_new', {'company': company.id}) }}{% else %}#{% endif %}"
+               class="px-4 py-2 order-2 md:order-1 rounded-sm  bg-gray-700 hover:bg-table-header hover:text-white/80 flex items-center {% if not documentNumberExist %}link-secondary pe-none{% endif %}">
+                <svg class="size-5 mr-2">
+                    <use href="#plus-circle-fill"/>
+                </svg>
+                <span>{{ 'button.invoice.new_invoice'|trans }}</span>
+                {#                <span class="sm:hidden">{{ 'button.invoice.new_invoice_short'|trans }}</span> #}
+            </a>
+        {% endif %}
+    </div>
     <div class="mb-2" {{ stimulus_controller('dashboard/masonry') }}>
-        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary">
-            <table class="w-full">
-                <thead>
-                <tr>
-                    <td class="text-xl font-semibold mb-4 p-2 bg-table-header text-text-primary"
-                    >{{ 'dashboard.fast_action'|trans }}</td>
-                </tr>
-                </thead>
-                <tbody class="text-text-secondary">
-                <tr>
-                    <td class="px-2 py-4">
-                        {% if is_granted('CREATE') %}
-                            <a href="{% if documentNumberExist %}{{ path('app_document_new', {'company': company.id}) }}{% else %}#{% endif %}"
-                               class="text-green-700 hover:text-green-500 flex justify-start items-center space-x-1 {% if not documentNumberExist %}link-secondary pe-none{% endif %}">
-                                <svg class="size-4">
-                                    <use href="#plus-circle-fill"/>
-                                </svg>
-                                <span>{{ 'button.invoice.new_invoice'|trans }}</span></a>
-                        {% endif %}
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        {#        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary"> #}
+        {#            <table class="w-full"> #}
+        {#                <thead> #}
+        {#                <tr> #}
+        {#                    <td class="text-xl font-semibold mb-4 p-2 bg-table-header text-text-primary" #}
+        {#                    >{{ 'dashboard.fast_action'|trans }}</td> #}
+        {#                </tr> #}
+        {#                </thead> #}
+        {#                <tbody class="text-text-secondary"> #}
+        {#                <tr> #}
+        {#                    <td class="px-2 py-4"> #}
+        {#                        {% if is_granted('CREATE') %} #}
+        {#                            <a href="{% if documentNumberExist %}{{ path('app_document_new', {'company': company.id}) }}{% else %}#{% endif %}" #}
+        {#                               class="text-green-700 hover:text-green-500 flex justify-start items-center space-x-1 {% if not documentNumberExist %}link-secondary pe-none{% endif %}"> #}
+        {#                                <svg class="size-4"> #}
+        {#                                    <use href="#plus-circle-fill"/> #}
+        {#                                </svg> #}
+        {#                                <span>{{ 'button.invoice.new_invoice'|trans }}</span></a> #}
+        {#                        {% endif %} #}
+        {#                    </td> #}
+        {#                </tr> #}
+        {#                </tbody> #}
+        {#            </table> #}
+        {#        </div> #}
         <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary">
             <h2 class="text-xl font-semibold mb-4 p-2 bg-table-header text-text-primary">{{ 'dashboard.sales_overview'|trans }}</h2>
             <canvas

@@ -3,7 +3,7 @@
 {% block title %}{{ 'invoice.edit_invoice_outgoing'|trans }}{% endblock %}
 
 {% block body %}
-    <h1 class="mb-5 flex justify-start items-center text-xl space-x-3">
+    <h1 class="mb-5 flex justify-start items-center text-xl space-x-3 px-2">
         <a href="{{ path('app_document_index', {'company': company.id}) }}">
             <svg class="size-8">
                 <use href="#arrow-left-circle"/>
@@ -12,7 +12,7 @@
         <span>{{ 'invoice.edit_invoice_outgoing'|trans }}</span>
     </h1>
 
-    <div class="mt-8 md:mb-8 flex fixed bottom-0 justify-center w-full md:relative md:justify-start bg-background py-2">
+    <div class="mt-8 md:mb-8 flex fixed bottom-0 left-0 justify-center w-full md:relative md:justify-start bg-gray-900 md:bg-transparent py-2">
         <a class="px-4 py-2 rounded-sm  bg-gray-700 hover:bg-table-header hover:text-white/80 flex items-center mr-4"
            href="{{ path('app_document_edit',{document:document.id, company:company.id}) }}">
             <svg class="size-4 mr-2">
@@ -37,7 +37,7 @@
     </div>
 
     <div class="bg-background-secondary p-0 md:p-8 mb-8">
-        <div class="columns-1 md:columns-2">
+        <div class="grid grid-cols-1 md:grid-cols-2">
             <div class="p-4 md:ml-32">
                 <div class="w-fit mx-auto md:mx-0">
                     {% set customer = document.customer %}
@@ -69,9 +69,15 @@
             </div>
         </div>
     </div>
+    {% if document.note %}
+        <div class="bg-background-secondary p-0 md:p-8 mb-8">
+            <div class="bg-table-header p-2 px-4">{{ 'invoice.note'|trans }}</div>
+            <p class="p-4">{{ document.note }}</p>
+        </div>
+    {% endif %}
 
     <div class="bg-background-secondary p-0 md:p-8">
-        <div class="grid grid-cols-[3fr_7fr_3fr_2fr] sm:grid-cols-[2fr_8fr_3fr_2fr] md:grid-cols-[1fr_3fr_1fr_1fr] lg:grid-cols-[1fr_8fr_2fr_1fr] gap-2 bg-table-header p-2">
+        <div class="grid grid-cols-[3fr_7fr_3fr_2fr] sm:grid-cols-[2fr_8fr_3fr_2fr] md:grid-cols-[1fr_3fr_1fr_1fr] lg:grid-cols-[1fr_8fr_2fr_1fr] gap-2 bg-table-header p-2 px-4">
             <div>
                 {{ 'invoice.item_quantity'|trans }}
             </div>
@@ -86,7 +92,7 @@
             </div>
         </div>
         {% for item in document.documentItems %}
-            <div class="grid grid-cols-[3fr_7fr_3fr_2fr] sm:grid-cols-[2fr_8fr_3fr_2fr] md:grid-cols-[1fr_3fr_1fr_1fr] lg:grid-cols-[1fr_8fr_2fr_1fr] gap-2 p-2 border-b border-input-border">
+            <div class="grid grid-cols-[3fr_7fr_3fr_2fr] sm:grid-cols-[2fr_8fr_3fr_2fr] md:grid-cols-[1fr_3fr_1fr_1fr] lg:grid-cols-[1fr_8fr_2fr_1fr] gap-2 p-2 px-4 border-b border-input-border">
                 <div>
                     {{ item.quantity }}&nbsp;{{ item.unit }}
                 </div>
@@ -106,10 +112,8 @@
             <div class="grid grid-cols-[1fr_1fr] gap-2 justify-end">
                 {% for documentPrice in document.documentPrices %}
                     {% if documentPrice.priceType.id == 2 %}
-
                         <div class="text-right">{{ documentPrice.vatLevel ? documentPrice.vatLevel.name }}</div>
                         <div class="text-right">{{ documentPrice.amount|default(0)|number_format(2,',',' ') }} {{ document.currency.symbol }}</div>
-
                     {% endif %}
                 {% endfor %}
                 {% for documentPrice in document.documentPrices %}

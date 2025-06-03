@@ -5,7 +5,7 @@
      data-document--dates-maturity-days-value="{{ company.maturityDays|default(14) }}"
      data-action="document--document-item-collection:add-row->document--price-calc#toggleDocumentWithWat">
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 gap-x-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 gap-x-4 px-2">
         <div class="col-span-1 order-1 ">
             {{ form_row(form.customer,{attr:{'data-document--price-calc-target':'customer',
                 'data-action':"change->document--price-calc#customerChange"}}) }}
@@ -54,7 +54,7 @@
                     <svg class="size-4 mt-1">
                         <use href="#plus-circle-fill"/>
                     </svg>
-                    <span>{{ 'invoice.more_options' }}</span>
+                    <span>{{ 'invoice.more_options'|trans }}</span>
                 </button>
             </div>
         </div>
@@ -138,7 +138,7 @@
                 {% endfor %}
             </div>
 
-            <div class="flex justify-end">
+            <div class="flex justify-end px-2">
                 <div class="w-96 grid grid-cols-[1fr_1fr] gap-2">
                     <div class="text-right"
                          data-document--price-calc-target="documentWithVat">{{ 'invoice.price_total_without_vat'|trans }}

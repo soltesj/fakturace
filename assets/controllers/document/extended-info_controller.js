@@ -12,7 +12,7 @@ export default class extends Controller {
 
     toggleInfo(event) {
         console.log(event.currentTarget)
-        event.currentTarget.innerHTML = this.showInformation ? '<svg class="size-4 mt-1"><use href="#plus-circle"/></svg><span>MORE_OPTIONS</span>' : '<svg class="size-4 mt-1"><use href="#minus-circle"/></svg><span>LESS_OPTIONS</span>';
+        event.currentTarget.innerHTML = this.showInformation ? '<svg class="size-4 mt-1"><use href="#plus-circle"/></svg><span>MORE_OPTIONS</span>' : '<svg class="size-4 mt-1"><use href="#minus-circle"/></svg><span>invoice.less_options</span>';
         this.showInformation = !this.showInformation;
         this.extendedInfoTargets.forEach((element) => {
             element.classList.toggle('hidden');

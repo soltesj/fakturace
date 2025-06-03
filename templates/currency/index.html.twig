@@ -3,7 +3,7 @@
 {% block title %}{{ 'currency.currencies'|trans }}{% endblock %}
 
 {% block body %}
-    <h1 class="mb-5 flex justify-start items-center text-xl space-x-3">
+    <h1 class="mb-5 flex justify-start items-center text-xl space-x-3 px-2">
         <a href="{{ path('app_dash_board',{'company': company.id}) }}" class="text-decoration-none">
             <svg class="size-8">
                 <use href="#arrow-left-circle"/>
@@ -12,12 +12,12 @@
         <span>{{ 'currency.currencies'|trans }}</span>
     </h1>
     <div class="grid grid-cols-2">
-        <div class="p-5">
+        <div class="p-5 px-2">
             <h2 class="bg-table-header px-2 py-1">{{ 'currency.current_currencies'|trans }}</h2>
             {% for currency in company.currency %}
-                <div class="flex justify-start items-center space-x-2 px-2 py-1">
+                <div class="flex justify-start items-center space-x-2 px-2 py-2 md:py-1">
                     <a href="{{ path('app_company_remove_currency', {'company':company.id, 'currency': currency.id}) }}">
-                        <svg class="size-5">
+                        <svg class="size-6 md:size-5">
                             <use href="#dash-circle-fill"/>
                         </svg>
                     </a>
@@ -25,13 +25,13 @@
                 </div>
             {% endfor %}
         </div>
-        <div class="p-5">
+        <div class="p-5 px-2">
             <h2 class="bg-table-header px-2 py-1">{{ 'currency.available_currencies'|trans }}</h2>
             {% for currency in currencies %}
                 {% if not company.currency.contains(currency) %}
-                    <div class="flex justify-start items-center space-x-2 px-2 py-1">
+                    <div class="flex justify-start items-center space-x-2 px-2 py-2 md:py-1">
                         <a href="{{ path('app_company_add_currency', {'company':company.id, 'currency': currency.id}) }}">
-                            <svg class="size-5">
+                            <svg class="size-6 md:size-5">
                                 <use href="#plus-circle-fill"/>
                             </svg>
                         </a>

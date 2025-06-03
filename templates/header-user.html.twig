@@ -45,11 +45,9 @@
                                class="rounded-sm {% if app.current_route == 'app_dash_board' %}bg-gray-900{% endif %} px-3 py-2 text-sm font-medium text-white"
                                aria-current="page">Dashboard</a>
                             <a href="{{ path('app_document_index', {'company': company.id}) }}"
-                               class="rounded-sm {% if app.current_route starts with 'app_document' %}bg-gray-900{% endif %} px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Faktury
-                                vydané</a>
+                               class="rounded-sm {% if app.current_route starts with 'app_document' %}bg-gray-900{% endif %} px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Faktury</a>
                             <a href="#"
-                               class="rounded-sm px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Faktury
-                                přijaté</a>
+                               class="rounded-sm px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Výdaje</a>
                             <a href="{{ path('app_payment_index', {'company': company.id}) }}"
                                class="rounded-sm px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Platby</a>
                             <a href="{{ path('app_customer_index',{'company': company.id}) }}"

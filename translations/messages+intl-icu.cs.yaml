@@ -21,6 +21,9 @@ invoice.customer: 'Zákazník'
 invoice.date_due: 'Splatnost'
 invoice.cash: 'Hotovostní příjem'
 message.invoice.stored: 'Fakruru byla uložena'
+invoice.note: Poznámka
+invoice.more_options: 'Více informací'
+invoice.less_options: 'Méně informací'
 message.invoice.not_stored: 'Fakruru nebyla uložena'
 form.invoice.vat_mode: DPH
 form.invoice.document_number: 'Číslo dokladu'
@@ -50,8 +53,10 @@ button.save: Uložit
 button.update: Upravit
 button.invoice.filter: Filtrovat
 button.invoice.new_invoice: 'NOVÁ FAKTURA'
+button.invoice.new_invoice_short: 'NOVÁ'
 button.invoice.check_payment: 'PŘÍJMOUT PLATBY'
 button.invoice.export_list: 'EXPORT SEZNAMU'
+button.invoice.export_list_short: 'EXPORT'
 invoice.outgoing_invoices: 'Faktury - vydané'
 form.filter.query: Vyhledat
 form.filter.query_placeholder: 'Číslo dokladu, poznámka, Oběratel,'

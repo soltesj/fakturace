@@ -3,7 +3,7 @@
 {% block title %}{{ 'bank_account.bank_accounts'|trans }}{% endblock %}
 
 {% block body %}
-    <h1 class="mb-5 flex justify-start items-center text-xl space-x-3">
+    <h1 class="mb-5 flex justify-start items-center text-xl space-x-3 px-2">
         <a href="{{ path('app_dash_board',{'company': company.id}) }}" class="text-decoration-none">
             <svg class="size-8">
                 <use href="#arrow-left-circle"/>
@@ -12,14 +12,13 @@
         <span>{{ 'bank_account.bank_accounts'|trans }}</span>
     </h1>
 
-    <div class="grid grid-flow-col justify-end md:justify-start space-x-3 md:space-x-4 p-3">
+    <div class="mt-8 md:mb-8 gap-4 flex fixed bottom-0 left-0 justify-center w-full md:relative md:justify-start bg-gray-900 md:bg-transparent py-2">
         {% if is_granted('CREATE') %}<a href="{{ path('app_setting_account_new',{'company':company.id}) }}"
-                                        class="text-primary flex justify-start items-center space-x-1
-fixed bottom-20 right-20 md:relative md:bottom-auto md:right-auto">
-            <svg class="size-10  md:size-5">
+                                        class="px-4 py-2 order-2 md:order-1 rounded-sm  bg-gray-700 hover:bg-table-header hover:text-white/80 flex items-center">
+            <svg class="size-5 sm:mr-2">
                 <use href="#plus-circle-fill"/>
             </svg>
-            <span class="hidden md:block">{{ 'bank_account.add_accounts'|trans }}</span>
+            <span class="hidden sm:block">{{ 'bank_account.add_accounts'|trans }}</span>
             </a>{% endif %}
     </div>
 

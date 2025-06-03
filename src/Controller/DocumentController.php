@@ -110,7 +110,7 @@ class DocumentController extends AbstractController
         ]);
     }
 
-    #[Route('/{_locale}/{company}/document/{document}', name: 'app_document_show', methods: ['GET'])]
+    #[Route('/{_locale}/{company}/document/{document}', name: 'app_document_show', methods: ['GET'], priority: 0)]
     #[IsGranted('VIEW', subject: 'document')]
     public function show(Document $document, Company $company): Response
     {
@@ -124,7 +124,7 @@ class DocumentController extends AbstractController
     }
 
 
-    #[Route('/{_locale}/{company}/document/new', name: 'app_document_new', methods: ['GET', 'POST'])]
+    #[Route('/{_locale}/{company}/document/new', name: 'app_document_new', methods: ['GET', 'POST'], priority: 10)]
     #[IsGranted('CREATE')]
     public function new(Request $request, Company $company): Response
     {
