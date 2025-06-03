@@ -13,6 +13,11 @@ export default class extends Controller {
         window.addEventListener('popstate', async () => {
             await this.onChange({fromHistory: true});
         });
+        this.filterFormTarget.addEventListener("reset", async () => {
+            await this.onChange();
+        });
+
+
     }
 
     async submitForm(event) {

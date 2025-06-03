@@ -2,7 +2,6 @@
 
 ## 📦 Bugs
 
-- [ ] fix resetting filter
 - [ ] fix stimulus document filter it doesn't send a request via ajax when it is submitted
 
 ## 📦 New features
@@ -31,3 +30,4 @@
   separate table for that
 - [x] make the document filter responsible
 - [x] remove transfer_tax from the database it will be replaced by vat_mode ``VatMode::DOMESTIC_REVERSE_CHARGE``
+- [x] fix resetting filter
