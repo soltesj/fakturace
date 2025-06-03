@@ -58,9 +58,6 @@ class Document implements CompanyOwnedInterface
     #[ORM\Column(name: 'state_id', type: Types::INTEGER, nullable: true)]
     private ?int $stateId = null;
 
-    #[ORM\Column(name: 'transfer_tax', type: Types::BOOLEAN, nullable: false)]
-    private bool $transferTax = false;
-
     #[ORM\Column(name: 'send', type: Types::BOOLEAN, nullable: true)]
     private ?bool $send = null;
 

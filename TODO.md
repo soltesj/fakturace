@@ -21,7 +21,6 @@
   relations
 - [ ] refactor the document bank account ⇒ remove all bank account columns and create a bank account in the bank account
   table with relations
-- [ ] remove transfer_tax from the database it will be replaced by vat_mode ``VatMode::DOMESTIC_REVERSE_CHARGE``
 
 ## ✅ Done
 
@@ -31,3 +30,4 @@
 - [x] Fixing the problem with document prices (low vat, high vat, no vat). Probably the best solution will be to make a
   separate table for that
 - [x] make the document filter responsible
+- [x] remove transfer_tax from the database it will be replaced by vat_mode ``VatMode::DOMESTIC_REVERSE_CHARGE``
