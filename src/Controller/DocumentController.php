@@ -68,7 +68,7 @@ class DocumentController extends AbstractController
              * @var Customer|null $customer
              * @var string|null $state
              * */
-            [$query, $dateFrom, $dateTo, $customer, $state] = $filterFormService->handleFrom(
+            [$query, $dateFrom, $dateTo, $state] = $filterFormService->handleFrom(
                 $formFilter->getData(),
                 $dateFrom
             );
@@ -79,7 +79,6 @@ class DocumentController extends AbstractController
                 $dateFrom,
                 $dateTo,
                 $query,
-                $customer,
                 $state);
 
         } catch (Exception|DBALException $e) {
@@ -122,7 +121,6 @@ class DocumentController extends AbstractController
             'company' => $company,
         ]);
     }
-
 
     #[Route('/{_locale}/{company}/document/new', name: 'app_document_new', methods: ['GET', 'POST'], priority: 10)]
     #[IsGranted('CREATE')]

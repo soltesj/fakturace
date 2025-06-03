@@ -37,7 +37,6 @@ class DocumentRepository extends ServiceEntityRepository
         ?DateTime $dateFrom = null,
         ?DateTime $dateTo = null,
         ?string $query = null,
-        ?Customer $customer = null,
         ?string $state = null
     ): array
     {
@@ -67,14 +66,13 @@ class DocumentRepository extends ServiceEntityRepository
                     $qb->expr()->like('document.note', ':search'),
                     $qb->expr()->like('document.documentNumber', ':search'),
                     $qb->expr()->like('customer.name', ':search'),
-                    $qb->expr()->like('document.description', ':search')
+                    $qb->expr()->like('document.description', ':search'),
+                    $qb->expr()->like('customer.name', ':search'),
+                    $qb->expr()->like('customer.companyNumber', ':search'),
+                    $qb->expr()->like('customer.vatNumber', ':search'),
                 )
             )
                 ->setParameter('search', '%'.$query.'%');
-        }
-        if ($customer != null) {
-            $qb->andWhere('document.customer = :customer')
-                ->setParameter('customer', $customer);
         }
         switch ($state) {
             case 'PAID':

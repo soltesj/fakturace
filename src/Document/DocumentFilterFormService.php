@@ -51,18 +51,6 @@ readonly class DocumentFilterFormService
                 'label' => t('form.filter.state'),
                 'required' => true,
             ])
-            ->add('customer', EntityType::class, [
-                'class' => Customer::class,
-                'choice_label' => 'name',
-                'label' => t('form.filter.customer'),
-                'required' => false,
-                'query_builder' => function (EntityRepository $er) use ($company): QueryBuilder {
-                    return $er->createQueryBuilder('customer')
-                        ->andWhere('customer.company = :company')
-                        ->setParameter('company', $company)
-                        ->orderBy('customer.name', 'ASC');
-                },
-            ])
             ->add('dateFrom', DateType::class, [
                 'label' => t('form.filter.date_from'),
                 'required' => false,
@@ -89,11 +77,10 @@ readonly class DocumentFilterFormService
         $dateTo = $data['dateTo']??null;
         /** @var string|null $state */
         $state = $data['state'] ?? null;
-        /** @var Customer|null $customer */
-        $customer = $data['customer'] ?? null;
+
         /** @var string|null $q */
         $q = $data['q'] ?? null;
 
-        return array($q, $dateFrom, $dateTo, $customer, $state);
+        return array($q, $dateFrom, $dateTo, $state);
     }
 }

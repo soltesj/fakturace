@@ -23,10 +23,10 @@ class DocumentFilterType extends AbstractType
                 'label' => 'state',
                 'required' => false,
             ])
-            ->add('customer', TextType::class, [
-                'label' => 'customer',
-                'required' => false,
-            ])
+//            ->add('customer', TextType::class, [
+//                'label' => 'customer',
+//                'required' => false,
+//            ])
             ->add('dateFrom', DateType::class, [
                 'label' => 'dateFrom',
                 'required' => false,

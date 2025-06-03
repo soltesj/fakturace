@@ -1,0 +1,24 @@
+{{ form_start(formFilter,{'attr':{
+    'class':"grid grid-cols-2 md:grid-cols-5 justify-items-stretch gap-2 mb-5 px-2 md:px-0",
+    'data-documents--filter-target':'filterForm',
+    'data-action':'submit->documents--filter#submitForm'
+}}) }}
+        {{ form_errors(formFilter) }}
+        {{ form_widget(formFilter.q, {attr: {'data-action':'documents--filter#onChange'}}) }}
+        {{ form_widget(formFilter.state, {attr: {'data-action':'documents--filter#onChange'}}) }}
+        {% for field in [ 'dateFrom', 'dateTo'] %}
+            {{ form_widget(formFilter[field], {attr: {'data-action':'documents--filter#onChange'}}) }}
+        {% endfor %}
+
+<div class="w-full col-span-2 md:col-span-1 justify-items-stretch">
+    <button type="reset" class="bg-red-900 hover:bg-red-700 text-red-100 p-2 flex items-center w-full">
+        <svg class="size-4 text-red-100 mr-2">
+            <use href="#square-xmark"/>
+        </svg>
+        <span>{{ 'invoice.reset_filter'|trans }}</span>
+    </button>
+    <button class="bg-blue-700 hover:bg-blue-500 text-blue-100 p-2 hidden"
+            type="submit" {{ stimulus_action('documents/filter', 'submitForm', 'click') }}>{{ 'button.invoice.filter'|trans }}</button>
+</div>
+
+{{ form_end(formFilter) }}

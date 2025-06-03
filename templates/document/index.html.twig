@@ -3,7 +3,7 @@
 {% block title %}{{ 'invoice.outgoing_invoices'|trans }}{% endblock %}
 
 {% block body %}
-    <h1 class="mb-5 flex justify-start items-center text-xl space-x-3 px-2">
+    <h1 class="mb-5 flex justify-start items-center text-xl space-x-3 px-2 md:px-0">
         <a href="{{ path('app_dash_board',{'company': company.id}) }}">
             <svg class="size-8">
                 <use href="#arrow-left-circle"/>
@@ -12,55 +12,33 @@
         <span>{{ 'invoice.outgoing_invoices'|trans }}</span>
     </h1>
 
+    <div class="mt-8 md:mb-8 gap-4 flex fixed bottom-0 left-0 justify-center w-full md:relative md:justify-start bg-gray-900 md:bg-transparent py-2">
+        {% if is_granted('CREATE') %}
+            <a href="{% if documentNumberExist %}{{ path('app_document_new', {'company': company.id}) }}{% else %}#{% endif %}"
+               class="px-4 py-2 order-2 md:order-1 rounded-sm  bg-gray-700 hover:bg-table-header hover:text-white/80 flex items-center {% if not documentNumberExist %}link-secondary pe-none{% endif %}">
+                <svg class="size-5 mr-2">
+                    <use href="#plus-circle-fill"/>
+                </svg>
+                <span class="hidden sm:block">{{ 'button.invoice.new_invoice'|trans }}</span>
+                <span class="sm:hidden">{{ 'button.invoice.new_invoice_short'|trans }}</span>
+            </a>
+        {% endif %}
+
+        <a href="#"
+           class="px-4 py-2 order-1 md:order-2 rounded-sm  bg-gray-700 hover:bg-table-header hover:text-white/80 flex items-center">
+            <svg class="size-5 mr-2">
+                <use href="#filetype-pdf"/>
+            </svg>
+            <span class="hidden sm:block">{{ 'button.invoice.export_list'|trans }}</span>
+            <span class="sm:hidden">{{ 'button.invoice.export_list_short'|trans }}</span>
+        </a>
+    </div>
+
+
     <div data-controller="documents--filter payment--payment"
          data-action="payment--payment:document:paid->documents--filter#onChange">
-        {% form_theme formFilter 'form/form_layout.html.twig' %}
-        {#        {{ form_start(formFilter,{'attr':{ #}
-        {#            'class':"grid grid-flow-col justify-items-center space-x-3 mb-5", #}
-        {#            'data-documents--filter-target':'filterForm', #}
-        {#            'data-action':'submit->documents--filter#submitForm' #}
-        {#        }}) }} #}
-        {#        {{ form_errors(formFilter) }} #}
 
-        {#        {% for field in ['q', 'state', 'customer', 'dateFrom', 'dateTo'] %} #}
-        {#            {{ form_row(formFilter[field], {attr: {'data-action':'documents--filter#onChange'}}) }} #}
-        {#        {% endfor %} #}
-
-        {#        <div class="mb-4 pt-6"> #}
-        {#            <button type="reset" class="bg-red-800 hover:bg-red-600 text-red-100 p-2 flex items-center"> #}
-        {#                <svg class="size-4 text-red-100 mr-2"> #}
-        {#                    <use href="#square-xmark"/> #}
-        {#                </svg> #}
-        {#                <span>{{ 'invoice.reset_filter'|trans }}</span> #}
-        {#            </button> #}
-        {#            #}{#            <button class="bg-blue-700 hover:bg-blue-500 text-blue-100 p-2" #}
-        {#            #}{#                    type="submit" {{ stimulus_action('documents/filter', 'submitForm', 'click') }}>{{ 'button.invoice.filter'|trans }}</button> #}
-        {#        </div> #}
-
-        {#        {{ form_end(formFilter) }} #}
-
-
-        <div class="mt-8 md:mb-8 gap-4 flex fixed bottom-0 left-0 justify-center w-full md:relative md:justify-start bg-gray-900 md:bg-transparent py-2">
-            {% if is_granted('CREATE') %}
-                <a href="{% if documentNumberExist %}{{ path('app_document_new', {'company': company.id}) }}{% else %}#{% endif %}"
-                   class="px-4 py-2 order-2 md:order-1 rounded-sm  bg-gray-700 hover:bg-table-header hover:text-white/80 flex items-center {% if not documentNumberExist %}link-secondary pe-none{% endif %}">
-                    <svg class="size-5 mr-2">
-                        <use href="#plus-circle-fill"/>
-                    </svg>
-                    <span class="hidden sm:block">{{ 'button.invoice.new_invoice'|trans }}</span>
-                    <span class="sm:hidden">{{ 'button.invoice.new_invoice_short'|trans }}</span>
-                </a>
-            {% endif %}
-
-            <a href="#"
-               class="px-4 py-2 order-1 md:order-2 rounded-sm  bg-gray-700 hover:bg-table-header hover:text-white/80 flex items-center">
-                <svg class="size-5 mr-2">
-                    <use href="#filetype-pdf"/>
-                </svg>
-                <span class="hidden sm:block">{{ 'button.invoice.export_list'|trans }}</span>
-                <span class="sm:hidden">{{ 'button.invoice.export_list_short'|trans }}</span>
-            </a>
-        </div>
+        {{ include('document/_filter.html.twig') }}
 
         <div data-documents--filter-target="documentList">
             {{ include('document/_list.html.twig') }}

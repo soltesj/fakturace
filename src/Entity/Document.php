@@ -527,12 +527,12 @@ class Document implements CompanyOwnedInterface
         $this->priceTotal = $priceTotal;
     }
 
-    public function getNote(): string
+    public function getNote(): ?string
     {
         return $this->note;
     }
 
-    public function setNote(string $note): void
+    public function setNote(?string $note): void
     {
         $this->note = $note;
     }
