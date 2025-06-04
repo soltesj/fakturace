@@ -1,4 +1,5 @@
 {{ form_start(form) }}
+{{ form_errors(form) }}
 <div data-controller="document--price-calc document--dates document--extended-info"
      data-document--price-calc-vats-value="{{ vats|json_encode }}"
      data-document--price-calc-company-value="{{ company.id }}"

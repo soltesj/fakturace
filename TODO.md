@@ -2,6 +2,8 @@
 
 ## 📦 Bugs
 
+- [ ] Fix the problem with generation document number in the load test there ware many attempts with same document
+  number
 
 ## 📦 New features
 
@@ -11,6 +13,7 @@
 
 ## 🔧 Refactoring
 
+- [ ] consider making a separate database for K6 tests
 - [ ] update payment of all odl documents transfer them to table payment
 - [ ] chat sql can nou take the price fom document table
 - [ ] QR payment has to be refactored do to all countries have their own standard

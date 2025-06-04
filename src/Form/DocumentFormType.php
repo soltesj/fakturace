@@ -28,7 +28,8 @@ class DocumentFormType extends AbstractType
         /** @var Document $document */
         $document = $options['data'];
         $company = $document->getCompany();
-        $builder->add('documentNumber', options: [
+        $builder
+            ->add('documentNumber', options: [
             'label' => t('form.invoice.document_number'),
                 'attr' => [
                     'placeholder' => t('form.invoice.document_number.placeholder'),

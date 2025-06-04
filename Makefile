@@ -43,6 +43,14 @@ test: ## Runs phpunit tests
 	docker exec fakturace_app php bin/console doctrine:schema:create --env=test --no-interaction
 	docker exec fakturace_app php bin/phpunit
 
+.PHONY .SILENT: test-k6
+test-k6: ## Runs phpunit tests
+	docker exec fakturace_app php bin/console cache:clear --env=k6
+	docker exec fakturace_app php bin/console doctrine:database:drop --env=k6 --if-exists --force
+	docker exec fakturace_app php bin/console doctrine:database:create --env=k6
+	docker exec fakturace_app php bin/console doctrine:schema:create --env=k6 --no-interaction
+	docker exec fakturace_app php bin/console doctrine:fixtures:load --env=k6 --no-interaction
+
 #.PHONY .SILENT: install
 #fixtures: ## Load doctrine fixtures
 #	docker exec fakturace_app php bin/console doctrine:fixtures:load --env=test --no-interaction --purger=PURGER
