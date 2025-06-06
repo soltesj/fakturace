@@ -4,7 +4,7 @@
 
 {% block body %}
     <h1 class="mb-5 flex justify-start items-center text-xl space-x-3 px-2 md:px-0">
-        <a href="{{ path('app_document_index', {'company': company.id}) }}">
+        <a href="{{ path('app_document_index', {'company': company.publicId}) }}">
             <svg class="size-8">
                 <use href="#arrow-left-circle"/>
             </svg>
@@ -14,21 +14,21 @@
 
     <div class="mt-8 md:mb-8 flex fixed bottom-0 left-0 justify-center w-full md:relative md:justify-start bg-gray-900 md:bg-transparent py-2">
         <a class="px-4 py-2 rounded-sm  bg-gray-700 hover:bg-table-header hover:text-white/80 flex items-center mr-4"
-           href="{{ path('app_document_edit',{document:document.id, company:company.id}) }}">
+           href="{{ path('app_document_edit',{document:document.id, company:company.publicId}) }}">
             <svg class="size-4 mr-2">
                 <use href="#pen-to-square"/>
             </svg>
             <span>Upravit</span>
         </a>
         <a class="px-4 py-2 rounded-sm bg-gray-700 hover:bg-table-header hover:text-white/80 flex items-center mr-4"
-           href="{{ path('app_document_edit',{document:document.id, company:company.id}) }}">
+           href="{{ path('app_document_edit',{document:document.id, company:company.publicId}) }}">
             <svg class="size-4 mr-2">
                 <use href="#envelope-arrow-up-fill"/>
             </svg>
             <span>Poslat</span>
         </a>
         <a class="px-4 py-2 rounded-sm bg-gray-700 hover:bg-table-header hover:text-white/80 flex items-center mr-4"
-           href="{{ path('app_document_print',{'document':document.id,'company':company.id}) }}">
+           href="{{ path('app_document_print',{'document':document.id,'company':company.publicId}) }}">
             <svg class="size-4 mr-2">
                 <use href="#filetype-pdf"/>
             </svg>

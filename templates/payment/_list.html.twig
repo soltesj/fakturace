@@ -17,7 +17,7 @@
                         <use href="#dollar-sign"/>
                     </svg>
                     <a
-                    href="{{ path('app_payment_edit', {'company': company.id, 'payment': payment.id}) }}"
+                    href="{{ path('app_payment_edit', {'company': company.publicId, 'payment': payment.id}) }}"
                     class="text-decoration-none">{{ payment.document.documentNumber|default('payment.no_document_assigned')|trans }}</a>{% else %}
                     {{ payment.document.documentNumber|default('payment.no_document_assigned')|trans }}
                 {% endif %}

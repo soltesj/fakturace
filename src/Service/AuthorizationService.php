@@ -9,21 +9,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 readonly class AuthorizationService
 {
-
-    public function __construct(
-        private CompanyRepository $companyRepository,
-    ) {
-    }
-
     public function checkUserCompanyAccess(
         UserInterface $user,
-        Company|int $company
+        Company $company
     ): bool {
-        if (!$company instanceof Company) {
-            $company = $this->companyRepository->find($company);
-        }
-
-        return $company !== null && $user->getCompanies()->contains($company);
+        return $user->getCompanies()->contains($company);
     }
 
 }

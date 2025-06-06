@@ -9,7 +9,7 @@
 
     <div class="mt-8 md:mb-8 gap-4 flex fixed bottom-0 left-0 justify-center w-full md:relative md:justify-start bg-gray-900 md:bg-transparent py-2 z-10">
         {% if is_granted('CREATE') %}
-            <a href="{% if documentNumberExist %}{{ path('app_document_new', {'company': company.id}) }}{% else %}#{% endif %}"
+            <a href="{% if documentNumberExist %}{{ path('app_document_new', {'company': company.publicId}) }}{% else %}#{% endif %}"
                class="px-4 py-2 order-2 md:order-1 rounded-sm  bg-gray-700 hover:bg-table-header hover:text-white/80 flex items-center {% if not documentNumberExist %}link-secondary pe-none{% endif %}">
                 <svg class="size-5 mr-2">
                     <use href="#plus-circle-fill"/>

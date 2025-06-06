@@ -2,7 +2,7 @@
 {{ form_errors(form) }}
 <div data-controller="document--price-calc document--dates document--extended-info"
      data-document--price-calc-vats-value="{{ vats|json_encode }}"
-     data-document--price-calc-company-value="{{ company.id }}"
+     data-document--price-calc-company-value="{{ company.publicId }}"
      data-document--dates-maturity-days-value="{{ company.maturityDays|default(14) }}"
      data-action="document--document-item-collection:add-row->document--price-calc#toggleDocumentWithWat">
 

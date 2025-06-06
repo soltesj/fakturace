@@ -33,6 +33,17 @@ class CompanyRepository extends ServiceEntityRepository
         return $queryBuilder->getOneOrNullResult();
     }
 
+    public function findOneByPublicId(string $publicId): ?Company
+    {
+        $queryBuilder = $this->createQueryBuilder('company')
+            ->andWhere('company.publicId = :publicId')
+            ->setParameter('publicId', $publicId)
+            ->getQuery();
+
+//        dump($queryBuilder->getDQL());
+        return $queryBuilder->getOneOrNullResult();
+    }
+
 //    /**
 //     * @return Company[] Returns an array of Company objects
 //     */

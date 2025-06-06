@@ -7,14 +7,19 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Ulid;
 
 #[ORM\Entity(repositoryClass: CompanyRepository::class)]
+#[ORM\Index(name: 'idx_company_public_id', columns: ['public_id'])]
 class Company
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     protected ?int $id = null;
+
+    #[ORM\Column(type: Types::STRING, length: 26, unique: true)]
+    private ?string $publicId = null;
 
     #[ORM\ManyToOne(targetEntity: Country::class)]
     #[ORM\JoinColumn(nullable: false)]
@@ -90,8 +95,9 @@ class Company
     #[ORM\OneToMany(targetEntity: CompanyInboxIdentifier::class, mappedBy: 'company')]
     private Collection $identifiers;
 
-    public function __construct()
+    public function __construct(?string $publicId = null)
     {
+        $this->publicId = new Ulid($publicId)->toString();
         $this->users = new ArrayCollection();
         $this->currency = new ArrayCollection();
     }
@@ -99,6 +105,16 @@ class Company
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getPublicId(): ?string
+    {
+        return $this->publicId;
+    }
+
+    public function setPublicId(?string $publicId): void
+    {
+        $this->publicId = $publicId;
     }
 
     /**
@@ -336,12 +352,12 @@ class Company
         return $this;
     }
 
-    public function getIdentifier(): Collection
+    public function getIdentifiers(): Collection
     {
         return $this->identifiers;
     }
 
-    public function setIdentifier(Collection $identifier): void
+    public function setIdentifiers(Collection $identifier): void
     {
         $this->identifiers = $identifier;
     }

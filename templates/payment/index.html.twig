@@ -4,7 +4,7 @@
 
 {% block body %}
     <h1 class="mb-5 flex justify-start items-center text-xl space-x-3 px-2 md:px-0">
-        <a href="{{ path('app_dash_board',{'company': company.id}) }}">
+        <a href="{{ path('app_dash_board',{'company': company.publicId}) }}">
             <svg class="size-8">
                 <use href="#arrow-left-circle"/>
             </svg>
@@ -38,7 +38,7 @@
 
         <div class="grid grid-flow-col justify-items-center md:justify-start space-x-3 md:space-x-4 mb-3">
             {% if is_granted('CREATE') %}
-                {#                <a href="{% if documentNumberExist %}{{ path('app_document_new', {'company': company.id}) }}{% else %}#{% endif %}" #}
+                {#                <a href="{% if documentNumberExist %}{{ path('app_document_new', {'company': company.publicId}) }}{% else %}#{% endif %}" #}
                 {#                   class="text-green-700 hover:text-green-500 font-bold ml-4 flex justify-start items-center space-x-1 {% if not documentNumberExist %}link-secondary pe-none{% endif %}"> #}
                 {#                    <svg class="size-4"> #}
                 {#                        <use href="#plus-circle-fill"/> #}

@@ -16,7 +16,7 @@ class DocumentControllerIndexTest extends WebTestCase
         $client = static::createClient();
         $user = $client->getContainer()->get(UserRepository::class)->findOneByEmail(AppFixtures::USER_1_EMAIL);
         $client->loginUser($user);
-        $crawler = $client->request('GET', '/cs/1/document');
+        $crawler = $client->request('GET', '/cs/'.AppFixtures::COMPANY_PUBLIC_ID_1.'/document');
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', $this->t('invoice.outgoing_invoices'));
     }
@@ -26,8 +26,8 @@ class DocumentControllerIndexTest extends WebTestCase
         $client = static::createClient();
         $user = $client->getContainer()->get(UserRepository::class)->findOneByEmail(AppFixtures::USER_1_EMAIL);
         $client->loginUser($user);
-        $crawler = $client->request('GET', '/cs/2/document');
-        $this->assertResponseRedirects('/cs/1/document', 302);
+        $crawler = $client->request('GET', '/cs/'.AppFixtures::COMPANY_PUBLIC_ID_2.'/document');
+        $this->assertResponseRedirects('/cs/'.AppFixtures::COMPANY_PUBLIC_ID_1.'/document', 302);
     }
 
 
@@ -36,7 +36,7 @@ class DocumentControllerIndexTest extends WebTestCase
         $client = static::createClient();
         $user = $client->getContainer()->get(UserRepository::class)->findOneByEmail(AppFixtures::USER_1_EMAIL);
         $client->loginUser($user);
-        $crawler = $client->request('GET', '/cs/1/document/new');
+        $crawler = $client->request('GET', '/cs/'.AppFixtures::COMPANY_PUBLIC_ID_1.'/document/new');
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', $this->t('invoice.new_invoice_outgoing'));
     }
@@ -46,8 +46,8 @@ class DocumentControllerIndexTest extends WebTestCase
         $client = static::createClient();
         $user = $client->getContainer()->get(UserRepository::class)->findOneByEmail(AppFixtures::USER_1_EMAIL);
         $client->loginUser($user);
-        $crawler = $client->request('GET', '/cs/2/document/new');
-        $this->assertResponseRedirects('/cs/1/document/new', 302);
+        $crawler = $client->request('GET', '/cs/'.AppFixtures::COMPANY_PUBLIC_ID_2.'/document/new');
+        $this->assertResponseRedirects('/cs/'.AppFixtures::COMPANY_PUBLIC_ID_1.'/document/new', 302);
     }
 
 //    public function testDocumentEditWorks(): void

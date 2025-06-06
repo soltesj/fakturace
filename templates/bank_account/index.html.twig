@@ -4,7 +4,7 @@
 
 {% block body %}
     <h1 class="mb-5 flex justify-start items-center text-xl space-x-3 px-2 md:px-0">
-        <a href="{{ path('app_dash_board',{'company': company.id}) }}" class="text-decoration-none">
+        <a href="{{ path('app_dash_board',{'company': company.publicId}) }}" class="text-decoration-none">
             <svg class="size-8">
                 <use href="#arrow-left-circle"/>
             </svg>
@@ -13,7 +13,7 @@
     </h1>
 
     <div class="mt-8 md:mb-8 gap-4 flex fixed bottom-0 left-0 justify-center w-full md:relative md:justify-start bg-gray-900 md:bg-transparent py-2">
-        {% if is_granted('CREATE') %}<a href="{{ path('app_setting_account_new',{'company':company.id}) }}"
+        {% if is_granted('CREATE') %}<a href="{{ path('app_setting_account_new',{'company':company.publicId}) }}"
                                         class="px-4 py-2 order-2 md:order-1 rounded-sm  bg-gray-700 hover:bg-table-header hover:text-white/80 flex items-center">
             <svg class="size-5 sm:mr-2">
                 <use href="#plus-circle-fill"/>
@@ -35,14 +35,14 @@
             {% for bank_account in bank_accounts %}
                 <div class="p-2">{{ bank_account.sequence }}</div>
                 <div class="p-2">{% if is_granted('EDIT', bank_account) %}<a
-                        href="{{ path('app_setting_account_edit', {'company':company.id,'bankAccount': bank_account.id}) }}"
+                        href="{{ path('app_setting_account_edit', {'company':company.publicId,'bankAccount': bank_account.id}) }}"
                         class="text-decoration-none">{{ bank_account.shortName }}</a>{% else %}{{ bank_account.shortName }}{% endif %}
                 </div>
                 <div class="p-2">{{ bank_account.accountNumber }}/{{ bank_account.bankCode }}</div>
                 <div class="p-2 hidden md:block">{{ bank_account.iban }}</div>
                 <div class="p-2 hidden md:block">{{ bank_account.bic }}</div>
                 <div class="p-2 flex justify-end">{% if is_granted('EDIT', bank_account) %}<a
-                        href="{{ path('app_setting_account_delete', {'company':company.id,'bankAccount': bank_account.id}) }}"
+                        href="{{ path('app_setting_account_delete', {'company':company.publicId,'bankAccount': bank_account.id}) }}"
                         class="text-secondary icon-link-hover">
                             <svg class="size-5">
                                 <use href="#dash-circle-fill"/>
@@ -54,6 +54,6 @@
         </div>
     </div>
     <div class="bg-background-secondary p-4">
-        <p class="text-center">platby.{{ company.identifier.first.identifier }}@i-fakturace.eu</p>
+        <p class="text-center">platby.{{ company.identifiers.first.identifier }}@i-fakturace.eu</p>
     </div>
 {% endblock %}

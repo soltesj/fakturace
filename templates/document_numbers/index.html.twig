@@ -4,7 +4,7 @@
 
 {% block body %}
     <h1 class="mb-5 flex justify-start items-center text-xl space-x-3 px-2 md:px-0">
-        <a href="{{ path('app_dash_board',{'company': company.id}) }}" class="text-decoration-none">
+        <a href="{{ path('app_dash_board',{'company': company.publicId}) }}" class="text-decoration-none">
             <svg class="size-8">
                 <use href="#arrow-left-circle"/>
             </svg>
@@ -26,7 +26,7 @@
                 <div class="p-2">{{ documentNumber.nextNumber }}</div>
                 <div class="p-2">{% if documentNumber.id is null %}
                         {% if is_granted('CREATE') %}
-                            <a href="{{ path('app_setting_document_numbers_new', {'documentType': documentTypeId, 'company':company.id}) }}">
+                            <a href="{{ path('app_setting_document_numbers_new', {'documentType': documentTypeId, 'company':company.publicId}) }}">
                                 <svg class="size-4">
                                     <use href="#plus-circle-fill"/>
                                 </svg>
@@ -34,7 +34,7 @@
                         {% endif %}
                     {% else %}
                         {% if is_granted('EDIT', documentNumber) %}
-                            <a href="{{ path('app_setting_document_numbers_edit', {'documentNumber': documentNumber.id, 'company':company.id}) }}">
+                            <a href="{{ path('app_setting_document_numbers_edit', {'documentNumber': documentNumber.id, 'company':company.publicId}) }}">
                                 <svg class="size-4">
                                     <use href="#pen-to-square"/>
                                 </svg>

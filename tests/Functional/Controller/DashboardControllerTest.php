@@ -16,7 +16,7 @@ class DashboardControllerTest extends WebTestCase
         $client = static::createClient();
         $user = $client->getContainer()->get(UserRepository::class)->findOneByEmail(AppFixtures::USER_1_EMAIL);
         $client->loginUser($user);
-        $crawler = $client->request('GET', '/cs/1/dashboard');
+        $crawler = $client->request('GET', '/cs/'.AppFixtures::COMPANY_PUBLIC_ID_1.'/dashboard');
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1', $this->t('dashboard.overview'));
     }
@@ -26,7 +26,7 @@ class DashboardControllerTest extends WebTestCase
         $client = static::createClient();
         $user = $client->getContainer()->get(UserRepository::class)->findOneByEmail(AppFixtures::USER_1_EMAIL);
         $client->loginUser($user);
-        $crawler = $client->request('GET', '/cs/2/dashboard');
-        $this->assertResponseRedirects('/cs/1/dashboard', 302);
+        $crawler = $client->request('GET', '/cs/'.AppFixtures::COMPANY_PUBLIC_ID_2.'/dashboard');
+        $this->assertResponseRedirects('/cs/'.AppFixtures::COMPANY_PUBLIC_ID_1.'/dashboard', 302);
     }
 }

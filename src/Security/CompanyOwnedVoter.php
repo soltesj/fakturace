@@ -4,7 +4,6 @@ namespace App\Security;
 
 use App\Entity\CompanyOwnedInterface;
 use App\Entity\User;
-use App\Service\AuthorizationService;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -16,9 +15,6 @@ class CompanyOwnedVoter extends Voter
     public const string CREATE = 'CREATE';
     public const array ALL = [self::VIEW, self::EDIT, self::DELETE, self::CREATE];
 
-    public function __construct(private AuthorizationService $authorizationService)
-    {
-    }
 
     protected function supports(string $attribute, $subject): bool
     {
@@ -45,7 +41,7 @@ class CompanyOwnedVoter extends Voter
                     return false;
                 }
 
-                return $this->authorizationService->checkUserCompanyAccess($user, $subject->getCompany())
+            return $user->getCompanies()->contains($subject->getCompany())
                     && $this->hasRolePermission($user, $attribute);
         }
 

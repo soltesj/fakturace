@@ -26,6 +26,9 @@ class AppFixtures extends Fixture
     const int USER_2 = 2;
     const string USER_2_EMAIL = 'user2@example.com';
     const int COMPANY_1 = 1;
+    const string COMPANY_PUBLIC_ID_1 = '01JX23FPCDAWFS6168ZRVB5A8G';
+    const string COMPANY_PUBLIC_ID_2 = '01JX23HEPSXHS49430DYSQ1KDR';
+
 
     const array VAT_LEVELS_DATA = [
         ['amount' => '21.00', 'name' => 'Základní sazba', 'validFrom' => '2013-01-01'],
@@ -238,7 +241,7 @@ class AppFixtures extends Fixture
 
     public function createCompany1(Country $country, Currency $currency): Company
     {
-        $company = new Company();
+        $company = new Company(self::COMPANY_PUBLIC_ID_1);
         $company->setName('Company_1');
         $company->setCity('Praha');
         $company->setStreet('Ulice 1');

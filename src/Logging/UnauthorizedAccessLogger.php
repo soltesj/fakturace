@@ -14,11 +14,11 @@ readonly class UnauthorizedAccessLogger
     ) {
     }
 
-    public function logAttempt(UserInterface $user, int $companyId, Request $request): void
+    public function logAttempt(UserInterface $user, string $publicId, Request $request): void
     {
         $this->logger->alert('Unauthorized access attempt to company', [
             'user_id' => method_exists($user, 'getId') ? $user->getId() : null,
-            'company_id' => $companyId,
+            'public_id' => $publicId,
             'ip_address' => $request->getClientIp(),
             'user_agent' => $request->headers->get('User-Agent'),
             'url' => $request->getUri(),

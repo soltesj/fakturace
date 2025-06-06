@@ -53,7 +53,7 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
         return new RedirectResponse(
             $this->urlGenerator->generate(
                 'app_dash_board',
-                ['company' => $user->getCompanies()[0]->getId()]
+                ['company' => $user->getCompanies()[0]->getPublicId()]
             )
         );
     }
