@@ -6,6 +6,7 @@ export default class extends Controller {
 
     static values = {
         vats: Object,
+        company: String,
     }
     prices = [];
     priceTotalWithoutVat = [];
@@ -94,7 +95,7 @@ export default class extends Controller {
     }
 
     async getVatProcessingData(customerValue) {
-        const response = await fetch(`/api/1/document-vat-mode/${customerValue}`)
+        const response = await fetch(`/api/${this.companyValue}/document-vat-mode/${customerValue}`)
         if (!response.ok) {
             this.showAlert(`Společnost s tímto ID nebyla nalezena:${customerValue}`, 'warning');
             throw new Error(`HTTP error! statu: ${response.status}`)

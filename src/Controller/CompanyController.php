@@ -25,7 +25,7 @@ class CompanyController extends AbstractController
             $entityManager->flush();
             $this->addFlash('success', 'message.changes_have_been_saved');
 
-            return $this->redirectToRoute('app_setting_edit', ['company' => $company->getId()],
+            return $this->redirectToRoute('app_setting_edit', ['company' => $company->getPublicId()],
                 Response::HTTP_SEE_OTHER);
         }
 

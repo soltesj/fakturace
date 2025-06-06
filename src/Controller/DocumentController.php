@@ -141,7 +141,7 @@ class DocumentController extends AbstractController
 
                 return $this->redirectToRoute(
                     'app_document_index',
-                    ['company' => $company->getId()],
+                    ['company' => $company->getPublicId()],
                     Response::HTTP_SEE_OTHER
                 );
             } catch (Throwable $e) {
@@ -179,7 +179,7 @@ class DocumentController extends AbstractController
 
                 return $this->redirectToRoute(
                     'app_document_index',
-                    ['company' => $company->getId()],
+                    ['company' => $company->getPublicId()],
                     Response::HTTP_SEE_OTHER
                 );
             } catch (Throwable $e) {

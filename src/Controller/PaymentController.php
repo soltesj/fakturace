@@ -110,7 +110,7 @@ class PaymentController extends AbstractController
 
                 return $this->redirectToRoute(
                     'app_payment_index',
-                    ['company' => $company->getId()],
+                    ['company' => $company->getPublicId()],
                     Response::HTTP_SEE_OTHER
                 );
             } catch (Throwable $e) {
@@ -129,11 +129,11 @@ class PaymentController extends AbstractController
         ]);
     }
 
-    #[
-        Route('/{_locale}/{company}/payment/{payment}/edit', name: 'app_payment_edit', methods: ['GET', 'POST'])]
-    #[IsGranted('EDIT', subject: 'payment')]
-    public function edit(Request $request, Company $company, Document $document): Response
-    {
+//    #[
+//        Route('/{_locale}/{company}/payment/{payment}/edit', name: 'app_payment_edit', methods: ['GET', 'POST'])]
+//    #[IsGranted('EDIT', subject: 'payment')]
+//    public function edit(Request $request, Company $company, Document $document): Response
+//    {
 //        $originalItems = new ArrayCollection();
 //        foreach ($document->getDocumentItems() as $documentItem) {
 //            $originalItems->add($documentItem);
@@ -150,7 +150,7 @@ class PaymentController extends AbstractController
 //
 //                return $this->redirectToRoute(
 //                    'app_payment_index',
-//                    ['company' => $company->getId()],
+//                    ['company' => $company->getPublicId()],
 //                    Response::HTTP_SEE_OTHER
 //                );
 //            } catch (Throwable $e) {
@@ -167,7 +167,7 @@ class PaymentController extends AbstractController
 //            'vats' => $vats,
 //            'vatMode' => $document->getVatMode()->value,
 //        ]);
-    }
+//    }
 
 
 }

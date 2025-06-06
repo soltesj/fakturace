@@ -57,7 +57,7 @@ class BankAccountController extends AbstractController
 
             return $this->redirectToRoute(
                 'app_setting_account_index',
-                ['company' => $company->getId()],
+                ['company' => $company->getPublicId()],
                 Response::HTTP_SEE_OTHER
             );
         }
@@ -96,7 +96,7 @@ class BankAccountController extends AbstractController
 
             return $this->redirectToRoute(
                 'app_setting_account_index',
-                ['company' => $company->getId()],
+                ['company' => $company->getPublicId()],
                 Response::HTTP_SEE_OTHER
             );
         }
@@ -125,7 +125,7 @@ class BankAccountController extends AbstractController
 
         return $this->redirectToRoute(
             'app_setting_account_index',
-            ['company' => $company->getId()],
+            ['company' => $company->getPublicId()],
             Response::HTTP_SEE_OTHER
         );
     }

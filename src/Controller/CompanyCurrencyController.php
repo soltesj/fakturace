@@ -48,7 +48,7 @@ class CompanyCurrencyController extends AbstractController
             $this->addFlash('warning', t('message.general_error'));
         }
 
-        return $this->redirectToRoute('app_setting_currency_edit', ['company' => $company->getId()],
+        return $this->redirectToRoute('app_setting_currency_edit', ['company' => $company->getPublicId()],
             Response::HTTP_SEE_OTHER);
     }
 
@@ -68,7 +68,7 @@ class CompanyCurrencyController extends AbstractController
             $this->addFlash('warning', t('message.general_error'));
         }
 
-        return $this->redirectToRoute('app_setting_currency_edit', ['company' => $company->getId()],
+        return $this->redirectToRoute('app_setting_currency_edit', ['company' => $company->getPublicId()],
             Response::HTTP_SEE_OTHER);
     }
 }

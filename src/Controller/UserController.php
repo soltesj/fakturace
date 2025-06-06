@@ -26,7 +26,8 @@ class UserController extends AbstractController
             $entityManager->flush();
             $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
-            return $this->redirectToRoute('app_user_edit', ['company'=>$company->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_edit', ['company' => $company->getPublicId()],
+                Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('user/index.html.twig', [

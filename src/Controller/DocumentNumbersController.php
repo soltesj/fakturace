@@ -78,7 +78,7 @@ class DocumentNumbersController extends AbstractController
             $entityManager->persist($documentNumber);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_setting_document_numbers_index', ['company' => $company->getId()],
+            return $this->redirectToRoute('app_setting_document_numbers_index', ['company' => $company->getPublicId()],
                 Response::HTTP_SEE_OTHER);
         }
 
@@ -107,7 +107,7 @@ class DocumentNumbersController extends AbstractController
             $entityManager->flush();
             $this->addFlash('success', 'message.changes_have_been_saved');
 
-            return $this->redirectToRoute('app_setting_document_numbers_index', ['company' => $company->getId()],
+            return $this->redirectToRoute('app_setting_document_numbers_index', ['company' => $company->getPublicId()],
                 Response::HTTP_SEE_OTHER);
         }
 

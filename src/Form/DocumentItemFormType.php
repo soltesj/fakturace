@@ -29,7 +29,7 @@ class DocumentItemFormType extends AbstractType
                 'data' => 'ks',
                 'attr' => ['placeholder' => 'invoice.item_price_of_uniy_of_meaure'],
             ])
-            ->add(child: 'price', options: ['attr' => ['placeholder' => 'invoice.item_price_of_uniy_of_meaure']])
+            ->add(child: 'price', options: ['attr' => ['placeholder' => 'invoice.item_price_of_unit_of_measure']])
             ->add(child: 'vat', type: EntityType::class, options: [
                 'class' => VatLevel::class,
                 'query_builder' => function (EntityRepository $er): QueryBuilder {

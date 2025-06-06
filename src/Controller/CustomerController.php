@@ -53,7 +53,7 @@ class CustomerController extends AbstractController
             $this->entityManager->flush();
             $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
-            return $this->redirectToRoute('app_customer_index', ['company' => $company->getId()],
+            return $this->redirectToRoute('app_customer_index', ['company' => $company->getPublicId()],
                 Response::HTTP_SEE_OTHER);
         }
 
@@ -79,7 +79,7 @@ class CustomerController extends AbstractController
             $this->entityManager->flush();
             $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
 
-            return $this->redirectToRoute('app_customer_index', ['company' => $company->getId()],
+            return $this->redirectToRoute('app_customer_index', ['company' => $company->getPublicId()],
                 Response::HTTP_SEE_OTHER);
         }
 
@@ -105,6 +105,7 @@ class CustomerController extends AbstractController
         $entityManager->flush();
         $this->addFlash('info', "Zakaznik {$customer->getName()} byl odstranen");
 
-        return $this->redirectToRoute('app_customer_index', ['company' => $company->getId()], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_customer_index', ['company' => $company->getPublicId()],
+            Response::HTTP_SEE_OTHER);
     }
 }

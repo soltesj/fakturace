@@ -3,16 +3,11 @@
 namespace App\Form;
 
 use App\Entity\BankAccount;
-use App\Entity\Company;
-use App\Entity\Currency;
-use App\Entity\Document;
 use App\Entity\Payment;
-use App\Enum\PaymentType;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -30,7 +25,7 @@ class PaymentTypeForm extends AbstractType
         $payment = $options['data'];
         $company = $payment->getCompany();
         $builder
-            ->setAction($this->urlGenerator->generate('app_payment_new', ['company' => $company->getId(),]))
+            ->setAction($this->urlGenerator->generate('app_payment_new', ['company' => $company->getPublicId(),]))
             ->add('paymentType', HiddenType::class, [
                 'data' => $payment->getType()->value,
                 'mapped' => false,
