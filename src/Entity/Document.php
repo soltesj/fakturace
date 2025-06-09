@@ -95,18 +95,6 @@ class Document implements CompanyOwnedInterface
     #[ORM\OneToMany(targetEntity: DocumentPrice::class, mappedBy: 'document', cascade: ['persist', 'remove'])]
     private Collection $documentPrices;
 
-    #[ORM\Column(name: 'bank_routing', type: Types::STRING, length: 32, nullable: true)]
-    private ?string $bankRouting = null;
-
-    #[ORM\Column(name: 'bank_account_number', type: Types::STRING, length: 50, nullable: true)]
-    private ?string $bankAccountNumber = null;
-
-    #[ORM\Column(type: Types::STRING, length: 64, nullable: true)]
-    private ?string $iban = null;
-
-    #[ORM\Column(type: Types::STRING, length: 64, nullable: true)]
-    private ?string $bic = null;
-
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
     private DateTimeInterface $dateIssue;
 
@@ -296,46 +284,6 @@ class Document implements CompanyOwnedInterface
     public function setBankAccount(?BankAccount $bankAccount): void
     {
         $this->bankAccount = $bankAccount;
-    }
-
-    public function getBankRouting(): ?string
-    {
-        return $this->bankRouting;
-    }
-
-    public function setBankRouting(?string $bankRouting): void
-    {
-        $this->bankRouting = $bankRouting;
-    }
-
-    public function getBankAccountNumber(): ?string
-    {
-        return $this->bankAccountNumber;
-    }
-
-    public function setBankAccountNumber(?string $bankAccountNumber): void
-    {
-        $this->bankAccountNumber = $bankAccountNumber;
-    }
-
-    public function getIban(): string
-    {
-        return $this->iban;
-    }
-
-    public function setIban(string $iban): void
-    {
-        $this->iban = $iban;
-    }
-
-    public function getBic(): string
-    {
-        return $this->bic;
-    }
-
-    public function setBic(string $bic): void
-    {
-        $this->bic = $bic;
     }
 
     public function getDateIssue(): DateTimeInterface

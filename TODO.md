@@ -19,8 +19,6 @@
 - [ ] improve handling with customer in the document when the customer was changed during editing the document
 - [ ] refactor the document customer ⇒ remove all customer columns and create customers in the customer table with
   relations
-- [ ] refactor the document bank account ⇒ remove all bank account columns and create a bank account in the bank account
-  table with relations
 
 ## ✅ Done
 
@@ -33,6 +31,8 @@
 - [x] remove transfer_tax from the database it will be replaced by vat_mode ``VatMode::DOMESTIC_REVERSE_CHARGE``
 - [x] fix resetting filter
 - [x] Add payment date to the document to show the user when it was paid
+- [x] refactor the document bank account ⇒ remove all bank account columns and create a bank account in the bank account
+  table with relations
 
 ## REMOVED
 
