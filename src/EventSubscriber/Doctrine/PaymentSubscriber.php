@@ -7,6 +7,7 @@ use App\Entity\Document;
 use App\Entity\Payment;
 use App\Enum\PaymentType;
 use App\Repository\PaymentRepository;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsDoctrineListener;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
@@ -77,10 +78,14 @@ readonly class PaymentSubscriber
             $netTotal = $this->calculator->calculateNetTotal($currentTotals[$documentId] ?? 0.0, $newPayments);
             $remainingAmount = strval($document->getTotalAmount() - $netTotal);
             $document->setRemainingAmount($remainingAmount);
+            $changeSet = ['remainingAmount' => [null, $remainingAmount]];
+            if ($remainingAmount <= 0) {
+                $date = new DateTimeImmutable();
+                $uow->propertyChanged($document, 'datePaid', null, $date);
+                $changeSet['datePaid'] = [null, $date];
+            }
             $uow->propertyChanged($document, 'remainingAmount', null, $remainingAmount);
-            $uow->scheduleExtraUpdate($document, [
-                'remainingAmount' => [null, $remainingAmount],
-            ]);
+            $uow->scheduleExtraUpdate($document, $changeSet);
         }
     }
 }

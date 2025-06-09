@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Enum\VatMode;
 use App\Repository\DocumentRepository;
+use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -106,14 +107,17 @@ class Document implements CompanyOwnedInterface
     #[ORM\Column(type: Types::STRING, length: 64, nullable: true)]
     private ?string $bic = null;
 
-    #[ORM\Column(name: 'date_issue', type: Types::DATE_MUTABLE, nullable: false)]
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: false)]
     private DateTimeInterface $dateIssue;
 
-    #[ORM\Column(name: 'date_taxable', type: Types::DATE_MUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?DateTimeInterface $dateTaxable = null;
 
-    #[ORM\Column(name: 'date_due', type: Types::DATE_MUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?DateTimeInterface $dateDue = null;
+
+    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    private ?DateTimeImmutable $datePaid = null;
 
     #[ORM\Column(name: 'customer_name', type: Types::STRING, length: 255, nullable: true)]
     private ?string $customerName = null;
@@ -212,16 +216,6 @@ class Document implements CompanyOwnedInterface
     public function setStateId(?int $stateId): void
     {
         $this->stateId = $stateId;
-    }
-
-    public function isTransferTax(): bool
-    {
-        return $this->transferTax;
-    }
-
-    public function setTransferTax(bool $transferTax): void
-    {
-        $this->transferTax = $transferTax;
     }
 
     public function getSend(): ?bool
@@ -372,6 +366,21 @@ class Document implements CompanyOwnedInterface
     public function setDateDue(DateTimeInterface $dateDue): void
     {
         $this->dateDue = $dateDue;
+    }
+
+    public function getDatePaid(): ?DateTimeImmutable
+    {
+        return $this->datePaid;
+    }
+
+    public function isPaid(): bool
+    {
+        return $this->datePaid !== null;
+    }
+
+    public function setDatePaid(?DateTimeImmutable $datePaid): void
+    {
+        $this->datePaid = $datePaid;
     }
 
     public function getCustomerName(): ?string

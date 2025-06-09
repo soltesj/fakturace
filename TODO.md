@@ -1,6 +1,6 @@
 # 🧠 TODO List
 
-## 📦 Bugs
+## 𓆣 Bugs
 
 - [ ] Fix the problem with generation document number in the load test there ware many attempts with same document
   number
@@ -9,7 +9,6 @@
 
 - [ ] default texts (email, invoice description, ...) management
 - [ ] Add a notification system (new payment, not assigned payment, messages from the system ...)
-- [ ] Add payment date to the document to show the user when it was paid
 
 ## 🔧 Refactoring
 
@@ -33,6 +32,7 @@
 - [x] make the document filter responsible
 - [x] remove transfer_tax from the database it will be replaced by vat_mode ``VatMode::DOMESTIC_REVERSE_CHARGE``
 - [x] fix resetting filter
+- [x] Add payment date to the document to show the user when it was paid
 
 ## REMOVED
 
