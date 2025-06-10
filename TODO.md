@@ -14,7 +14,7 @@
 
 - [ ] consider making a separate database for K6 tests
 - [ ] update payment of all odl documents transfer them to table payment
-- [ ] chat sql can nou take the price fom document table
+- [ ] chart sql can nou take the price fom document table
 - [ ] QR payment has to be refactored do to all countries have their own standard
 - [ ] improve handling with customer in the document when the customer was changed during editing the document
 - [ ] refactor the document customer ⇒ remove all customer columns and create customers in the customer table with
@@ -37,3 +37,22 @@
 ## REMOVED
 
 - [ ] fix stimulus document filter it doesn't send a request via ajax when it is submitted
+
+$this->addSql(<<<'SQL'
+DELETE FROM document WHERE company_id = 5;
+SQL);
+$this->addSql(<<<'SQL'
+DELETE FROM customer WHERE company_id = 5;
+SQL);
+$this->addSql(<<<'SQL'
+DELETE FROM bank_account WHERE company_id = 5;
+SQL);
+$this->addSql(<<<'SQL'
+DELETE FROM user WHERE id = 5;
+SQL);
+$this->addSql(<<<'SQL'
+DELETE FROM company_user WHERE company_id = 5
+SQL);
+$this->addSql(<<<'SQL'
+DELETE FROM company WHERE id = 5
+SQL);
