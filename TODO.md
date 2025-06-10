@@ -17,8 +17,6 @@
 - [ ] chart sql can nou take the price fom document table
 - [ ] QR payment has to be refactored do to all countries have their own standard
 - [ ] improve handling with customer in the document when the customer was changed during editing the document
-- [ ] refactor the document customer ⇒ remove all customer columns and create customers in the customer table with
-  relations
 
 ## ✅ Done
 
@@ -33,26 +31,9 @@
 - [x] Add payment date to the document to show the user when it was paid
 - [x] refactor the document bank account ⇒ remove all bank account columns and create a bank account in the bank account
   table with relations
+- [x] refactor the document customer ⇒ remove all customer columns and create customers in the customer table with
+  relations
 
 ## REMOVED
 
 - [ ] fix stimulus document filter it doesn't send a request via ajax when it is submitted
-
-$this->addSql(<<<'SQL'
-DELETE FROM document WHERE company_id = 5;
-SQL);
-$this->addSql(<<<'SQL'
-DELETE FROM customer WHERE company_id = 5;
-SQL);
-$this->addSql(<<<'SQL'
-DELETE FROM bank_account WHERE company_id = 5;
-SQL);
-$this->addSql(<<<'SQL'
-DELETE FROM user WHERE id = 5;
-SQL);
-$this->addSql(<<<'SQL'
-DELETE FROM company_user WHERE company_id = 5
-SQL);
-$this->addSql(<<<'SQL'
-DELETE FROM company WHERE id = 5
-SQL);

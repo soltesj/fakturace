@@ -107,30 +107,6 @@ class Document implements CompanyOwnedInterface
     #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
     private ?DateTimeImmutable $datePaid = null;
 
-    #[ORM\Column(name: 'customer_name', type: Types::STRING, length: 255, nullable: true)]
-    private ?string $customerName = null;
-
-    #[ORM\Column(name: 'customer_contact', type: Types::STRING, length: 255, nullable: true)]
-    private ?string $customerContact = null;
-
-    #[ORM\Column(name: 'customer_street', type: Types::STRING, length: 255, nullable: true)]
-    private ?string $customerStreet = null;
-
-    #[ORM\Column(name: 'customer_house_number', type: Types::STRING, length: 20, nullable: true)]
-    private ?string $customerHouseNumber = null;
-
-    #[ORM\Column(name: 'customer_town', type: Types::STRING, length: 255, nullable: true)]
-    private ?string $customerTown = null;
-
-    #[ORM\Column(name: 'customer_zipcode', type: Types::STRING, length: 6, nullable: true)]
-    private ?string $customerZipcode = null;
-
-    #[ORM\Column(name: 'customer_ic', type: Types::STRING, length: 20, nullable: true)]
-    private ?string $customerIc = null;
-
-    #[ORM\Column(name: 'customer_dic', type: Types::STRING, length: 20, nullable: true)]
-    private ?string $customerDic = null;
-
     #[ORM\Column(type: Types::TEXT, length: 65535, nullable: true)]
     private ?string $description;
 
@@ -329,86 +305,6 @@ class Document implements CompanyOwnedInterface
     public function setDatePaid(?DateTimeImmutable $datePaid): void
     {
         $this->datePaid = $datePaid;
-    }
-
-    public function getCustomerName(): ?string
-    {
-        return $this->customerName;
-    }
-
-    public function setCustomerName(?string $customerName): void
-    {
-        $this->customerName = $customerName;
-    }
-
-    public function getCustomerContact(): ?string
-    {
-        return $this->customerContact;
-    }
-
-    public function setCustomerContact(?string $customerContact): void
-    {
-        $this->customerContact = $customerContact;
-    }
-
-    public function getCustomerStreet(): ?string
-    {
-        return $this->customerStreet;
-    }
-
-    public function setCustomerStreet(?string $customerStreet): void
-    {
-        $this->customerStreet = $customerStreet;
-    }
-
-    public function getCustomerHouseNumber(): ?string
-    {
-        return $this->customerHouseNumber;
-    }
-
-    public function setCustomerHouseNumber(?string $customerHouseNumber): void
-    {
-        $this->customerHouseNumber = $customerHouseNumber;
-    }
-
-    public function getCustomerTown(): ?string
-    {
-        return $this->customerTown;
-    }
-
-    public function setCustomerTown(?string $customerTown): void
-    {
-        $this->customerTown = $customerTown;
-    }
-
-    public function getCustomerZipcode(): ?string
-    {
-        return $this->customerZipcode;
-    }
-
-    public function setCustomerZipcode(?string $customerZipcode): void
-    {
-        $this->customerZipcode = $customerZipcode;
-    }
-
-    public function getCustomerIc(): ?string
-    {
-        return $this->customerIc;
-    }
-
-    public function setCustomerIc(?string $customerIc): void
-    {
-        $this->customerIc = $customerIc;
-    }
-
-    public function getCustomerDic(): string
-    {
-        return $this->customerDic;
-    }
-
-    public function setCustomerDic(string $customerDic): void
-    {
-        $this->customerDic = $customerDic;
     }
 
     public function getDescription(): ?string
