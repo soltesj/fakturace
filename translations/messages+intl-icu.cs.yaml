@@ -145,3 +145,17 @@ document.date_taxable: DUZP
 document.payment_type: Způsob úhrady
 document.date_paid: Zaplaceno
 document.variable_symbol: VS
+navigation.dashboard: 'Přehledy'
+navigation.invoices: 'Faktury'
+navigation.expenses: 'Výdaje'
+navigation.payments: 'Platby'
+navigation.customers: 'Adresář'
+navigation.settings: 'Nastavení'
+navigation.company_info: 'Firemní údaje'
+navigation.bank_accounts: 'Bankovní účty'
+navigation.document_numbers: 'Číselné řady'
+navigation.currencies: 'Měny'
+navigation.personal_info: 'Osobní údaje'
+navigation.sign_out: 'Odhlásit'
+navigation.sign_in: 'Přihlásit'
+navigation.sign_up: 'Zaregistrovat'

@@ -7,7 +7,7 @@
         <span>{{ 'dashboard.overview'|trans }}</span>
     </h1>
 
-    <div class="mt-8 md:mb-8 gap-4 flex fixed bottom-0 left-0 justify-center w-full md:relative md:justify-start bg-gray-900 md:bg-transparent py-2 z-10">
+    <div class="mt-8 md:mb-8 gap-4 flex fixed bottom-0 left-0 justify-center w-full md:relative md:justify-start bg-gray-900 md:bg-transparent py-2 z-10 ">
         {% if is_granted('CREATE') %}
             <a href="{% if documentNumberExist %}{{ path('app_document_new', {'company': company.publicId}) }}{% else %}#{% endif %}"
                class="px-4 py-2 order-2 md:order-1 rounded-sm  bg-gray-700 hover:bg-table-header hover:text-white/80 flex items-center {% if not documentNumberExist %}link-secondary pe-none{% endif %}">
@@ -23,7 +23,7 @@
         <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary">
             <h2 class="text-xl font-semibold mb-4 p-2 bg-table-header text-text-primary">{{ 'dashboard.sales_overview'|trans }}</h2>
             <canvas
-                    class=""
+                    class="px-2"
                     {{ stimulus_controller('dashboard/chart') }}
                     data-dashboard--chart-type-value="bar"
                     data-dashboard--chart-data-value='{{ chartData|json_encode }}'
@@ -33,18 +33,18 @@
             <table class="w-full mb-4">
                 <thead>
                 <tr>
-                    <td class="text-xl font-semibold mb-4 p-2 bg-table-header text-text-primary"
+                    <td class="text-xl font-semibold mb-4 p-2 px-3 bg-table-header text-text-primary"
                         colspan="2">{{ 'dashboard.account_balance'|trans }}</td>
                 </tr>
                 </thead>
                 <tbody class="text-text-secondary">
                 <tr class="border-b border-b-border">
-                    <td class="p-2">Fio</td>
-                    <td class="p-2 text-right">10 000 Kč</td>
+                    <td class="p-2 px-3">Fio</td>
+                    <td class="p-2 px-3 text-right">10 000 Kč</td>
                 </tr>
                 <tr class="border-b border-b-border">
-                    <td class="p-2">Air bank</td>
-                    <td class="p-2 text-right">99 000 Kč</td>
+                    <td class="p-2 px-3">Air bank</td>
+                    <td class="p-2 px-3 text-right">99 000 Kč</td>
                 </tr>
                 </tbody>
             </table>
@@ -53,18 +53,18 @@
             <table class="w-full mb-4">
                 <thead>
                 <tr>
-                    <td class="text-xl font-semibold mb-4 p-2 bg-table-header text-text-primary"
+                    <td class="text-xl px-3 font-semibold mb-4 p-2 bg-table-header text-text-primary"
                         colspan="2">{{ 'dashboard.vat_records'|trans }}</td>
                 </tr>
                 </thead>
                 <tbody class="text-text-secondary">
                 <tr class="border-b border-b-border">
-                    <td class="p-2">Tento měsíc</td>
-                    <td class="p-2 text-right">10 000kč</td>
+                    <td class="p-2 px-3">Tento měsíc</td>
+                    <td class="p-2 px-3 text-right">10 000kč</td>
                 </tr>
                 <tr class="border-b border-b-border">
-                    <td class="p-2">Minulý měsíc</td>
-                    <td class="p-2 text-right">10 000kč</td>
+                    <td class="p-2 px-3">Minulý měsíc</td>
+                    <td class="p-2 px-3 text-right">10 000kč</td>
                 </tr>
                 </tbody>
             </table>
@@ -72,16 +72,16 @@
         <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary">
             <div class="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-6">
                 <div class="md:order-1 col-span-2 md:col-span-5 lg:col-span-6"><h2
-                            class="text-xl font-semibold p-2 bg-table-header text-text-primary">{{ 'dashboard.unpaid_invoices'|trans }}</h2>
+                            class="text-xl font-semibold p-2 px-3 bg-table-header text-text-primary">{{ 'dashboard.unpaid_invoices'|trans }}</h2>
                 </div>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-6 border-b border-b-border">
-                <div class="p-2 pb-1 md:p-2 sm:col-span-1 md:order-1 text-lg font-medium md:text-base md:font-normal text-text-primary/60">
+                <div class="p-2 px-3 pb-1 md:p-2 sm:col-span-1 md:order-1 text-lg font-medium md:text-base md:font-normal text-text-primary/60">
                     <a href="/cs/1/document/4622/edit" class="text-decoration-none">2510000004</a></div>
                 <div class="p-2 pb-1 md:p-2 md:order-6 text-right text-lg font-medium md:text-base md:font-normal text-text-primary/60">
                     121.00
                 </div>
-                <div class="px-2 pb-1 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-normal md:col-span-2 lg:col-span-3">
+                <div class="px-2 px-3 pb-1 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-normal md:col-span-2 lg:col-span-3">
                     AURES Holdings a.s.
                 </div>
                 <div class="px-2 pb-1 pt-0 md:p-2 md:order-3 text-xs font-light md:text-base md:font-normal md:text-md text-right">
@@ -90,12 +90,12 @@
 
             </div>
             <div class="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-6 border-b border-b-border">
-                <div class="p-2 pb-1 md:p-2 sm:col-span-1 md:order-1 text-lg font-medium md:text-base md:font-normal text-text-primary/60">
+                <div class="p-2 px-3 pb-1 md:p-2 sm:col-span-1 md:order-1 text-lg font-medium md:text-base md:font-normal text-text-primary/60">
                     <a href="/cs/1/document/4621/edit" class="text-decoration-none">2510000003</a></div>
                 <div class="p-2 pb-1 md:p-2 md:order-6 text-right text-lg font-medium md:text-base md:font-normal text-text-primary/60">
                     200.00
                 </div>
-                <div class="px-2 pb-1 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-normal md:col-span-2 lg:col-span-3">
+                <div class="px-2 px-3 pb-1 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-normal md:col-span-2 lg:col-span-3">
                     AURES Holdings a.s.
                 </div>
                 <div class="px-2 pb-1 pt-0 md:p-2 md:order-3 text-xs font-light md:text-base md:font-normal md:text-md text-right">
@@ -106,9 +106,9 @@
 
 
         <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary ">
-            <h2 class="text-xl font-semibold  p-2 bg-table-header text-text-primary">{{ 'dashboard.best_customers'|trans }}</h2>
+            <h2 class="text-xl font-semibold p-2 px-3 bg-table-header text-text-primary">{{ 'dashboard.best_customers'|trans }}</h2>
 
-            <p class="p-2">
+            <p class="p-2 px-3">
                 Data<br>
                 Data<br>
                 data<br>

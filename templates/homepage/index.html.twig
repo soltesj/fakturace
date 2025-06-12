@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello DefaultController!{% endblock %}
+
+{% block body %}
+
+    <div class="grid grid-cols-2 text-center gap-4 px-2 mb-8 md:hidden">
+        <a href="{{ path('app_login') }}"
+           class="block rounded-sm bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-0">
+            {{ 'navigation.sign_in'|trans }}
+        </a>
+        <a href="{{ path('app_register') }}"
+           class="block rounded-sm bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-0">
+            {{ 'navigation.sign_up'|trans }}
+        </a>
+    </div>
+    <div class=" px-2">
+        <h1 class="text-2xl">Fakturace snadno a odkudkoli</h1>
+    </div>
+
+{% endblock %}

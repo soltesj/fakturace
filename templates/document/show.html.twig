@@ -72,14 +72,14 @@
         <div class="text-center  font-semibold">
             {% set diff = ('now'|date('U') - document.dateDue|date('U')) // 86400 %}
             {% if document.remainingAmount == 0 %}
-                <div class="bg-green-700 text-green-100 p-2 inline">{{ 'invoice.paid'|trans }}</div>
+                <div class="bg-green-700 text-green-100 p-2 block sm:block md:inline">{{ 'invoice.paid'|trans }}</div>
             {% elseif document.remainingAmount > 0 and diff>0 %}
-                <div class="{{ (diff > 0) and (diff < 7)? 'bg-yellow-700 text-yellow-100' }} {{ diff >= 7 ?' bg-red-700 text-red-100' }}  p-2 inline">{{ 'invoice.overdue'|trans }}
+                <div class="{{ (diff > 0) and (diff < 7)? 'bg-yellow-700 text-yellow-100' }} {{ diff >= 7 ?' bg-red-700 text-red-100' }}  p-2 block sm:block md:inline">{{ 'invoice.overdue'|trans }}
                     : {{ document.remainingAmount|default(0)|number_format(2,',',' ') }} {{ document.currency.symbol }}</div>
             {% elseif document.remainingAmount > 0 and diff<=0 %}
                 {{ 'invoice.to_pay'|trans }}: {{ document.remainingAmount|default(0)|number_format(2,',',' ') }} {{ document.currency.symbol }}
             {% elseif document.remainingAmount < 0 %}
-                <div class="bg-purple-700 text-purple-100 p-2 inline">
+                <div class="bg-purple-700 text-purple-100 p-2 block sm:block md:inline">
                     {{ 'invoice.overpayment'|trans }}
                     : {{ document.remainingAmount|default(0)|abs|number_format(2,',',' ') }} {{ document.currency.symbol }}
                 </div>

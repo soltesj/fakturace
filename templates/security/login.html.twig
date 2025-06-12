@@ -3,7 +3,7 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-    <div class="max-w-xl mx-auto">
+    <div class="max-w-xl mx-auto px-2">
         <form method="post" class="grid grid-cols-2">
             {% if error %}
                 <div class="mb-3 col-span-2">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -40,13 +40,13 @@
                 <input ID="remember_me" type="checkbox" name="_remember_me" checked>
                 {{ 'login.remember_me'|trans }}
             </label>
-            <button class="col-span-2 bg-background-secondary p-2 mb-6 md:mb-5" type="submit">
+            <button class="col-span-2 w-full mt-2 mb-6 md:mb-4 p-2 bg-green-700 hover:bg-green-500 text-green-100"
+                    type="submit">
                 {{ 'login.sign_in'|trans }}
             </button>
             <p class="text text-secondary col-span-2">
                 <a href="{{ path('app_forgot_password_request') }}">{{ 'login.forgotten_password'|trans }}</a>
             </p>
-
 
             <input type="hidden" name="_csrf_token"
                    value="{{ csrf_token('authenticate') }}">

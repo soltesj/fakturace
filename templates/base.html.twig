@@ -2,7 +2,7 @@
 <html lang="cs" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Welcome!{% endblock %}</title>
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -14,31 +14,6 @@
 
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const settingsMenu = document.getElementById('settings-menu');
-                const submenu = document.getElementById('settings-submenu');
-
-                settingsMenu.addEventListener('mouseenter', () => {
-                    submenu.classList.remove('hidden');
-                });
-
-                settingsMenu.addEventListener('mouseleave', () => {
-                    submenu.classList.add('hidden');
-                });
-
-                const userMenu = document.getElementById('user-menu');
-                const userSubmenu = document.getElementById('user-submenu');
-
-                userMenu.addEventListener('mouseenter', () => {
-                    userSubmenu.classList.remove('hidden');
-                });
-
-                userMenu.addEventListener('mouseleave', () => {
-                    userSubmenu.classList.add('hidden');
-                });
-            });
-        </script>
         {% block importmap %}{% endblock %}
     {% endblock %}
 </head>
@@ -74,10 +49,12 @@
     {% block body %}{% endblock %}
 </div>
 <script>
-    const theme = localStorage.getItem('theme')
-    console.log(theme)
-    document.getElementById('toggle-theme').addEventListener('click', () => {
-        document.documentElement.classList.toggle('dark')
+    document.addEventListener('DOMContentLoaded', function () {
+        const theme = localStorage.getItem('theme')
+        console.log(theme)
+        document.getElementById('toggle-theme')?.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark')
+        })
     })
 </script>
 {% include 'svg-symbols.html.twig' %}
