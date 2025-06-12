@@ -1,7 +1,9 @@
 # Fakturace
 
 ## Installation
-adding czech font is necessary copy them from ``fonts`` to ``vendor/tecnickcom/tcpdf/fonts`` directory. Or use the TCPDF utility ``tools/tcpdf_addfont.php`` Specify the path to the font
+
+It is necessary to add czech font copy them from ``fonts`` to ``vendor/tecnickcom/tcpdf/fonts`` directory. Or use the
+TCPDF utility ``tools/tcpdf_addfont.php`` Specify the path to the font. You have to do that after every composer update
 
 >``make fonts``
 > 
@@ -13,17 +15,17 @@ adding czech font is necessary copy them from ``fonts`` to ``vendor/tecnickcom/t
 > 
 >``php tcpdf_addfont.php -b -t OpenSans -f 32 -i /open_sans/static/OpenSans-Regular.ttf,/open_sans/static/OpenSans-Bold.ttf``
 
-Javascript compile
+## Javascript compile
 > ``npm run watch``
 >
 > ``npm run build``
 
-## translatios
+## Translations
 
 extract translations
 > `docker exec fakturace_app php bin/console translation:extract --force --format=yaml cs`
 
-## important
+## Important
 
 git commit 625085c312a909ef2efd12f175eb0f6470de6205 is fixing migration be careful
 
