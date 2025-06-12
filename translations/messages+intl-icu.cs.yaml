@@ -14,15 +14,15 @@ invoice.price_total_without_vat: 'Celkem bez DPH'
 invoice.price_total_vat: DPH
 invoice.price_total_with_vat: 'Cena celkem'
 invoice.edit_invoice_outgoing: 'Upravit fakruru vydanou'
-invoice.invoice: 'Fakrura'
+invoice.invoice: Fakrura
 invoice.reset_filter: 'Zrusit filter'
 invoice.document_number: 'Č. dokladu'
 invoice.to_pay: 'Zbývá uhradit'
-invoice.overpayment: 'Přeplatek'
-invoice.paid: 'Uhrazeno'
+invoice.overpayment: Přeplatek
+invoice.paid: Uhrazeno
 invoice.overdue: 'Po splatnosti'
-invoice.customer: 'Zákazník'
-invoice.date_due: 'Splatnost'
+invoice.customer: Zákazník
+invoice.date_due: Splatnost
 invoice.cash: 'Hotovostní příjem'
 message.invoice.stored: 'Fakruru byla uložena'
 invoice.note: Poznámka
@@ -57,10 +57,10 @@ button.save: Uložit
 button.update: Upravit
 button.invoice.filter: Filtrovat
 button.invoice.new_invoice: 'NOVÁ FAKTURA'
-button.invoice.new_invoice_short: 'NOVÁ'
+button.invoice.new_invoice_short: NOVÁ
 button.invoice.check_payment: 'PŘÍJMOUT PLATBY'
 button.invoice.export_list: 'EXPORT SEZNAMU'
-button.invoice.export_list_short: 'EXPORT'
+button.invoice.export_list_short: EXPORT
 invoice.outgoing_invoices: 'Faktury - vydané'
 form.filter.query: Vyhledat
 form.filter.query_placeholder: 'Číslo dokladu, poznámka, Oběratel,'
@@ -130,32 +130,41 @@ dashboard.vat_records: 'Evidence DPH'
 dashboard.overview: Přehledy
 dashboard.fast_action: 'Rychlé akce'
 payment.not_bank_movement: 'Nebankovní pohyb'
-payment.no_document_assigned: 'Nepřiřazeno'
-payment.document: 'Doklad'
-payment.amount: 'Částka'
-payment.bank: 'Banka'
-payment.date: 'Datum'
-payment.payments: 'Platby'
+payment.no_document_assigned: Nepřiřazeno
+payment.document: Doklad
+payment.amount: Částka
+payment.bank: Banka
+payment.date: Datum
+payment.payments: Platby
 payment.received: 'Platba přijata'
-customer.company_number: 'IČO'
-customer.vat_number: 'DIČ'
+customer.company_number: IČO
+customer.vat_number: DIČ
 document.date_issue: Vystaveno
 document.date_due: Splatnost
 document.date_taxable: DUZP
-document.payment_type: Způsob úhrady
+document.payment_type: 'Způsob úhrady'
 document.date_paid: Zaplaceno
 document.variable_symbol: VS
-navigation.dashboard: 'Přehledy'
-navigation.invoices: 'Faktury'
-navigation.expenses: 'Výdaje'
-navigation.payments: 'Platby'
-navigation.customers: 'Adresář'
-navigation.settings: 'Nastavení'
+navigation.dashboard: Přehledy
+navigation.invoices: Faktury
+navigation.expenses: Výdaje
+navigation.payments: Platby
+navigation.customers: Adresář
+navigation.settings: Nastavení
 navigation.company_info: 'Firemní údaje'
 navigation.bank_accounts: 'Bankovní účty'
 navigation.document_numbers: 'Číselné řady'
-navigation.currencies: 'Měny'
+navigation.currencies: Měny
 navigation.personal_info: 'Osobní údaje'
-navigation.sign_out: 'Odhlásit'
-navigation.sign_in: 'Přihlásit'
-navigation.sign_up: 'Zaregistrovat'
+navigation.sign_out: Odhlásit
+navigation.sign_in: Přihlásit
+navigation.sign_up: Zaregistrovat
+user.personal_info: 'Osobní údaje'
+form.user.name: Jméno
+form.user.name.placeholder: Jméno
+form.user.surname: Příjmení
+form.user.suname.placeholder: Příjmení
+form.user.email: Email
+form.user.email.placeholder: Email
+form.user.phone: Telefon
+form.user.phone.placeholder: Telefon

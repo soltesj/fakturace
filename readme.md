@@ -17,6 +17,12 @@ Javascript compile
 > ``npm run watch``
 >
 > ``npm run build``
+
+## translatios
+
+extract translations
+> `docker exec fakturace_app php bin/console translation:extract --force --format=yaml cs`
+
 ## important
 
 git commit 625085c312a909ef2efd12f175eb0f6470de6205 is fixing migration be careful

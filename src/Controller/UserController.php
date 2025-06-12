@@ -24,7 +24,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
+            $this->addFlash('success', 'message.changes_have_been_saved');
 
             return $this->redirectToRoute('app_user_edit', ['company' => $company->getPublicId()],
                 Response::HTTP_SEE_OTHER);

@@ -9,33 +9,35 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use function Symfony\Component\Translation\t;
+
 class UserEditFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name',null,[
-                'label' => 'Name',
+            ->add(child: 'name', options: [
+                'label' => t('form.user.name'),
                 'attr' => [
-                    'placeholder' => 'Name',
+                    'placeholder' => t('form.user.name.placeholder'),
                 ],
             ])
-            ->add('surname',null,[
-                'label' => 'Surname',
+            ->add(child: 'surname', options: [
+                'label' => t('form.user.surname'),
                 'attr' => [
-                    'placeholder' => 'Surname',
+                    'placeholder' => t('form.user.suname.placeholder'),
                 ],
             ])
-            ->add('email',null,[
-                'label' => 'Email',
+            ->add(child: 'email', options: [
+                'label' => t('form.user.email'),
                 'attr' => [
-                    'placeholder' => 'Email',
+                    'placeholder' => t('form.user.email.placeholder'),
                 ],
             ])
-            ->add('phone',null,[
-                'label' => 'Phone',
+            ->add(child: 'phone', options: [
+                'label' => t('form.user.phone'),
                 'attr' => [
-                    'placeholder' => 'Phone',
+                    'placeholder' => t('form.user.phone.placeholder'),
                 ],
             ])
         ;

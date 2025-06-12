@@ -51,7 +51,7 @@ class CustomerController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($customer);
             $this->entityManager->flush();
-            $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
+            $this->addFlash('success', 'message.changes_have_been_saved');
 
             return $this->redirectToRoute('app_customer_index', ['company' => $company->getPublicId()],
                 Response::HTTP_SEE_OTHER);
@@ -77,7 +77,7 @@ class CustomerController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($customerNew);
             $this->entityManager->flush();
-            $this->addFlash('info', 'CHANGES_HAVE_BEEN_SAVED');
+            $this->addFlash('success', 'message.changes_have_been_saved');
 
             return $this->redirectToRoute('app_customer_index', ['company' => $company->getPublicId()],
                 Response::HTTP_SEE_OTHER);

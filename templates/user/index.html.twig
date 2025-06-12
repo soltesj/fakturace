@@ -1,22 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Osobní údaje{% endblock %}
+{% block title %}{{ 'user.personal_info'|trans }}{% endblock %}
 
 {% block body %}
-    <h1 class="mb-5">
-        <a href="{{ path('app_dash_board', {'company': company.publicId}) }}" class="text-decoration-none">
+    <h1 class="mb-5 flex justify-start items-center text-xl space-x-3 px-2 md:px-0">
+        <a href="{{ path('app_dash_board', {'company': company.publicId}) }}">
             <svg class="size-8">
                 <use href="#arrow-left-circle"/>
             </svg>
         </a>
-        Osobní údaje
+        <span>{{ 'user.personal_info'|trans }}</span>
     </h1>
 
 
-    <div class="col-md-6">
+    <div class="col-md-6 px-2">
         {{ form_start(form) }}
         {{ form_widget(form) }}
-        <button class="btn btn-success">Ulozit</button>
+        <button class="w-full mt-10 p-2 bg-green-700 hover:bg-green-500 text-green-100">{{ 'button.save'|trans }}</button>
         {{ form_end(form) }}
     </div>
 
