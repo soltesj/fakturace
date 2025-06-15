@@ -46,7 +46,7 @@ class DocumentRepository extends ServiceEntityRepository
                 dateDue,
                 dateIssue,
                 totalAmount,
-                remainingAmount}', 'PARTIAL customer.{id, name}')
+                remainingAmount}', 'PARTIAL customer.{id, name, email}')
             ->leftJoin('document.customer', 'customer')
             ->andWhere('document.company = :company')
             ->setParameter('company', $company)

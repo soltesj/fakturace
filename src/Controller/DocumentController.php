@@ -17,7 +17,10 @@ use App\Entity\User;
 use App\Enum\PaymentType;
 use App\Form\DocumentFormType;
 use App\Form\PaymentTypeForm;
+use App\Form\SendEmailFormType;
+use App\Message\InvoiceEmail;
 use App\Repository\DocumentRepository;
+use App\Repository\EmailTemplateRepository;
 use App\Service\Date;
 use App\Service\VatService;
 use DateTime;
@@ -44,6 +47,7 @@ class DocumentController extends AbstractController
         private readonly DocumentUpdater $documentUpdater,
         private readonly DocumentNewSaver $documentNewSaver,
         private readonly DocumentRepository $documentRepository,
+        private readonly EmailTemplateRepository $emailTemplateRepository,
     ) {
     }
 
@@ -56,6 +60,14 @@ class DocumentController extends AbstractController
         $customer = null;
         $query = null;
         $state = null;
+        /** @var User $user */
+        $user = $this->getUser();
+        $username = $user->getName().' '.$user->getSurname();
+        $emailTemplate = $this->emailTemplateRepository->findOneByCompany($company);
+        $invoiceEmail = new InvoiceEmail(1, '', '', '', $username);
+        $formEmail = $this->createForm(SendEmailFormType::class, $invoiceEmail, [
+            'action' => $this->generateUrl('app_send_invoice', ['company' => $company->getPublicId(),]),
+        ]);
         $payment = new Payment($company, PaymentType::INCOME, 0);
         $formPayment = $this->createForm(PaymentTypeForm::class, $payment);
         $formFilter = $filterFormService->createForm($company);
@@ -80,7 +92,6 @@ class DocumentController extends AbstractController
                 $dateTo,
                 $query,
                 $state);
-
         } catch (Exception|DBALException $e) {
             $this->logger->error($e->getMessage(), $e->getTrace());
             $this->addFlash('danger', "DOCUMENT_LOADING_ERROR");
@@ -106,6 +117,8 @@ class DocumentController extends AbstractController
             'formFilter' => $formFilter->createView(),
             'formPayment' => $formPayment->createView(),
             'documentNumberExist' => $documentNumberExist,
+            'emailTemplate' => $emailTemplate,
+            'formEmail' => $formEmail->createView(),
         ]);
     }
 
@@ -115,10 +128,18 @@ class DocumentController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
+        $username = $user->getName().' '.$user->getSurname();
+        $emailTemplate = $this->emailTemplateRepository->findOneByCompany($company);
+        $invoiceEmail = new InvoiceEmail(1, '', '', '', $username);
+        $form = $this->createForm(SendEmailFormType::class, $invoiceEmail, [
+            'action' => $this->generateUrl('app_send_invoice', ['company' => $company->getPublicId(),]),
+        ]);
 
         return $this->render('document/show.html.twig', [
             'document' => $document,
             'company' => $company,
+            'emailTemplate' => $emailTemplate,
+            'formEmail' => $form->createView(),
         ]);
     }
 

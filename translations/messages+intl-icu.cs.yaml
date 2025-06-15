@@ -145,6 +145,10 @@ document.date_taxable: DUZP
 document.payment_type: 'Způsob úhrady'
 document.date_paid: Zaplaceno
 document.variable_symbol: VS
+document.send_by_email.headline: 'Zaslat emailem'
+document.send_by_email.email_to: 'Na email'
+document.send_by_email.subject: 'Předmět'
+document.send_by_email.content: 'Zpráva'
 navigation.dashboard: Přehledy
 navigation.invoices: Faktury
 navigation.expenses: Výdaje
@@ -168,3 +172,6 @@ form.user.email: Email
 form.user.email.placeholder: Email
 form.user.phone: Telefon
 form.user.phone.placeholder: Telefon
+document.send_by_email.email_to.not_blank: 'Vyplňte emalovou adresu'
+document.send_by_email.subject.not_blank: 'Vyplňte předmět'
+document.send_by_email.content.not_blank: 'Vyplňte text emailu'

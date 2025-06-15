@@ -16,7 +16,7 @@ class PdfService
 {
     public function __construct(private readonly Environment $twig) {}
 
-    public function generateDocumentPdf(Document $document, string $author): TCPDF
+    public function generateDocumentPdf(Document $document, string $author = ''): TCPDF
     {
         $language['a_meta_charset'] = 'UTF-8';
         $language['a_meta_dir'] = 'ltr';

@@ -48,9 +48,15 @@
             {#        <div class="p-2 hidden lg:block md:order-4">2 500,00</div> #}
             {#        <div class="p-2 hidden md:block md:order-5">3 025,00</div> #}
             <div class="px-2 pb-3 pt-1 md:p-2 col-span-2 md:col-span-1 text-right md:order-7  flex justify-end items-center space-x-2">
-                <svg class="size-5">
+                <button {{ stimulus_action('email/send-email','open') }}
+                        data-document-id="{{ document.id }}"
+                        data-document-number="{{ document.documentNumber }}"
+                        data-company-name="{{ company.name }}"
+                        data-email="{{ document.customer.email }}">
+                    <svg class="size-5">
                     <use href="#envelope-arrow-up-fill"/>
                 </svg>
+                </button>
 
                 <a href="{{ path('app_document_print',{'document':document.id,'company':company.publicId}) }}"
                    target="_blank" class="hover:text-primary cursor-pointer">
@@ -60,7 +66,7 @@
                 </a>
                 <button
                         {#                        {{ stimulus_controller('payment/payment') }} #}
-                        {{ stimulus_action('payment--payment','open') }}
+                        {{ stimulus_action('payment/payment','open') }}
                         data-payment-document-id="{{ document.id }}"
                         data-payment-amount="{{ document.remainingAmount }}"
                         class="hover:text-primary cursor-pointer">

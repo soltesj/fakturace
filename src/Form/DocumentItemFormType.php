@@ -27,7 +27,7 @@ class DocumentItemFormType extends AbstractType
             ])
             ->add(child: 'unit', options: [
                 'data' => 'ks',
-                'attr' => ['placeholder' => 'invoice.item_price_of_uniy_of_meaure'],
+                'attr' => ['placeholder' => 'invoice.item_price_of_unit_of_measure'],
             ])
             ->add(child: 'price', options: ['attr' => ['placeholder' => 'invoice.item_price_of_unit_of_measure']])
             ->add(child: 'vat', type: EntityType::class, options: [
