@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Country;
 use App\Entity\DefaultEmailTemplate;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -30,13 +31,12 @@ class DefaultEmailTemplateRepository extends ServiceEntityRepository
     //            ->getResult()
     //        ;
     //    }
-    //    public function findOneBySomeField($value): ?DefaultEmailTemplate
-    //    {
-    //        return $this->createQueryBuilder('e')
-    //            ->andWhere('e.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function findOneByCountry(Country $country): ?DefaultEmailTemplate
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.country = :country')
+            ->setParameter('country', $country)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

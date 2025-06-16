@@ -40,6 +40,7 @@ class RegistrationController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response {
         $user = new User();
+        $user->setRoles(['ROLE_USER', 'ROLE_COMPANY_EDITOR', 'ROLE_COMPANY_ADMIN']);
         $company = new Company();
         $company->setMaturityDays(14);
         $company->addUser($user);

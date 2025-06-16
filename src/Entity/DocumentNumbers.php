@@ -29,9 +29,9 @@ class DocumentNumbers implements CompanyOwnedInterface
     private string $numberFormat;
 
     #[ORM\Column(type: Types::INTEGER, nullable: false)]
-    private int $nextNumber = 0;
+    private int $nextNumber = 1;
 
-    public function __construct(Company $company, DocumentType $documentType, int $year,string $numberFormat)
+    public function __construct(Company $company, DocumentType $documentType, int $year, string $numberFormat)
     {
         $this->company = $company;
         $this->documentType = $documentType;
