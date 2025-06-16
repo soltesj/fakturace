@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'email_template.invoice_template'|trans }}{% endblock %}
+
+{% block body %}
+    <h1 class="mb-5 flex justify-start items-center text-xl space-x-3 px-2 md:px-0">
+        <a href="{{ path('app_dash_board',{'company': company.publicId}) }}">
+            <svg class="size-8">
+                <use href="#arrow-left-circle"/>
+            </svg>
+        </a>
+        <span>{{ 'email_template.invoice_template'|trans }}</span>
+    </h1>
+    <div class="bg-background-secondary p-2 mt-5 md:p-4">
+        {{ form_start(form) }}
+        {{ form_row(form.subject) }}
+        {{ form_row(form.content) }}
+
+        <button class="w-full mt-10 p-2 bg-green-700 hover:bg-green-500 text-green-100"
+                type="submit">{{ 'button.save'|trans }}</button>
+        {{ form_end(form) }}
+    </div>
+
+    <h2 class="bg-table-header p-2 mt-8 md:p-4">
+        Proměnne v šabloně
+    </h2>
+    <div class="grid grid-cols-3 gap-x-2 bg-background-secondary p-2 md:p-4">
+        <div class="text-right">{number}</div>
+        <div class="col-span-2">je proměnná pro číslo dokumentu</div>
+        <div class="text-right">{username}</div>
+        <div class="col-span-2">je promnná pro jmeno a příjen odesilatele</div>
+        <div class="text-right">{company}</div>
+        <div class="col-span-2">je promnná pro název firmy</div>
+    </div>
+{% endblock %}

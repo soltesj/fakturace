@@ -71,9 +71,6 @@ class Company
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $website = null;
 
-    #[ORM\Column(name: 'email_invoice_message', type: Types::TEXT, length: 65535, nullable: true)]
-    private ?string $emailInvoiceMessage = null;
-
     /**
      * @var Collection<int,User>
      */

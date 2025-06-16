@@ -9,6 +9,7 @@
 
 - [ ] default texts (email, invoice description, ...) management
 - [ ] Add a notification system (new payment, not assigned payment, messages from the system ...)
+- [ ] when a new company is created, add an email template
 
 ## 🔧 Refactoring
 
@@ -33,6 +34,7 @@
   table with relations
 - [x] refactor the document customer ⇒ remove all customer columns and create customers in the customer table with
   relations
+- [x] management for default template for sending invoice by email
 
 ## REMOVED
 

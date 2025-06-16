@@ -6,8 +6,8 @@ export default class extends Controller {
         id: Number,
         subjectTemplate: String,
         contentTemplate: String,
-        // amount: Number,
-        // url: String
+        userName: String,
+        companyName: String,
     };
 
     connect() {
@@ -44,12 +44,12 @@ export default class extends Controller {
         let subjectTemplate = this.subjectTemplateValue;
         let contentTemplate = this.contentTemplateValue;
 
-        let companyName = button.dataset.companyName;
         this.toTarget.value = button.dataset.email;
 
         this.contentTarget.value = this.renderTemplate(contentTemplate, {
             number: documentNumber,
-            company: companyName
+            company: this.companyNameValue,
+            username: this.userNameValue,
         });
         this.subjectTarget.value = this.renderTemplate(subjectTemplate, {
             number: documentNumber,

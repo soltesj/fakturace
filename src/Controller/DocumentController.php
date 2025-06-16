@@ -62,9 +62,9 @@ class DocumentController extends AbstractController
         $state = null;
         /** @var User $user */
         $user = $this->getUser();
-        $username = $user->getName().' '.$user->getSurname();
+        $userName = $user->getName().' '.$user->getSurname();
         $emailTemplate = $this->emailTemplateRepository->findOneByCompany($company);
-        $invoiceEmail = new InvoiceEmail(1, '', '', '', $username);
+        $invoiceEmail = new InvoiceEmail(1, '', '', '', $userName);
         $formEmail = $this->createForm(SendEmailFormType::class, $invoiceEmail, [
             'action' => $this->generateUrl('app_send_invoice', ['company' => $company->getPublicId(),]),
         ]);
@@ -114,6 +114,7 @@ class DocumentController extends AbstractController
         return $this->render('document/index.html.twig', [
             'documents' => $documents,
             'company' => $company,
+            'userName' => $userName,
             'formFilter' => $formFilter->createView(),
             'formPayment' => $formPayment->createView(),
             'documentNumberExist' => $documentNumberExist,
@@ -128,9 +129,9 @@ class DocumentController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
-        $username = $user->getName().' '.$user->getSurname();
+        $userName = $user->getName().' '.$user->getSurname();
         $emailTemplate = $this->emailTemplateRepository->findOneByCompany($company);
-        $invoiceEmail = new InvoiceEmail(1, '', '', '', $username);
+        $invoiceEmail = new InvoiceEmail(1, '', '', '', $userName);
         $form = $this->createForm(SendEmailFormType::class, $invoiceEmail, [
             'action' => $this->generateUrl('app_send_invoice', ['company' => $company->getPublicId(),]),
         ]);
@@ -138,6 +139,7 @@ class DocumentController extends AbstractController
         return $this->render('document/show.html.twig', [
             'document' => $document,
             'company' => $company,
+            'userName' => $userName,
             'emailTemplate' => $emailTemplate,
             'formEmail' => $form->createView(),
         ]);

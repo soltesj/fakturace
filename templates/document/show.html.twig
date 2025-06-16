@@ -6,6 +6,8 @@
     <div {{ stimulus_controller('email/send-email') }}
             data-email--send-email-subject-template-value="{{ emailTemplate.subject }}"
             data-email--send-email-content-template-value="{{ emailTemplate.content }}"
+            data-email--send-email-user-name-value="{{ userName }}"
+            data-email--send-email-company-name-value="{{ company.name }}"
     >
         <h1 class="mb-5 flex justify-start items-center text-xl space-x-3 px-2 md:px-0">
             <a href="{{ path('app_document_index', {'company': company.publicId}) }}">
@@ -28,7 +30,6 @@
                     {{ stimulus_action('email/send-email','open') }}
                     data-document-id="{{ document.id }}"
                     data-document-number="{{ document.documentNumber }}"
-                    data-company-name="{{ company.name }}"
                     data-email="{{ document.customer.email }}">
                 <svg class="size-4 mr-2">
                     <use href="#envelope-arrow-up-fill"/>

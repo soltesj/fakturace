@@ -159,6 +159,7 @@ navigation.company_info: 'Firemní údaje'
 navigation.bank_accounts: 'Bankovní účty'
 navigation.document_numbers: 'Číselné řady'
 navigation.currencies: Měny
+navigation.invoice_template: 'Emailová šablona'
 navigation.personal_info: 'Osobní údaje'
 navigation.sign_out: Odhlásit
 navigation.sign_in: Přihlásit
@@ -175,3 +176,6 @@ form.user.phone.placeholder: Telefon
 document.send_by_email.email_to.not_blank: 'Vyplňte emalovou adresu'
 document.send_by_email.subject.not_blank: 'Vyplňte předmět'
 document.send_by_email.content.not_blank: 'Vyplňte text emailu'
+document.send_by_email.content.min_limit: "Text musí mít minimalaně  znaků"
+document.send_by_email.content.max_limit: "Text nesmí být delší než {{ limit }} znaků"
+email_template.invoice_template: 'Emailová šablona'

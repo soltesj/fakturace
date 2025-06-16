@@ -100,12 +100,6 @@ class CompanyType extends AbstractType
                     'placeholder' => t('form.company.website'),
                 ],
             ])
-            ->add(child: 'emailInvoiceMessage', options: [
-                'label' => t('form.company.email_invoice_message'),
-                'attr' => [
-                    'placeholder' => t('form.company.email_invoice_message'),
-                ],
-            ])
             ->add(child: 'country', type: EntityType::class, options: [
                 'class' => Country::class,
                 'choice_label' => 'name',
