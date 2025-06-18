@@ -91,56 +91,6 @@
                 </div>
             </div>
         </div>
-        <div class="fixed inset-0 z-10
-                bg-black bg-opacity-50 backdrop-blur-[1px] flex items-center justify-center
-         opacity-0 scale-95 transition-opacity transition-transform duration-500 pointer-events-none"
-             data-email--send-email-target="modal">
-            <div class="bg-white rounded-sm shadow-lg w-full md:max-w-md transition duration-500 ease-in-out">
-                <div class="bg-table-header text-text-primary/80 p-4 flex items-center place-content-between">
-                    <h2 class="text-xl font-bold">{{ 'document.send_by_email.headline'|trans }}</h2>
-                    <button {{ stimulus_action('email/send-email','close') }}>
-                        <svg class="size-6">
-                            <use href="#xmark"></use>
-                        </svg>
-                    </button>
-                </div>
-                <div class="p-4 bg-background-secondary text-center">
-                    {{ form_start(formEmail, {
-                        'attr':{
-                            'data-email--send-email-target':'form' ,
-                        }
-                    }) }}
-                    {{ form_row(formEmail.documentId,{
-                        'attr' : { 'data-email--send-email-target':'documentId',}
-                    }) }}
-                    {{ form_row(formEmail.username) }}
-                    {{ form_row(formEmail.to,{
-                        'attr' : { 'data-email--send-email-target':'to',}
-                    }) }}
-                    {{ form_row(formEmail.subject,{
-                        'attr' : { 'data-email--send-email-target':'subject',}
-                    }) }}
-                    {{ form_widget(formEmail.content,{
-                        'attr' : { 'data-email--send-email-target':'content',}
-                    }) }}
-
-
-                    <div class="mt-8 grid grid-cols-2 gap-4">
-                        <div class="text-left">
-                            <button type="button"
-                                    class="p-2 px-4 bg-red-700 hover:bg-red-500 text-green-100" {{ stimulus_action('email/send-email','close') }}>
-                                Zrušit
-                            </button>
-                        </div>
-                        <div class="text-right">
-                            <button type="submit" class="p-2 px-4 bg-green-700 hover:bg-green-500 text-green-100">
-                                Odeslat
-                            </button>
-                        </div>
-                    </div>
-                    {{ form_end(formEmail) }}
-                </div>
-            </div>
-        </div>
+        {{ include('document/_send_by_email_modal.html.twig') }}
     </div>
 {% endblock %}
