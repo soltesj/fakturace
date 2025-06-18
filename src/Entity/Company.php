@@ -303,16 +303,6 @@ class Company
         $this->website = $website;
     }
 
-    public function getEmailInvoiceMessage(): ?string
-    {
-        return $this->emailInvoiceMessage;
-    }
-
-    public function setEmailInvoiceMessage(?string $emailInvoiceMessage): void
-    {
-        $this->emailInvoiceMessage = $emailInvoiceMessage;
-    }
-
     /**
      * @return Collection<int, Currency>
      */

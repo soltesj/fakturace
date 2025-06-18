@@ -28,6 +28,10 @@ message.invoice.stored: 'Fakruru byla uložena'
 invoice.note: Poznámka
 invoice.more_options: 'Více informací'
 invoice.less_options: 'Méně informací'
+invoice.customer.add: 'Přidat odběratele'
+invoice.customer.last-customers: 'Poslední odberatelé'
+#invoice.customer.add: ''
+#invoice.customer.add: ''
 message.invoice.not_stored: 'Fakruru nebyla uložena'
 form.invoice.vat_mode: DPH
 form.invoice.document_number: 'Číslo dokladu'

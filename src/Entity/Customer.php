@@ -7,10 +7,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 class Customer implements CompanyOwnedInterface
 {
+
+    #[Groups(['minimal'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -31,6 +34,7 @@ class Customer implements CompanyOwnedInterface
     #[ORM\OneToMany(targetEntity: Document::class, mappedBy: 'customer')]
     private Collection $documents;
 
+    #[Groups(['minimal'])]
     #[ORM\Column(type: Types::STRING, length: 255, nullable: false)]
     private string $name;
 
@@ -49,6 +53,7 @@ class Customer implements CompanyOwnedInterface
     #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
     private ?string $zipcode = null;
 
+    #[Groups(['minimal'])]
     #[ORM\Column(type: Types::STRING, length: 20, nullable: true)]
     private ?string $companyNumber = null;
 

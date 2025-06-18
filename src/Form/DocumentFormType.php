@@ -28,9 +28,10 @@ class DocumentFormType extends AbstractType
         /** @var Document $document */
         $document = $options['data'];
         $company = $document->getCompany();
+        $customer = $document->getCustomer();
         $builder
             ->add('documentNumber', options: [
-            'label' => t('form.invoice.document_number'),
+                'label' => t('form.invoice.document_number'),
                 'attr' => [
                     'placeholder' => t('form.invoice.document_number.placeholder'),
                     'readonly' => true,
@@ -46,7 +47,6 @@ class DocumentFormType extends AbstractType
                 'class' => DocumentPaymentType::class,
                 'choice_label' => 'name',
                 'label' => t('form.invoice.payment_type'),
-
             ])
             ->add('dateIssue', options: [
                 'label' => t('form.invoice.date_issue'),
@@ -82,19 +82,9 @@ class DocumentFormType extends AbstractType
                     'placeholder' => t('form.invoice.bankAccount.placeholder'),
                 ],
             ])
-            ->add('customer', EntityType::class, [
-                'class' => Customer::class,
-                'choice_label' => 'name',
-                'query_builder' => function (EntityRepository $er) use ($company): QueryBuilder {
-                    return $er->createQueryBuilder('customer')
-                        ->andWhere('customer.company = :company')
-                        ->setParameter('company', $company)
-                        ->andWhere('customer.status = :status')
-                        ->setParameter('status', StatusValues::STATUS_ACTIVE)
-                        ->orderBy('customer.name', 'ASC');
-                },
-                'label' => t('form.invoice.customer'),
-                'placeholder' => t('form.invoice.customer.placeholder'),
+            ->add('customerId', HiddenType::class, [
+                'mapped' => false,
+                'data' => $customer?->getId(),
             ])
             ->add('currency', EntityType::class, [
                 'class' => Currency::class,

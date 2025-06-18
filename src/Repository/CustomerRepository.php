@@ -26,8 +26,11 @@ class CustomerRepository extends ServiceEntityRepository
     /**
      * @return Customer[] Returns an array of Customer objects
      */
-    public function findByCompany(Company $company, int $statusId = StatusValues::STATUS_ACTIVE, string $order = 'ASC'): array
-    {
+    public function findByCompany(
+        Company $company,
+        int $statusId = StatusValues::STATUS_ACTIVE,
+        string $order = 'ASC'
+    ): array {
         $qb = $this->createQueryBuilder('customer')
             ->andWhere('customer.company = :company')
             ->setParameter('company', $company)
@@ -38,13 +41,46 @@ class CustomerRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-//    public function findOneBySomeField($value): ?Customer
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /**
+     * @return Customer[]
+     */
+    public function search(Company $company, string $query): array
+    {
+        if ($query === '') {
+            return [];
+        }
+        $qb = $this->createQueryBuilder('customer')
+            ->andWhere('customer.company = :company')
+            ->setParameter('company', $company)
+            ->andWhere('customer.status = :status')
+            ->setParameter('status', StatusValues::STATUS_ACTIVE);
+        $qb->andWhere(
+            $qb->expr()->orX(
+                $qb->expr()->like('customer.name', ':query'),
+                $qb->expr()->like('customer.companyNumber', ':query'),
+                $qb->expr()->like('customer.vatNumber', ':query'),
+                $qb->expr()->like('customer.contact', ':query'),
+            )
+        )
+            ->setParameter('query', '%'.$query.'%');
+
+        return $qb->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return Customer[]
+     */
+    public function lastCustomersByCompany(Company $company, int $limit = 5): array
+    {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.documents', 'd')
+            ->where('c.company = :company')
+            ->setParameter('company', $company)
+            ->orderBy('d.dateIssue', 'DESC')
+            ->groupBy('c.id')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -1,0 +1,12 @@
+{% for customer in customers %}
+    {% if  customer.companyNumber %}
+        {% set customerName = '<span class="font-semibold">' ~ customer.name ~ '</span> <span class="text-sm">(' ~ 'form.company.businessId'|trans ~ ':' ~ customer.companyNumber ~')</span>' %}
+    {% else %}
+        {% set customerName = '<span class="font-semibold">' ~ customer.name ~ '</span>' %}
+    {% endif %}
+    <div class="hover:bg-input-bg px-2 py-1 cursor-pointer border-b border-input-border"
+            {{ stimulus_action('document/customer','pickCustomer','click') }}
+         data-customer-id="{{ customer.id }}"
+         data-customer-name="{{ customerName }}">
+        {{ customerName|raw }}</div>
+{% endfor %}

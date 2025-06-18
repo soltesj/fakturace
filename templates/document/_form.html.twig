@@ -7,10 +7,72 @@
      data-action="document--document-item-collection:add-row->document--price-calc#toggleDocumentWithWat">
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-2 gap-x-4 px-2">
-        <div class="col-span-1 order-1 ">
-            {{ form_row(form.customer,{attr:{'data-document--price-calc-target':'customer',
-                'data-action':"change->document--price-calc#customerChange"}}) }}
+        <div class="col-start-1 col-span-1 order-1"
+                {{ stimulus_controller('document/customer') }}
+             data-document--customer-api-url-value="{{ path('api_customers_lookup',{'company':company.publicId}) }}"
+             data-action="document--customer:customer:change->document--price-calc#customerChange"
+        >
+            <div class="mb-1 md:grid md:grid-cols-[12rem_1fr]">
+                <div class="px-1 md:px-0">
+                    <label for="customer" class="required">{{ 'form.invoice.customer'|trans }}</label>
+                </div>
+                <div class="relative">
+                    <div type="text"
+                         class="pr-7 rounded-sm mt-0 block w-full border-0 border-b-2 bg-input-bg border-input-border px-1 focus:border-input-border-focus focus:ring-0 invalid:border-red-700"
+                            {{ stimulus_target('document/customer','name') }}
+                            {{ stimulus_action('document/customer','toggle', 'click') }}>
+                        {% if document.customer %}
+                            <span class="font-semibold">{{ document.customer.name }}</span>
+                            {% if document.customer.companyNumber is defined %}
+                                <span class="text-sm">({{ 'form.company.businessId'|trans }}: {{ document.customer.companyNumber }} )</span>
+                            {% endif %}
+                        {% else %}
+                            &nbsp;
+                        {% endif %}
+                    </div>
+                    <svg class="size-4 absolute right-3 top-3" {{ stimulus_action('document/customer','toggle', 'click') }}>
+                        <use href="#caret-down" {{ stimulus_target('document/customer','caretDown') }} />
+                        <use href="#caret-up" {{ stimulus_target('document/customer','caretUp') }} class="hidden"/>
+                    </svg>
+                </div>
+                <div class="col-start-2 relative hidden" {{ stimulus_target('document/customer','searchBlock') }}>
+                    <div class="absolute z-10 bg-table-header w-full py-2 mt-0.5">
+                        <div class="relative px-2 mb-2">
+                            <input type="text" id="customer-search" name="customer-search"
+                                   class="pr-7 rounded-sm mt-0 block w-full border-0 border-b-2 bg-input-bg border-input-border px-1 focus:border-input-border-focus focus:ring-0 invalid:border-red-700"
+                                    {{ stimulus_target('document/customer','searchInput') }}
+                                    {{ stimulus_action('document/customer', 'onChange') }}
+                            >
+                            <svg class="size-4 absolute right-5 top-3">
+                                <use href="#magnifying-glass"/>
+                            </svg>
+                        </div>
+                        <div class="max-h-64 overflow-y-auto"
+                                {{ stimulus_target('document/customer','list') }}>
+                            <div class="px-2 py-1 border-b border-input-border text-sm">{{ 'invoice.customer.last-customers'|trans }}
+                                :
+                            </div>
+                            {{ include('document/_customer.html.twig') }}
+                        </div>
+                        <div class="px-2 py-1">
+                            <button type="button"
+                                    class="px-2 py-1 w-full mt-3 bg-green-700 hover:bg-green-500 text-green-100">{{ 'invoice.customer.add'|trans }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{ form_row(form.customerId,{attr:{
+                'data-document--customer-target':'customerId',
+                'data-document--price-calc-target':'customer',
+
+            }}) }}
         </div>
+
+        {#        <div class="col-start-1 col-span-1 order-1 "> #}
+        {#            #}{#            {{ form_row(form.customer,{attr:{'data-document--price-calc-target':'customer', #}
+        {#            #}{#                'data-action':"change->document--price-calc#customerChange"}}) }} #}
+        {#        </div> #}
         <div class="col-span-1 order-2 ">
             {{ form_row(form.dateIssue, {'attr':{'data-document--dates-target':'dateIssue','data-action':'document--dates#changeDate'}}) }}</div>
         <div class="col-span-1 order-3 md:order-4 hidden" data-document--extended-info-target="extendedInfo">
@@ -68,22 +130,22 @@
                     index:  form.documentItems|length > 0 ? form.documentItems|last.vars.name + 1 : 0,
                 }) }}
 
-                data-document--document-item-collection-prototype-value="
+             data-document--document-item-collection-prototype-value="
      {{ '<div class="row-span-3 md:row-span-1 order-1 flex align-middle" data-document--price-calc-target="itemName"><button type="button" class="p-2 md:pr-0 rounded-xl hover:text-red-500 text-red-800" data-action="document--document-item-collection#removeCollectionElement"><svg class="size-5 m-1"><use href="#minus-circle-fill"/></svg></button></div>'|e('html_attr') }}
      {{ '<div class="col-span-8 md:col-span-5 order-2">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.name)|e('html_attr') }}{{ '</div>'|e('html_attr') }}
      {{ '<div class="col-span-2 md:col-span-2 order-3 text-right">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.quantity,{'attr':{
-                    'data-document--price-calc-target':'quantity',
-                    'data-action':'document--price-calc#calc'
-                }})|e('html_attr') }}{{ '</div>'|e('html_attr') }}
+                 'data-document--price-calc-target':'quantity',
+                 'data-action':'document--price-calc#calc'
+             }})|e('html_attr') }}{{ '</div>'|e('html_attr') }}
     {{ '<div class="col-span-2 md:col-span-1 order-4 text-right">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.unit)|e('html_attr') }}{{ '</div>'|e('html_attr') }}
     {{ '<div class="col-span-2 md:col-span-2 order-5 text-right">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.price, {'attr':{
-                    'data-document--price-calc-target':'price',
-                    'data-action':'document--price-calc#calc'
-                }})|e('html_attr') }}{{ '</div>'|e('html_attr') }}
+                 'data-document--price-calc-target':'price',
+                 'data-action':'document--price-calc#calc'
+             }})|e('html_attr') }}{{ '</div>'|e('html_attr') }}
     {{ '<div class="col-span-2 md:col-span-2 order-6 text-right" data-document--price-calc-target="documentWithVat">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.vat,{'attr':{
-                    'data-document--price-calc-target':'vatPercentage',
-                    'data-action':'document--price-calc#calc'
-                }})|e('html_attr') }}{{ '</div>'|e('html_attr') }}
+                 'data-document--price-calc-target':'vatPercentage',
+                 'data-action':'document--price-calc#calc'
+             }})|e('html_attr') }}{{ '</div>'|e('html_attr') }}
     {{ '<div class="hidden md:block col-span-8 md:col-span-2 order-7 text-right p-2"><div data-document--price-calc-target="priceItem">--</div></div'|e('html_attr') }}"
         >
 

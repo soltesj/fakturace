@@ -19,6 +19,7 @@ use App\Form\DocumentFormType;
 use App\Form\PaymentTypeForm;
 use App\Form\SendEmailFormType;
 use App\Message\InvoiceEmail;
+use App\Repository\CustomerRepository;
 use App\Repository\DocumentRepository;
 use App\Repository\EmailTemplateRepository;
 use App\Service\Date;
@@ -48,6 +49,7 @@ class DocumentController extends AbstractController
         private readonly DocumentNewSaver $documentNewSaver,
         private readonly DocumentRepository $documentRepository,
         private readonly EmailTemplateRepository $emailTemplateRepository,
+        private readonly CustomerRepository $customerRepository,
     ) {
     }
 
@@ -57,7 +59,6 @@ class DocumentController extends AbstractController
         $documents = [];
         $dateFrom = Date::firstDayOfJanuary();
         $dateTo = null;
-        $customer = null;
         $query = null;
         $state = null;
         /** @var User $user */
@@ -155,9 +156,11 @@ class DocumentController extends AbstractController
         $vats['domestic'] = $vatsDomestic;
         $vats['domestic_reverse_charge'] = $vatsDomestic;
         $document = $this->documentFactory->createInvoiceOutgoing($company, $user);
+        $customers = $this->customerRepository->lastCustomersByCompany($company);
         $form = $this->createForm(DocumentFormType::class, $document);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $customerId = $form->get('customerId')->getData();
             try {
                 $this->documentNewSaver->save($document);
                 $this->addFlash('success', 'message.invoice.stored');
@@ -179,6 +182,7 @@ class DocumentController extends AbstractController
             'company' => $company,
             'vats' => $vats,
             'vatMode' => $document->getVatMode()->value,
+            'customers' => $customers,
         ]);
     }
 
@@ -193,6 +197,7 @@ class DocumentController extends AbstractController
         $vatsDomestic = $this->vatService->getValidVatsByCompany($company);
         $vats['domestic'] = $vatsDomestic;
         $vats['domestic_reverse_charge'] = $vatsDomestic;
+        $customers = $this->customerRepository->lastCustomersByCompany($company);
         $form = $this->createForm(DocumentFormType::class, $document);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -218,6 +223,7 @@ class DocumentController extends AbstractController
             'company' => $company,
             'vats' => $vats,
             'vatMode' => $document->getVatMode()->value,
+            'customers' => $customers,
         ]);
     }
 
