@@ -1,4 +1,5 @@
 import {Controller} from '@hotwired/stimulus';
+import {useClickOutside} from "stimulus-use";
 
 export default class extends Controller {
     static targets = [
@@ -8,6 +9,9 @@ export default class extends Controller {
     ];
     timeout = null
 
+    connect() {
+        useClickOutside(this)
+    }
     showSettingsMenu() {
         clearTimeout(this.timeout)
         this.settingsSubmenuTarget.classList.remove("hidden")
@@ -42,5 +46,10 @@ export default class extends Controller {
 
     toggleUserMenu() {
         this.userSubmenuTarget.classList.toggle('hidden');
+    }
+
+    clickOutside() {
+        this.hideUserMenu()
+        this.hideMobileMenu()
     }
 }
