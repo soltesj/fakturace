@@ -1,4 +1,7 @@
-{{ form_start(form) }}
+{{ form_start(form,{'attr':{
+    'data-document--new-customer-target':'form',
+    'data-action':'submit->document--new-customer#submit'
+}}) }}
 <div {{ stimulus_controller('customer/ico-autofill',{}) }}>
     <div {{ stimulus_target('customer/ico-autofill','alertBox') }}></div>
     <div class="flex justify-between">
@@ -42,6 +45,6 @@
         {{ form_row(form.web) }}
         </div>
     </div>
-    <button class="btn btn-success">{{ button_label|default('button.save') }}</button>
+    <button class="w-full mt-10 p-2 bg-green-700 hover:bg-green-500 text-green-100">{{ button_label|default('button.save')|trans }}</button>
 </div>
 {{ form_end(form) }}

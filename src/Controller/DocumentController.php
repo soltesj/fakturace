@@ -160,9 +160,9 @@ class DocumentController extends AbstractController
         $form = $this->createForm(DocumentFormType::class, $document);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $customerId = $form->get('customerId')->getData();
+            $customerId = (int)$form->get('customerId')->getData();
             try {
-                $this->documentNewSaver->save($document);
+                $this->documentNewSaver->save($document, $customerId);
                 $this->addFlash('success', 'message.invoice.stored');
 
                 return $this->redirectToRoute(
@@ -202,7 +202,8 @@ class DocumentController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->documentUpdater->update($document, $originalItems);
+                $customerId = (int)$form->get('customerId')->getData();
+                $this->documentUpdater->update($document, $originalItems, $customerId);
                 $this->addFlash('success', 'message.invoice.stored');
 
                 return $this->redirectToRoute(

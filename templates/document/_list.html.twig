@@ -51,7 +51,7 @@
                 <button {{ stimulus_action('email/send-email','open') }}
                         data-document-id="{{ document.id }}"
                         data-document-number="{{ document.documentNumber }}"
-                        data-email="{{ document.customer.email }}">
+                        data-email="{{ document.customer.email|default('') }}">
                     <svg class="size-5">
                     <use href="#envelope-arrow-up-fill"/>
                 </svg>

@@ -9,6 +9,7 @@ use App\Entity\DocumentItem;
 use App\Entity\DocumentPrice;
 use App\Entity\DocumentPriceType;
 use App\Entity\VatLevel;
+use App\Repository\CustomerRepository;
 use App\Repository\PaymentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,11 +20,14 @@ readonly class DocumentUpdater
         private EntityManagerInterface $entityManager,
         private PriceCalculatorService $priceCalculatorService,
         private PaymentRepository $paymentRepository,
+        private CustomerRepository $customerRepository,
     ) {
     }
 
-    public function update(Document $document, ArrayCollection $originalItems): void
+    public function update(Document $document, ArrayCollection $originalItems, int $customerId): void
     {
+        $customer = $this->customerRepository->find($customerId);
+        $document->setCustomer($customer);
         $this->removeUnassociatedItems($originalItems, $document);
         [$vatPrices, $priceTotal] = $this->priceCalculatorService->calculate($document);
         $this->updateExistingPrices($document, $vatPrices, $priceTotal);

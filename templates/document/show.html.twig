@@ -30,7 +30,7 @@
                     {{ stimulus_action('email/send-email','open') }}
                     data-document-id="{{ document.id }}"
                     data-document-number="{{ document.documentNumber }}"
-                    data-email="{{ document.customer.email }}">
+                    data-email="{{ document.customer.email|default('') }}">
                 <svg class="size-4 mr-2">
                     <use href="#envelope-arrow-up-fill"/>
                 </svg>
@@ -49,14 +49,16 @@
             <div class="grid grid-cols-1 md:grid-cols-2">
                 <div class="p-4 md:ml-32">
                     <div class="w-fit mx-auto md:mx-0">
-                        {% set customer = document.customer %}
-                        <span class="font-semibold">{{ customer.name }}</span><br>
-                        {{ customer.street }} {{ customer.houseNumber }}<br>
-                        {{ customer.zipcode }} {{ customer.town }}<br>
-                        {% if customer.companyNumber %}{{ 'customer.company_number'|trans }}: {{ customer.companyNumber }}
-                            <br>{% endif %}
-                        {% if customer.vatNumber %}{{ 'customer.vat_number'|trans }}: {{ customer.vatNumber }}
-                            <br>{% endif %}
+                        {% if document.customer is not null %}
+                            {% set customer = document.customer %}
+                            <span class="font-semibold">{{ customer.name }}</span><br>
+                            {{ customer.street }} {{ customer.houseNumber }}<br>
+                            {{ customer.zipcode }} {{ customer.town }}<br>
+                            {% if customer.companyNumber %}{{ 'customer.company_number'|trans }}: {{ customer.companyNumber }}
+                                <br>{% endif %}
+                            {% if customer.vatNumber %}{{ 'customer.vat_number'|trans }}: {{ customer.vatNumber }}
+                                <br>{% endif %}
+                        {% endif %}
                     </div>
                 </div>
                 <div class="p-4 md:mr-10 columns-2">

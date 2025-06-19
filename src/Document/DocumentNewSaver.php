@@ -7,6 +7,7 @@ use App\DocumentPrice\Types as PriceTypes;
 use App\Entity\Document;
 use App\Entity\DocumentPrice;
 use App\Entity\VatLevel;
+use App\Repository\CustomerRepository;
 use App\Repository\DocumentPriceTypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -17,11 +18,14 @@ readonly class DocumentNewSaver
         private DocumentNumberManager $documentNumberManager,
         private PriceCalculatorService $priceCalculatorService,
         private DocumentPriceTypeRepository $documentPriceTypeRepository,
+        private CustomerRepository $customerRepository,
     ) {
     }
 
-    public function save(Document $document): void
+    public function save(Document $document, int $customerId): void
     {
+        $customer = $this->customerRepository->find($customerId);
+        $document->setCustomer($customer);
         $this->documentNumberManager->generate($document);
         [$vatPrices, $priceTotal] = $this->priceCalculatorService->calculate($document);
         $this->createDocumentPrices($document, $vatPrices, $priceTotal);

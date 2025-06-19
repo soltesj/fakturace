@@ -1,247 +1,290 @@
-{{ form_start(form) }}
-{{ form_errors(form) }}
-<div data-controller="document--price-calc document--dates document--extended-info"
-     data-document--price-calc-vats-value="{{ vats|json_encode }}"
-     data-document--price-calc-company-value="{{ company.publicId }}"
-     data-document--dates-maturity-days-value="{{ company.maturityDays|default(14) }}"
-     data-action="document--document-item-collection:add-row->document--price-calc#toggleDocumentWithWat">
+<div
+        {{ stimulus_controller('document/new-customer') }}
+        data-document--new-customer-api-url-value="{{ path('app_customer_new',{'company':company.publicId}) }}"
+        data-action="document--customer:customer:add-customer->document--new-customer#open">
+    {{ form_start(form,{attr:{
+        'data-controller':'document--validator',
+        'data-action':"document--validator#submit"
+    }}) }}
+    {{ form_errors(form) }}
+    <div data-controller="document--price-calc document--dates document--extended-info"
+         data-document--price-calc-vats-value="{{ vats|json_encode }}"
+         data-document--price-calc-company-value="{{ company.publicId }}"
+         data-document--dates-maturity-days-value="{{ company.maturityDays|default(14) }}"
+         data-action="document--document-item-collection:add-row->document--price-calc#toggleDocumentWithWat">
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 gap-x-4 px-2">
-        <div class="col-start-1 col-span-1 order-1"
-                {{ stimulus_controller('document/customer') }}
-             data-document--customer-api-url-value="{{ path('api_customers_lookup',{'company':company.publicId}) }}"
-             data-action="document--customer:customer:change->document--price-calc#customerChange"
-        >
-            <div class="mb-1 md:grid md:grid-cols-[12rem_1fr]">
-                <div class="px-1 md:px-0">
-                    <label for="customer" class="required">{{ 'form.invoice.customer'|trans }}</label>
-                </div>
-                <div class="relative">
-                    <div type="text"
-                         class="pr-7 rounded-sm mt-0 block w-full border-0 border-b-2 bg-input-bg border-input-border px-1 focus:border-input-border-focus focus:ring-0 invalid:border-red-700"
-                            {{ stimulus_target('document/customer','name') }}
-                            {{ stimulus_action('document/customer','toggle', 'click') }}>
-                        {% if document.customer %}
-                            <span class="font-semibold">{{ document.customer.name }}</span>
-                            {% if document.customer.companyNumber is defined %}
-                                <span class="text-sm">({{ 'form.company.businessId'|trans }}: {{ document.customer.companyNumber }} )</span>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 gap-x-4 px-2">
+            <div class="col-start-1 col-span-1 order-1"
+                    {{ stimulus_controller('document/customer') }}
+                 data-document--customer-api-url-value="{{ path('api_customers_lookup',{'company':company.publicId}) }}"
+                 data-action="document--customer:customer:change->document--price-calc#customerChange"
+            >
+                <div class="mb-1 md:grid md:grid-cols-[12rem_1fr]">
+                    <div class="px-1 md:px-0">
+                        <label for="customer" class="required">{{ 'form.invoice.customer'|trans }}</label>
+                    </div>
+                    <div class="relative">
+                        <div type="text"
+                             class="pr-7 rounded-sm mt-0 block w-full border-0 border-b-2 bg-input-bg border-input-border px-1 "
+                                {{ stimulus_target('document/customer','name') }}
+                                {{ stimulus_action('document/customer','toggle', 'click') }}
+                                {{ stimulus_target('document/new-customer','customerName') }}
+                                {{ stimulus_target('document/validator','customerName') }}>
+                            {% if document.customer %}
+                                <span class="font-semibold">{{ document.customer.name }}</span>
+                                {% if document.customer.companyNumber is defined %}
+                                    <span class="text-sm">({{ 'form.company.businessId'|trans }}: {{ document.customer.companyNumber }} )</span>
+                                {% endif %}
+                            {% else %}
+                                &nbsp;
                             {% endif %}
-                        {% else %}
-                            &nbsp;
-                        {% endif %}
-                    </div>
-                    <svg class="size-4 absolute right-3 top-3" {{ stimulus_action('document/customer','toggle', 'click') }}>
-                        <use href="#caret-down" {{ stimulus_target('document/customer','caretDown') }} />
-                        <use href="#caret-up" {{ stimulus_target('document/customer','caretUp') }} class="hidden"/>
-                    </svg>
-                </div>
-                <div class="col-start-2 relative hidden" {{ stimulus_target('document/customer','searchBlock') }}>
-                    <div class="absolute z-10 bg-table-header w-full py-2 mt-0.5">
-                        <div class="relative px-2 mb-2">
-                            <input type="text" id="customer-search" name="customer-search"
-                                   class="pr-7 rounded-sm mt-0 block w-full border-0 border-b-2 bg-input-bg border-input-border px-1 focus:border-input-border-focus focus:ring-0 invalid:border-red-700"
-                                    {{ stimulus_target('document/customer','searchInput') }}
-                                    {{ stimulus_action('document/customer', 'onChange') }}
-                            >
-                            <svg class="size-4 absolute right-5 top-3">
-                                <use href="#magnifying-glass"/>
-                            </svg>
                         </div>
-                        <div class="max-h-64 overflow-y-auto"
-                                {{ stimulus_target('document/customer','list') }}>
-                            <div class="px-2 py-1 border-b border-input-border text-sm">{{ 'invoice.customer.last-customers'|trans }}
-                                :
+                        <svg class="size-4 absolute right-3 top-3" {{ stimulus_action('document/customer','toggle', 'click') }}>
+                            <use href="#caret-down" {{ stimulus_target('document/customer','caretDown') }} />
+                            <use href="#caret-up" {{ stimulus_target('document/customer','caretUp') }} class="hidden"/>
+                        </svg>
+                    </div>
+                    <div class="col-start-2 relative hidden" {{ stimulus_target('document/customer','searchBlock') }}>
+                        <div class="absolute z-10 bg-table-header w-full py-2 mt-0.5">
+                            <div class="relative px-2 mb-2">
+                                <input type="text" id="customer-search" name="customer-search"
+                                       class="pr-7 rounded-sm mt-0 block w-full border-0 border-b-2 bg-input-bg border-input-border px-1 focus:border-input-border-focus focus:ring-0 invalid:border-red-700"
+                                        {{ stimulus_target('document/customer','searchInput') }}
+                                        {{ stimulus_action('document/customer', 'onChange') }}
+                                >
+                                <svg class="size-4 absolute right-5 top-3">
+                                    <use href="#magnifying-glass"/>
+                                </svg>
                             </div>
-                            {{ include('document/_customer.html.twig') }}
-                        </div>
-                        <div class="px-2 py-1">
-                            <button type="button"
-                                    class="px-2 py-1 w-full mt-3 bg-green-700 hover:bg-green-500 text-green-100">{{ 'invoice.customer.add'|trans }}
-                            </button>
+                            <div class="max-h-64 overflow-y-auto"
+                                    {{ stimulus_target('document/customer','list') }}>
+                                <div class="px-2 py-1 border-b border-input-border text-sm">{{ 'invoice.customer.last-customers'|trans }}
+                                    :
+                                </div>
+                                {{ include('document/_customer.html.twig') }}
+                            </div>
+                            <div class="px-2 py-1">
+                                <button type="button"
+                                        class="px-2 py-1 w-full mt-3 bg-green-700 hover:bg-green-500 text-green-100"
+                                        {{ stimulus_action('document/customer','addCustomer') }}>{{ 'invoice.customer.add'|trans }}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
+                {{ form_row(form.customerId,{attr:{
+                    'data-document--customer-target':'customerId',
+                    'data-document--new-customer-target':'customerId',
+                    'data-document--price-calc-target':'customer',
+                    'data-action':"document--customer#check",
+                    'data-document--validator-target':'customerId',
+                }}) }}
             </div>
-            {{ form_row(form.customerId,{attr:{
-                'data-document--customer-target':'customerId',
-                'data-document--price-calc-target':'customer',
 
-            }}) }}
-        </div>
-
-        {#        <div class="col-start-1 col-span-1 order-1 "> #}
-        {#            #}{#            {{ form_row(form.customer,{attr:{'data-document--price-calc-target':'customer', #}
-        {#            #}{#                'data-action':"change->document--price-calc#customerChange"}}) }} #}
-        {#        </div> #}
-        <div class="col-span-1 order-2 ">
-            {{ form_row(form.dateIssue, {'attr':{'data-document--dates-target':'dateIssue','data-action':'document--dates#changeDate'}}) }}</div>
-        <div class="col-span-1 order-3 md:order-4 hidden" data-document--extended-info-target="extendedInfo">
-            {{ form_row(form.dateTaxable, {'attr':{'data-document--dates-target':'dateTaxable'}}) }}
-        </div>
-        <div class="col-span-1 order-4 md:order-6 hidden" data-document--extended-info-target="extendedInfo">
-            {{ form_row(form.dateDue, {'attr':{'data-document--dates-target':'dateDue'}}) }}
-        </div>
-        <div class="col-span-1 order-5 md:order-3">
-            {{ form_row(form.vatMode, {'attr':{'data-document--price-calc-target':'vatMode',
-                'data-action':'document--price-calc#vatModeChange'}}) }}
-        </div>
-        <div class="col-span-1 order-6 md:order-5 hidden" data-document--extended-info-target="extendedInfo">
-            {{ form_row(form.documentNumber) }}
-        </div>
-        <div class="col-span-1 order-7 hidden" data-document--extended-info-target="extendedInfo">
-            {{ form_row(form.variableSymbol) }}
-        </div>
-        <div class="col-span-1 order-8 hidden" data-document--extended-info-target="extendedInfo">
-            {{ form_row(form.paymentType) }}
-        </div>
-        <div class="col-span-1 order-9 hidden" data-document--extended-info-target="extendedInfo">
-            {{ form_row(form.bankAccount) }}</div>
-        <div class="col-span-1 order-10 hidden" data-document--extended-info-target="extendedInfo">
-            {{ form_row(form.currency) }}
-        </div>
-        <div class="col-span-1 order-11 hidden" data-document--extended-info-target="extendedInfo">
-            {{ form_row(form.rate) }}
-        </div>
-        <div class="col-span-1 order-12 hidden md:col-span-2" data-document--extended-info-target="extendedInfo">
-            {{ form_row(form.note) }}
-        </div>
-        <div class="col-span-1 order-13 hidden md:col-span-2" data-document--extended-info-target="extendedInfo">
-            {{ form_row(form.description) }}
-        </div>
-        <div class="col-span-1 order-14">
-            <div class="mb-1 grid grid-cols-[12rem_1fr]">
-                <span></span>
-                <button type="button"
-                        class="flex align-middle justify-center gap-2 p-2 bg-blue-700 hover:bg-blue-500 text-blue-100"
-                        data-action="document--extended-info#toggleInfo">
-                    <svg class="size-4 mt-1">
-                        <use href="#plus-circle-fill"/>
-                    </svg>
-                    <span>{{ 'invoice.more_options'|trans }}</span>
-                </button>
+            {#        <div class="col-start-1 col-span-1 order-1 "> #}
+            {#            #}{#            {{ form_row(form.customer,{attr:{'data-document--price-calc-target':'customer', #}
+            {#            #}{#                'data-action':"change->document--price-calc#customerChange"}}) }} #}
+            {#        </div> #}
+            <div class="col-span-1 order-2 ">
+                {{ form_row(form.dateIssue, {'attr':{'data-document--dates-target':'dateIssue','data-action':'document--dates#changeDate'}}) }}</div>
+            <div class="col-span-1 order-3 md:order-4 hidden" data-document--extended-info-target="extendedInfo">
+                {{ form_row(form.dateTaxable, {'attr':{'data-document--dates-target':'dateTaxable'}}) }}
+            </div>
+            <div class="col-span-1 order-4 md:order-6 hidden" data-document--extended-info-target="extendedInfo">
+                {{ form_row(form.dateDue, {'attr':{'data-document--dates-target':'dateDue'}}) }}
+            </div>
+            <div class="col-span-1 order-5 md:order-3">
+                {{ form_row(form.vatMode, {'attr':{'data-document--price-calc-target':'vatMode',
+                    'data-action':'document--price-calc#vatModeChange'}}) }}
+            </div>
+            <div class="col-span-1 order-6 md:order-5 hidden" data-document--extended-info-target="extendedInfo">
+                {{ form_row(form.documentNumber) }}
+            </div>
+            <div class="col-span-1 order-7 hidden" data-document--extended-info-target="extendedInfo">
+                {{ form_row(form.variableSymbol) }}
+            </div>
+            <div class="col-span-1 order-8 hidden" data-document--extended-info-target="extendedInfo">
+                {{ form_row(form.paymentType) }}
+            </div>
+            <div class="col-span-1 order-9 hidden" data-document--extended-info-target="extendedInfo">
+                {{ form_row(form.bankAccount) }}</div>
+            <div class="col-span-1 order-10 hidden" data-document--extended-info-target="extendedInfo">
+                {{ form_row(form.currency) }}
+            </div>
+            <div class="col-span-1 order-11 hidden" data-document--extended-info-target="extendedInfo">
+                {{ form_row(form.rate) }}
+            </div>
+            <div class="col-span-1 order-12 hidden md:col-span-2" data-document--extended-info-target="extendedInfo">
+                {{ form_row(form.note) }}
+            </div>
+            <div class="col-span-1 order-13 hidden md:col-span-2" data-document--extended-info-target="extendedInfo">
+                {{ form_row(form.description) }}
+            </div>
+            <div class="col-span-1 order-14">
+                <div class="mb-1 grid grid-cols-[12rem_1fr]">
+                    <span></span>
+                    <button type="button"
+                            class="flex align-middle justify-center gap-2 p-2 bg-blue-700 hover:bg-blue-500 text-blue-100"
+                            data-action="document--extended-info#toggleInfo">
+                        <svg class="size-4 mt-1">
+                            <use href="#plus-circle-fill"/>
+                        </svg>
+                        <span>{{ 'invoice.more_options'|trans }}</span>
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
 
 
-    <div>
-        <div class="mt-10"
-                {{ stimulus_controller('document/document-item-collection', {
-                    index:  form.documentItems|length > 0 ? form.documentItems|last.vars.name + 1 : 0,
-                }) }}
+        <div>
+            <div class="mt-10"
+                    {{ stimulus_controller('document/document-item-collection', {
+                        index:  form.documentItems|length > 0 ? form.documentItems|last.vars.name + 1 : 0,
+                    }) }}
 
-             data-document--document-item-collection-prototype-value="
+                 data-document--document-item-collection-prototype-value="
      {{ '<div class="row-span-3 md:row-span-1 order-1 flex align-middle" data-document--price-calc-target="itemName"><button type="button" class="p-2 md:pr-0 rounded-xl hover:text-red-500 text-red-800" data-action="document--document-item-collection#removeCollectionElement"><svg class="size-5 m-1"><use href="#minus-circle-fill"/></svg></button></div>'|e('html_attr') }}
      {{ '<div class="col-span-8 md:col-span-5 order-2">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.name)|e('html_attr') }}{{ '</div>'|e('html_attr') }}
      {{ '<div class="col-span-2 md:col-span-2 order-3 text-right">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.quantity,{'attr':{
-                 'data-document--price-calc-target':'quantity',
-                 'data-action':'document--price-calc#calc'
-             }})|e('html_attr') }}{{ '</div>'|e('html_attr') }}
+                     'data-document--price-calc-target':'quantity',
+                     'data-action':'document--price-calc#calc'
+                 }})|e('html_attr') }}{{ '</div>'|e('html_attr') }}
     {{ '<div class="col-span-2 md:col-span-1 order-4 text-right">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.unit)|e('html_attr') }}{{ '</div>'|e('html_attr') }}
     {{ '<div class="col-span-2 md:col-span-2 order-5 text-right">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.price, {'attr':{
-                 'data-document--price-calc-target':'price',
-                 'data-action':'document--price-calc#calc'
-             }})|e('html_attr') }}{{ '</div>'|e('html_attr') }}
+                     'data-document--price-calc-target':'price',
+                     'data-action':'document--price-calc#calc'
+                 }})|e('html_attr') }}{{ '</div>'|e('html_attr') }}
     {{ '<div class="col-span-2 md:col-span-2 order-6 text-right" data-document--price-calc-target="documentWithVat">'|e('html_attr') }}{{ form_widget(form.documentItems.vars.prototype.vat,{'attr':{
-                 'data-document--price-calc-target':'vatPercentage',
-                 'data-action':'document--price-calc#calc'
-             }})|e('html_attr') }}{{ '</div>'|e('html_attr') }}
+                     'data-document--price-calc-target':'vatPercentage',
+                     'data-action':'document--price-calc#calc'
+                 }})|e('html_attr') }}{{ '</div>'|e('html_attr') }}
     {{ '<div class="hidden md:block col-span-8 md:col-span-2 order-7 text-right p-2"><div data-document--price-calc-target="priceItem">--</div></div'|e('html_attr') }}"
-        >
+            >
 
-            {#            <button type="button" {{ stimulus_action('document/document-item-collection', 'addCollectionElement') }} #}
-            {#                    class="p-2 pr-0 rounded-xl hover:text-green-500 text-green-700"> #}
-            {#                <svg class="size-6"> #}
-            {#                    <use href="#plus-circle-fill"/> #}
-            {#                </svg> #}
-            {#            </button> #}
+                {#            <button type="button" {{ stimulus_action('document/document-item-collection', 'addCollectionElement') }} #}
+                {#                    class="p-2 pr-0 rounded-xl hover:text-green-500 text-green-700"> #}
+                {#                <svg class="size-6"> #}
+                {#                    <use href="#plus-circle-fill"/> #}
+                {#                </svg> #}
+                {#            </button> #}
 
-            <div class="row grid grid-cols-[35px_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr] md:grid-cols-[50px_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr] gap-0 md:gap-2 mb-2 bg-table-header">
-                <div class="row-span-3 md:row-span-1 order-1 flex align-middle col-md-5 px-2 py-1 md:p-2">
-                    <button type="button" {{ stimulus_action('document/document-item-collection', 'addCollectionElement') }}
-                            class="p-2 md:pr-0 rounded-full hover:text-green-500 text-green-700">
-                        <svg class="size-5">
-                            <use href="#plus-circle-fill"/>
-                        </svg>
-                    </button>
+                <div class="row grid grid-cols-[35px_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr] md:grid-cols-[50px_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr] gap-0 md:gap-2 mb-2 bg-table-header">
+                    <div class="row-span-3 md:row-span-1 order-1 flex align-middle col-md-5 px-2 py-1 md:p-2">
+                        <button type="button" {{ stimulus_action('document/document-item-collection', 'addCollectionElement') }}
+                                class="p-2 md:pr-0 rounded-full hover:text-green-500 text-green-700">
+                            <svg class="size-5">
+                                <use href="#plus-circle-fill"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="col-span-8 md:col-span-5 order-2 text-left px-2 py-1 md:p-2">{{ 'invoice.item_name'|trans }}</div>
+                    <div class="col-span-2 md:col-span-2 order-3 text-left md:text-right px-2 py-1 md:p-2">{{ 'invoice.item_quantity'|trans }}</div>
+                    <div class="col-span-2 md:col-span-1 order-4 text-right px-2 py-1 md:p-2">{{ 'invoice.item_unit_of_measure'|trans }}</div>
+                    <div class="col-span-2 md:col-span-2 order-5 text-right px-2 py-1 md:p-2">{{ 'invoice.item_price_of_unit_of_measure'|trans }}</div>
+                    <div class="col-span-2 md:col-span-2 order-6 text-right px-2 py-1 md:p-2" {{ stimulus_target('document/price-calc', 'documentWithVat') }}>{{ 'invoice.item_vat'|trans }}</div>
+                    <div class="hidden md:block col-span-8 md:col-span-2 order-7 text-right px-2 py-1 md:p-2">{{ 'invoice.item_unit_price_total'|trans }}
+                    </div>
                 </div>
-                <div class="col-span-8 md:col-span-5 order-2 text-left px-2 py-1 md:p-2">{{ 'invoice.item_name'|trans }}</div>
-                <div class="col-span-2 md:col-span-2 order-3 text-left md:text-right px-2 py-1 md:p-2">{{ 'invoice.item_quantity'|trans }}</div>
-                <div class="col-span-2 md:col-span-1 order-4 text-right px-2 py-1 md:p-2">{{ 'invoice.item_unit_of_measure'|trans }}</div>
-                <div class="col-span-2 md:col-span-2 order-5 text-right px-2 py-1 md:p-2">{{ 'invoice.item_price_of_unit_of_measure'|trans }}</div>
-                <div class="col-span-2 md:col-span-2 order-6 text-right px-2 py-1 md:p-2" {{ stimulus_target('document/price-calc', 'documentWithVat') }}>{{ 'invoice.item_vat'|trans }}</div>
-                <div class="hidden md:block col-span-8 md:col-span-2 order-7 text-right px-2 py-1 md:p-2">{{ 'invoice.item_unit_price_total'|trans }}
+
+                <div class="mb-8" {{ stimulus_target('document/document-item-collection', 'collectionContainer') }}>
+                    {% for documentItem in form.documentItems %}
+                        <div class="row grid grid-cols-[35px_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr] md:grid-cols-[50px_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr] gap-2 py-2.5 border-b border-input-border">
+                            <div class="row-span-3 md:row-span-1 order-1 flex align-middle" {{ stimulus_target('document/price-calc', 'itemName') }}>
+                                <button type="button" {{ stimulus_action('document/document-item-collection', 'removeCollectionElement') }}
+                                        class="p-2 md:pr-0 rounded-xl hover:text-red-500 text-red-800">
+                                    <svg class="size-5 m-1">
+                                        <use href="#minus-circle-fill"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="col-span-8 md:col-span-5 order-2">{{ form_widget(documentItem.name) }}</div>
+                            <div class="col-span-2 md:col-span-2 order-3 text-right">{{ form_widget(documentItem.quantity, {'attr':{
+                                    'data-document--price-calc-target':'quantity',
+                                    'data-action':'document--price-calc#calc'
+                                }}) }}</div>
+                            <div class="col-span-2 md:col-span-1 order-4 text-right">{{ form_widget(documentItem.unit) }}</div>
+                            <div class="col-span-2 md:col-span-2 order-5 text-right">{{ form_widget(documentItem.price, {'attr':{
+                                    'data-document--price-calc-target':'price',
+                                    'data-action':'document--price-calc#calc'
+                                }}) }}</div>
+                            <div class="col-span-2 md:col-span-2 order-6 text-right"
+                                 data-document--price-calc-target="documentWithVat">
+                                {{ form_widget(documentItem.vat, {'attr':{
+                                    'data-document--price-calc-target':'vatPercentage',
+                                    'data-action':'document--price-calc#calc'
+                                }}) }}</div>
+                            <div class="hidden md:block col-span-8 md:col-span-2 order-7 text-right p-2">
+                                <div data-document--price-calc-target="priceItem">00.00</div>
+                            </div>
+                        </div>
+                    {% endfor %}
                 </div>
-            </div>
 
-            <div class="mb-8" {{ stimulus_target('document/document-item-collection', 'collectionContainer') }}>
-                {% for documentItem in form.documentItems %}
-                    <div class="row grid grid-cols-[35px_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr] md:grid-cols-[50px_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr_1fr] gap-2 py-2.5 border-b border-input-border">
-                        <div class="row-span-3 md:row-span-1 order-1 flex align-middle" {{ stimulus_target('document/price-calc', 'itemName') }}>
-                            <button type="button" {{ stimulus_action('document/document-item-collection', 'removeCollectionElement') }}
-                                    class="p-2 md:pr-0 rounded-xl hover:text-red-500 text-red-800">
-                                <svg class="size-5 m-1">
-                                    <use href="#minus-circle-fill"/>
-                                </svg>
-                            </button>
+                <div class="flex justify-end px-2">
+                    <div class="w-96 grid grid-cols-[1fr_1fr] gap-2">
+                        <div class="text-right"
+                             data-document--price-calc-target="documentWithVat">{{ 'invoice.price_total_without_vat'|trans }}
+                            :
                         </div>
-                        <div class="col-span-8 md:col-span-5 order-2">{{ form_widget(documentItem.name) }}</div>
-                        <div class="col-span-2 md:col-span-2 order-3 text-right">{{ form_widget(documentItem.quantity, {'attr':{
-                                'data-document--price-calc-target':'quantity',
-                                'data-action':'document--price-calc#calc'
-                            }}) }}</div>
-                        <div class="col-span-2 md:col-span-1 order-4 text-right">{{ form_widget(documentItem.unit) }}</div>
-                        <div class="col-span-2 md:col-span-2 order-5 text-right">{{ form_widget(documentItem.price, {'attr':{
-                                'data-document--price-calc-target':'price',
-                                'data-action':'document--price-calc#calc'
-                            }}) }}</div>
-                        <div class="col-span-2 md:col-span-2 order-6 text-right"
-                             data-document--price-calc-target="documentWithVat">
-                            {{ form_widget(documentItem.vat, {'attr':{
-                                'data-document--price-calc-target':'vatPercentage',
-                                'data-action':'document--price-calc#calc'
-                            }}) }}</div>
-                        <div class="hidden md:block col-span-8 md:col-span-2 order-7 text-right p-2">
-                            <div data-document--price-calc-target="priceItem">00.00</div>
+                        <div class="text-right" data-document--price-calc-target="documentWithVat priceTotal">0.00</div>
+                        <div class="text-right"
+                             data-document--price-calc-target="documentWithVat">{{ 'invoice.price_total_vat'|trans }}:
                         </div>
+                        <div class="text-right" data-document--price-calc-target="documentWithVat priceVat">0.00</div>
+                        <div class="text-right">{{ 'invoice.price_total_with_vat'|trans }}:</div>
+                        <div class="text-right" data-document--price-calc-target="priceTotalVat">0.00</div>
                     </div>
-                {% endfor %}
-            </div>
-
-            <div class="flex justify-end px-2">
-                <div class="w-96 grid grid-cols-[1fr_1fr] gap-2">
-                    <div class="text-right"
-                         data-document--price-calc-target="documentWithVat">{{ 'invoice.price_total_without_vat'|trans }}
-                        :
-                    </div>
-                    <div class="text-right" data-document--price-calc-target="documentWithVat priceTotal">0.00</div>
-                    <div class="text-right"
-                         data-document--price-calc-target="documentWithVat">{{ 'invoice.price_total_vat'|trans }}:
-                    </div>
-                    <div class="text-right" data-document--price-calc-target="documentWithVat priceVat">0.00</div>
-                    <div class="text-right">{{ 'invoice.price_total_with_vat'|trans }}:</div>
-                    <div class="text-right" data-document--price-calc-target="priceTotalVat">0.00</div>
                 </div>
             </div>
         </div>
+
+
+        {{ form_row(form.priceTotal, {
+            'attr' : { 'data-document--price-calc-target':'priceTotalWithVat' },
+        }) }}
+        {{ form_row(form.priceWithoutHighVat, {
+            'attr' : { 'data-document--price-calc-target':'priceWithoutHighVat' },
+        }) }}
+        {{ form_row(form.priceWithoutLowVat, {
+            'attr' : { 'data-document--price-calc-target':'priceWithoutLowVat' },
+        }) }}
+        {{ form_row(form.priceNoVat, {
+            'attr' : { 'data-document--price-calc-target':'priceTotalWithoutVat' },
+        }) }}
+
+
+        <button class="w-full mt-10 p-2 bg-green-700 hover:bg-green-500 text-green-100"
+                type="submit"
+                {{ stimulus_target('document/validator','submitButton') }}
+        >{{ button_label|trans|default('save') }}</button>
+
     </div>
+    {{ form_end(form) }}
 
 
-    {{ form_row(form.priceTotal, {
-        'attr' : { 'data-document--price-calc-target':'priceTotalWithVat' },
-    }) }}
-    {{ form_row(form.priceWithoutHighVat, {
-        'attr' : { 'data-document--price-calc-target':'priceWithoutHighVat' },
-    }) }}
-    {{ form_row(form.priceWithoutLowVat, {
-        'attr' : { 'data-document--price-calc-target':'priceWithoutLowVat' },
-    }) }}
-    {{ form_row(form.priceNoVat, {
-        'attr' : { 'data-document--price-calc-target':'priceTotalWithoutVat' },
-    }) }}
 
+    {# NEW CUSTOMER POPUP START #}
 
-    <button class="w-full mt-10 p-2 bg-green-700 hover:bg-green-500 text-green-100"
-            type="submit">{{ button_label|trans|default('save') }}</button>
+    <div class="fixed inset-0 z-10 bg-black bg-opacity-50 backdrop-blur-[1px] flex items-center justify-center
+         opacity-0 scale-95 transition-opacity transition-transform duration-500 pointer-events-none"
+            {{ stimulus_target('document/new-customer','modal') }}
+            {{ stimulus_action('document/new-customer','onOverlayClick', 'click') }}
+    >
+        <div class="bg-white rounded-sm shadow-lg w-full md:max-w-3xl transition duration-500 ease-in-out"
+                {{ stimulus_target('document/new-customer','content') }}>
+            <div class="bg-table-header text-text-primary/80 p-4 flex items-center place-content-between">
+                <h2 class="text-xl font-bold">{{ 'customer.new_customer'|trans }}</h2>
+                <button {{ stimulus_action('document/new-customer','close') }}>
+                    <svg class="size-6">
+                        <use href="#xmark"></use>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-4 bg-background-secondary text-center"
+                    {{ stimulus_target('document/new-customer','body') }}
+            >
+            </div>
+        </div>
+    </div>
 </div>
-{{ form_end(form) }}
+{# NEW CUSTOMER POPUP END #}

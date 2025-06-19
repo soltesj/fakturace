@@ -84,6 +84,7 @@ class DocumentFormType extends AbstractType
             ])
             ->add('customerId', HiddenType::class, [
                 'mapped' => false,
+                'required' => true,
                 'data' => $customer?->getId(),
             ])
             ->add('currency', EntityType::class, [

@@ -183,3 +183,4 @@ document.send_by_email.content.not_blank: 'Vyplňte text emailu'
 document.send_by_email.content.min_limit: "Text musí mít minimalaně  znaků"
 document.send_by_email.content.max_limit: "Text nesmí být delší než {{ limit }} znaků"
 email_template.invoice_template: 'Emailová šablona'
+customer.new_customer: 'Nový zákazník'

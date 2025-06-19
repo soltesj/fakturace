@@ -8,7 +8,6 @@ export default class extends Controller {
     static values = {
         apiUrl: String,
     }
-    isOpen = false
 
     connect() {
         useDebounce(this, {wait: 600});
@@ -20,7 +19,6 @@ export default class extends Controller {
             return
         }
         let url = `${decodeURI(this.apiUrlValue)}/${this.searchInputTarget.value}`
-        console.log(url)
         const response = await fetch(url)
         if (!response.ok) {
             throw new Error(`HTTP error! statu: ${response.status}`)
@@ -40,7 +38,12 @@ export default class extends Controller {
         this.nameTarget.innerHTML = event.currentTarget.dataset.customerName
 
         this.dispatch('customer:change')
-        this.toggle()
+        this.close()
+    }
+
+    addCustomer() {
+        this.dispatch('customer:add-customer')
+        this.close()
     }
 
     clickOutside() {

@@ -51,12 +51,26 @@ class CustomerController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->persist($customer);
             $this->entityManager->flush();
+            if ($request->isXmlHttpRequest()) {
+                return $this->json([
+                    'id' => $customer->getId(),
+                    'name' => $customer->getName(),
+                    'companyNumber' => $customer->getCompanyNumber(),
+                ]);
+            }
+
             $this->addFlash('success', 'message.changes_have_been_saved');
 
             return $this->redirectToRoute('app_customer_index', ['company' => $company->getPublicId()],
                 Response::HTTP_SEE_OTHER);
         }
-
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('customer/_form.html.twig', [
+                'customer' => $customer,
+                'form' => $form->createView(),
+                'company' => $company,
+            ]);
+        }
         return $this->render('customer/new.html.twig', [
             'customer' => $customer,
             'form' => $form->createView(),
