@@ -154,3 +154,6 @@ Error: Chyba
 'Your password should be at least {{ limit }} characters': '__Your password should be at least {{ limit }} characters'
 'Please enter your email': '__Please enter your email'
 'There is already an account with this email': '__There is already an account with this email'
+document.send_by_email.subject.not_blank: __document.send_by_email.subject.not_blank
+document.send_by_email.email_to.not_blank: __document.send_by_email.email_to.not_blank
+document.send_by_email.content.not_blank: __document.send_by_email.content.not_blank

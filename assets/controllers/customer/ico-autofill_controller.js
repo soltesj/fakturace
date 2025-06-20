@@ -7,12 +7,12 @@ export default class extends Controller {
     static targets = [
         'alertBox', 'companyNumberInput', 'nameInput', 'streetInput', 'houseNumberInput',
         'townInput', 'zipcodeInput', 'vatNumberInput', 'isVatPayerInput', 'countryInput',
-        'lookupButton', 'buttonSpinner', 'buttonLabel'
+        'lookupButton', 'buttonSpinner', 'buttonLabel', 'companyNumber', 'country'
     ]
 
     async lookup() {
-        const country = this.countryInputTarget.value.trim()
-        const companyNumber = this.companyNumberInputTarget.value.trim()
+        const country = this.countryTarget.value.trim()
+        const companyNumber = this.companyNumberTarget.value.trim()
 
         if (!this.isValidCompanyNumber(companyNumber)) {
             this.showWarning('IČO musí mít 8 číslic')
@@ -39,7 +39,7 @@ export default class extends Controller {
 
             const data = await response.json()
             this.fillForm(data)
-            this.showInfo('Údaje byly úspěšně načteny.')
+            // this.showInfo('Údaje byly úspěšně načteny.')
         } catch (error) {
             console.error(error)
             this.showWarning('Společnost s tímto IČO nebyla nalezena.')
@@ -67,6 +67,7 @@ export default class extends Controller {
         this.houseNumberInputTarget.value = data.houseNumber || ''
         this.townInputTarget.value = data.town || ''
         this.zipcodeInputTarget.value = data.zipcode || ''
+        this.companyNumberInputTarget.value = data.vatNumber || ''
         this.vatNumberInputTarget.value = data.vatNumber || ''
         this.isVatPayerInputTarget.checked = !!data.isVatPayer
     }

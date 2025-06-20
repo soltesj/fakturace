@@ -4,47 +4,57 @@
 }}) }}
 <div {{ stimulus_controller('customer/ico-autofill',{}) }}>
     <div {{ stimulus_target('customer/ico-autofill','alertBox') }}></div>
-    <div class="flex justify-between">
-        <div class="">
-            {{ form_row(form.country, { attr: { 'data-customer--ico-autofill-target': 'countryInput' }}) }}
 
-            <div class="mb-1 grid grid-cols-[12rem_1fr]">
-            {{ form_label(form.companyNumber) }}
-
-            {{ form_widget(form.companyNumber, { attr: { 'data-customer--ico-autofill-target': 'companyNumberInput' }}) }}
-                <div class="col-span-4 col-start-2">
-                    <button class=" bg-background-secondary disabled:bg-gray-500 flex items-center justify-center p-2"
-                            type="button" id="button-addon"
-                    {{ stimulus_action('customer--ico-autofill','lookup') }}
-                    {{ stimulus_target('customer--ico-autofill','lookupButton') }}
-                    >Auto fill
-                        <svg class="animate-spin size-5 ml-3 hidden" {{ stimulus_target('customer--ico-autofill','buttonSpinner') }}>
-                    <use href="#spinner"/>
-                </svg>
-                        <svg class="size-5 ml-3 text-secondary" {{ stimulus_target('customer--ico-autofill','buttonLabel') }}>
-                    <use href="#share"/>
-                </svg>
-            </button>
-                </div>
+    <h2 class="text-xl font-semibold p-2 bg-table-header text-text-primary">{{ 'customer.load_by_customer_number'|trans }}</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 gap-x-4 px-2 mb-10 bg-background-secondary">
+        <div class="mb-1 md:grid md:grid-cols-[12rem_1fr]">
+            <label for="look-up_country" class="p-2 md:px-0">Zeme</label>
+            <select id="look-up_country" name="look-up_country" {{ stimulus_target('customer/ico-autofill','country') }}
+                    class="px-2 rounded-sm mt-0 block w-full border-0 border-b-2 bg-input-bg border-input-border focus:border-input-border-focus focus:ring-0">
+                <option value="41" selected="selected">Česká republika</option>
+            </select></div>
+        <div class="mb-1 md:grid md:grid-cols-[12rem_1fr]">
+            <label for="look-up_company-number" class="p-2 md:px-0">IČO</label>
+            <input id="look-up_company-number" type="text"
+                   class="rounded-sm mt-0 block w-full border-0 border-b-2 bg-input-bg border-input-border focus:border-input-border-focus focus:ring-0"
+                    {{ stimulus_target('customer/ico-autofill','companyNumber') }}>
         </div>
+        <button class="bg-blue-800 text-blue-100 disabled:bg-gray-500 flex items-center justify-center p-2"
+                type="button" id="button-addon"
+                {{ stimulus_action('customer--ico-autofill','lookup') }}
+                {{ stimulus_target('customer--ico-autofill','lookupButton') }}
+        >Auto fill
+            <svg class="animate-spin size-5 ml-3 hidden" {{ stimulus_target('customer--ico-autofill','buttonSpinner') }}>
+                <use href="#spinner"/>
+            </svg>
+            <svg class="size-5 ml-3 text-secondary" {{ stimulus_target('customer--ico-autofill','buttonLabel') }}>
+                <use href="#share"/>
+            </svg>
+        </button>
+
+    </div>
+
+    <h2 class="text-xl font-semibold mb-0 p-2 bg-table-header text-text-primary">Fakturační údaje</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-x-4 p-2 bg-background-secondary">
 
 
         {{ form_row(form.name, { attr: { 'data-customer--ico-autofill-target': 'nameInput' } }) }}
-        {{ form_row(form.contact) }}
+
         {{ form_row(form.street, { attr: { 'data-customer--ico-autofill-target': 'streetInput' } }) }}
+        {{ form_row(form.houseNumber, { attr: { 'data-customer--ico-autofill-target': 'houseNumberInput' } }) }}
         {{ form_row(form.town, { attr: { 'data-customer--ico-autofill-target': 'townInput' } }) }}
-        {{ form_row(form.isVatPayer,{ attr: { 'data-customer--ico-autofill-target': 'isVatPayerInput' } }) }}
-    </div>
-        <div class="">
+        {{ form_row(form.zipcode, { attr: { 'data-customer--ico-autofill-target': 'zipcodeInput' } }) }}
+        {{ form_row(form.country, { attr: { 'data-customer--ico-autofill-target': 'countryInput' }}) }}
+        {{ form_row(form.companyNumber, { attr: { 'data-customer--ico-autofill-target': 'companyNumberInput' } }) }}
         {{ form_row(form.vatNumber, { attr: { 'data-customer--ico-autofill-target': 'vatNumberInput' } }) }}
+        {{ form_row(form.isVatPayer,{ attr: { 'data-customer--ico-autofill-target': 'isVatPayerInput' } }) }}
+        {{ form_row(form.bankAccount) }}
         {{ form_row(form.email) }}
         {{ form_row(form.phone) }}
-        {{ form_row(form.houseNumber, { attr: { 'data-customer--ico-autofill-target': 'houseNumberInput' } }) }}
-        {{ form_row(form.zipcode, { attr: { 'data-customer--ico-autofill-target': 'zipcodeInput' } }) }}
-        {{ form_row(form.bankAccount) }}
-        {{ form_row(form.web) }}
-        </div>
+        {{ form_row(form.website) }}
+        {{ form_row(form.contact) }}
+
     </div>
-    <button class="w-full mt-10 p-2 bg-green-700 hover:bg-green-500 text-green-100">{{ button_label|default('button.save')|trans }}</button>
+    <button class="w-full mt-10 p-2 bg-green-700 hover:bg-green-500 text-green-100 mb-16">{{ button_label|default('button.save')|trans }}</button>
 </div>
 {{ form_end(form) }}

@@ -1,17 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Customer{% endblock %}
+{% block title %}{{ 'customer.update_customer'|trans }}: {{ customer.name }}{% endblock %}
 
 {% block body %}
-    <h1 class="mb-10 flex justify-start items-center text-xl space-x-3">
+    <h1 class="mb-5 flex justify-start items-center text-xl space-x-3 px-2 md:px-0">
         <a href="{{ path('app_customer_index', {'company': company.publicId}) }}" class="text-decoration-none">
             <svg class="size-8">
                 <use href="#arrow-left-circle"/>
             </svg>
         </a>
-        <span>Upravit</span>
+        <span>{{ 'customer.update_customer'|trans }}: {{ customer.name }}</span>
     </h1>
 
-    {{ include('customer/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('customer/_form.html.twig', {'button_label': 'button.update'}) }}
 
 {% endblock %}

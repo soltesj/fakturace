@@ -3,7 +3,7 @@
 {% block title %}{{ 'customer.new_customer'|trans }}{% endblock %}
 
 {% block body %}
-    <h1 class="mb-10 flex justify-start items-center text-xl space-x-3">
+    <h1 class="mb-5 flex justify-start items-center text-xl space-x-3 px-2 md:px-0">
         <a href="{{ path('app_customer_index',{'company': company.publicId}) }}" class="text-decoration-none">
             <svg class="size-8">
                 <use href="#arrow-left-circle"/>
@@ -12,5 +12,5 @@
         <span>{{ 'customer.new_customer'|trans }}</span>
     </h1>
 
-    {{ include('customer/_form.html.twig') }}
+    {{ include('customer/_form.html.twig', {'button_label': 'button.save'}) }}
 {% endblock %}

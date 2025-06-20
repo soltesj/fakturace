@@ -30,8 +30,6 @@ invoice.more_options: 'Více informací'
 invoice.less_options: 'Méně informací'
 invoice.customer.add: 'Přidat odběratele'
 invoice.customer.last-customers: 'Poslední odberatelé'
-#invoice.customer.add: ''
-#invoice.customer.add: ''
 message.invoice.not_stored: 'Fakruru nebyla uložena'
 form.invoice.vat_mode: DPH
 form.invoice.document_number: 'Číslo dokladu'
@@ -151,8 +149,8 @@ document.date_paid: Zaplaceno
 document.variable_symbol: VS
 document.send_by_email.headline: 'Zaslat emailem'
 document.send_by_email.email_to: 'Na email'
-document.send_by_email.subject: 'Předmět'
-document.send_by_email.content: 'Zpráva'
+document.send_by_email.subject: Předmět
+document.send_by_email.content: Zpráva
 navigation.dashboard: Přehledy
 navigation.invoices: Faktury
 navigation.expenses: Výdaje
@@ -180,7 +178,37 @@ form.user.phone.placeholder: Telefon
 document.send_by_email.email_to.not_blank: 'Vyplňte emalovou adresu'
 document.send_by_email.subject.not_blank: 'Vyplňte předmět'
 document.send_by_email.content.not_blank: 'Vyplňte text emailu'
-document.send_by_email.content.min_limit: "Text musí mít minimalaně  znaků"
-document.send_by_email.content.max_limit: "Text nesmí být delší než {{ limit }} znaků"
+document.send_by_email.content.min_limit: 'Text musí mít minimalaně  znaků'
+document.send_by_email.content.max_limit: 'Text nesmí být delší než {{ limit }} znaků'
 email_template.invoice_template: 'Emailová šablona'
 customer.new_customer: 'Nový zákazník'
+customer.update_customer: 'Upravit zákazníka'
+customer.load_by_customer_number: 'Načíst podle IČO'
+form.customer.name: Nézev
+form.customer.name.placeholder: 'Nézev firmy'
+form.customer.contact: 'Kontaktní osoba'
+form.customer.contact.placeholder: 'Jmeno a příjmení'
+form.customer.street: Ulice
+form.customer.street.placeholder: Ulice
+form.customer.house_number: 'Číslo domu'
+form.customer.house_number.placeholder: 'Číslo domu'
+form.customer.town: Město
+form.customer.town.placeholder: Město
+form.customer.zipcode: PSČ
+form.customer.zipcode.placeholder: PSČ
+form.customer.company_number: IČO
+form.customer.company_number.placeholder: IČO
+form.customer.vat_number: DIČ
+form.customer.vat_number.placeholder: DIČ
+form.customer.is_vat_payer: 'Plátce DPH'
+form.customer.is_vat_payer.placeholder: 'Plátce DPH'
+form.customer.phone: Telefon
+form.customer.phone.placeholder: Telefon
+form.customer.email: Email
+form.customer.email.placeholder: Email
+form.customer.website: Stránky
+form.customer.website.placeholder: 'Internetové stránky'
+form.customer.bank_account: 'Bankovni účet'
+form.customer.bank_account.placeholder: 'Číslo účetu a kód banky'
+form.customer.country: Země
+form.customer.country.placeholder: Země

@@ -8,11 +8,11 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 class Customer implements CompanyOwnedInterface
 {
-
     #[Groups(['minimal'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -20,9 +20,7 @@ class Customer implements CompanyOwnedInterface
     protected ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Company::class)]
-    #[ORM\JoinColumn(
-        nullable: false,
-    )]
+    #[ORM\JoinColumn(nullable: false)]
     private Company $company;
 
     #[ORM\ManyToOne(targetEntity: Country::class)]
@@ -35,43 +33,65 @@ class Customer implements CompanyOwnedInterface
     private Collection $documents;
 
     #[Groups(['minimal'])]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+    #[Assert\Length(max: 255)]
     #[ORM\Column(type: Types::STRING, length: 255, nullable: false)]
     private string $name;
 
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $contact = null;
 
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+    #[Assert\Length(max: 255)]
     #[ORM\Column(type: Types::STRING, length: 255, nullable: false)]
     private string $street;
 
-    #[ORM\Column(type: Types::STRING, length: 25, nullable: true)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+    #[Assert\Length(max: 25)]
+    #[ORM\Column(type: Types::STRING, length: 25, nullable: false)]
     private ?string $houseNumber = null;
 
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+    #[Assert\Length(max: 255)]
+    #[ORM\Column(type: Types::STRING, length: 255, nullable: false)]
     private ?string $town = null;
 
-    #[ORM\Column(type: Types::STRING, length: 10, nullable: true)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull]
+    #[Assert\Length(max: 10)]
+    #[ORM\Column(type: Types::STRING, length: 10, nullable: false)]
     private ?string $zipcode = null;
 
     #[Groups(['minimal'])]
+    #[Assert\Length(max: 20)]
     #[ORM\Column(type: Types::STRING, length: 20, nullable: true)]
     private ?string $companyNumber = null;
 
-    #[ORM\Column( type: Types::STRING, length: 20, nullable: true)]
+    #[Assert\Length(max: 20)]
+    #[ORM\Column(type: Types::STRING, length: 20, nullable: true)]
     private ?string $vatNumber = null;
 
+    #[Assert\NotNull]
     #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     private bool $isVatPayer = false;
 
+    #[Assert\Length(max: 25)]
     #[ORM\Column(type: Types::STRING, length: 25, nullable: true)]
     private ?string $phone = null;
 
+    #[Assert\Length(max: 255)]
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
     private ?string $email = null;
 
+    #[Assert\Length(max: 255)]
     #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
-    private ?string $web = null;
+    private ?string $website = null;
 
+    #[Assert\Length(max: 255)]
     #[ORM\Column(type: Types::STRING, length: 40, nullable: true)]
     private ?string $bankAccount = null;
 
@@ -204,14 +224,14 @@ class Customer implements CompanyOwnedInterface
         $this->email = $email;
     }
 
-    public function getWeb(): ?string
+    public function getWebsite(): ?string
     {
-        return $this->web;
+        return $this->website;
     }
 
-    public function setWeb(?string $web): void
+    public function setWebsite(?string $website): void
     {
-        $this->web = $web;
+        $this->website = $website;
     }
 
     public function getBankAccount(): ?string

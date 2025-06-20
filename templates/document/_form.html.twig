@@ -270,7 +270,7 @@
             {{ stimulus_target('document/new-customer','modal') }}
             {{ stimulus_action('document/new-customer','onOverlayClick', 'click') }}
     >
-        <div class="bg-white rounded-sm shadow-lg w-full md:max-w-3xl transition duration-500 ease-in-out"
+        <div class="rounded-sm shadow-lg w-full md:max-w-3xl max-h-[calc(100vh-4rem)] transition duration-500 ease-in-out"
                 {{ stimulus_target('document/new-customer','content') }}>
             <div class="bg-table-header text-text-primary/80 p-4 flex items-center place-content-between">
                 <h2 class="text-xl font-bold">{{ 'customer.new_customer'|trans }}</h2>
@@ -280,7 +280,7 @@
                     </svg>
                 </button>
             </div>
-            <div class="p-4 bg-background-secondary text-center"
+            <div class="p-4 bg-background-secondary max-h-[90vh] overflow-y-auto"
                     {{ stimulus_target('document/new-customer','body') }}
             >
             </div>

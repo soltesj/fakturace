@@ -57,7 +57,7 @@ export default class extends Controller {
         const modal = this.modalTarget;
         modal.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
         modal.classList.add('opacity-100', 'scale-100');
-
+        document.body.classList.add('overflow-hidden');
         await this.loadForm();
     }
 
@@ -79,7 +79,7 @@ export default class extends Controller {
         const modal = this.modalTarget;
         modal.classList.remove('opacity-100', 'scale-100');
         modal.classList.add('opacity-0', 'scale-95');
-
+        document.body.classList.remove('overflow-hidden');
         setTimeout(() => {
             modal.classList.add('pointer-events-none');
         }, 500);
