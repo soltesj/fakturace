@@ -45,8 +45,8 @@ form.invoice.date_due: 'Datum splatnosti'
 form.invoice.date_due.placeholder: 'Datum splatnosti'
 form.invoice.bank_account: 'Bankovní účet'
 form.invoice.bankAccount.placeholder: 'Bankovní účet'
-form.invoice.customer: Oběratel
-form.invoice.customer.placeholder: Oběratel
+form.invoice.customer: Odběratel
+form.invoice.customer.placeholder: Odběratel
 form.invoice.currency: Měna
 form.invoice.currency.placeholder: Měna
 form.invoice.currency_rate: Kurz
@@ -65,9 +65,9 @@ button.invoice.export_list: 'EXPORT SEZNAMU'
 button.invoice.export_list_short: EXPORT
 invoice.outgoing_invoices: 'Faktury - vydané'
 form.filter.query: Vyhledat
-form.filter.query_placeholder: 'Číslo dokladu, poznámka, Oběratel,'
+form.filter.query_placeholder: 'Číslo dokladu, poznámka, Odběratel,'
 form.filter.state: Stav
-form.filter.customer: Oběratel
+form.filter.customer: Odběratel
 form.filter.date_from: 'Datum od'
 form.filter.date_to: 'Datum do'
 state.no_paid: neuhrazené
