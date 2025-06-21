@@ -72,41 +72,33 @@
                 </tbody>
             </table>
         </div>
-        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary">
-            <div class="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-6">
-                <div class="md:order-1 col-span-2 md:col-span-5 lg:col-span-6"><h2
-                            class="text-xl font-semibold p-2 px-3 bg-table-header text-text-primary">{{ 'dashboard.unpaid_invoices'|trans }}</h2>
+        {% if overdueInvoices|length >0 %}
+            <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary">
+                <div class="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-6">
+                    <div class="md:order-1 col-span-2 md:col-span-5 lg:col-span-6"><h2
+                                class="text-xl font-semibold p-2 px-3 bg-table-header text-text-primary">{{ 'dashboard.unpaid_invoices'|trans }}</h2>
+                    </div>
                 </div>
+                {% for overdueInvoice in overdueInvoices %}
+                    {% set diff = ('now'|date('U') - overdueInvoice.dateDue|date('U')) // 86400 %}
+                    <div class="grid grid-cols-2 border-b border-b-border">
+                        <div class="p-2 px-3 pb-1 sm:col-span-1 text-lg font-medium text-text-primary/60">
+                            <a href="{{ path('app_document_show',{'company':company.publicId,'document':overdueInvoice.id}) }}"
+                               class="text-decoration-none">{{ overdueInvoice.documentNumber }}</a></div>
+                        <div class="p-2 pb-1 text-right text-lg font-medium text-text-primary/60">
+                            {{ overdueInvoice.remainingAmount }}
+                        </div>
+                        <div class="px-3 pb-1 pt-0 text-xs font-normal">
+                            {{ overdueInvoice.customer.name|default('') }}
+                        </div>
+                        <div class="px-2 pb-1 pt-0 text-xs font-normal lg:text-base text-right
+{% if (diff > 0) and (diff < 7) %} text-yellow-500 {% endif %} {{ diff >= 7 ?' text-red-500' : '' }}">
+                            {{ overdueInvoice.dateDue|diff_for_humans }}
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-6 border-b border-b-border">
-                <div class="p-2 px-3 pb-1 md:p-2 sm:col-span-1 md:order-1 text-lg font-medium md:text-base md:font-normal text-text-primary/60">
-                    <a href="/cs/1/document/4622/edit" class="text-decoration-none">2510000004</a></div>
-                <div class="p-2 pb-1 md:p-2 md:order-6 text-right text-lg font-medium md:text-base md:font-normal text-text-primary/60">
-                    121.00
-                </div>
-                <div class="px-3 pb-1 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-normal md:col-span-2 lg:col-span-3">
-                    AURES Holdings a.s.
-                </div>
-                <div class="px-2 pb-1 pt-0 md:p-2 md:order-3 text-xs font-light md:text-base md:font-normal md:text-md text-right">
-                    2025-05-15
-                </div>
-
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-6 border-b border-b-border">
-                <div class="p-2 px-3 pb-1 md:p-2 sm:col-span-1 md:order-1 text-lg font-medium md:text-base md:font-normal text-text-primary/60">
-                    <a href="/cs/1/document/4621/edit" class="text-decoration-none">2510000003</a></div>
-                <div class="p-2 pb-1 md:p-2 md:order-6 text-right text-lg font-medium md:text-base md:font-normal text-text-primary/60">
-                    200.00
-                </div>
-                <div class="px-3 pb-1 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-normal md:col-span-2 lg:col-span-3">
-                    AURES Holdings a.s.
-                </div>
-                <div class="px-2 pb-1 pt-0 md:p-2 md:order-3 text-xs font-light md:text-base md:font-normal md:text-md text-right">
-                    2025-05-13
-                </div>
-            </div>
-        </div>
-
+        {% endif %}
 
         <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary ">
             <h2 class="text-xl font-semibold p-2 px-3 bg-table-header text-text-primary">{{ 'dashboard.best_customers'|trans }}</h2>

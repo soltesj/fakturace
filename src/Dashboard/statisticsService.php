@@ -2,7 +2,9 @@
 
 namespace App\Dashboard;
 
+use App\Document\Types;
 use App\Entity\Company;
+use App\Entity\Document;
 use App\Enum\VatPaymentMode;
 use App\Repository\DocumentRepository;
 use DateMalformedStringException;
@@ -93,5 +95,16 @@ readonly class statisticsService
         }
 
         return [$dateFrom, $dateTo];
+    }
+
+
+    /**
+     * @param Company $company
+     * @return Document[]
+     */
+    public function getOverdueInvoices(Company $company): array
+    {
+        return $this->documentRepository->filtered(company: $company, documentTypes: Types::INVOICE_OUTGOING_TYPES,
+            state: 'OVERDUE');
     }
 }

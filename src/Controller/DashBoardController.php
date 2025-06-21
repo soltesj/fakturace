@@ -30,6 +30,7 @@ class DashBoardController extends AbstractController
         try {
             $vatsToPay = $this->statisticsService->getVatToPay($company);
             $chartData = $this->statisticsService->getChart($company, (int)new DateTime()->format('Y'));
+            $overdueInvoices = $this->statisticsService->getOverdueInvoices($company);
         } catch (Exception $e) {
             $chartData = [];
             $this->logger->error($e->getMessage(), $e->getTrace());
@@ -46,6 +47,7 @@ class DashBoardController extends AbstractController
             'chartData' => $chartData,
             'documentNumberExist' => $documentNumberExist,
             'vatsToPay' => $vatsToPay,
+            'overdueInvoices' => $overdueInvoices,
         ]);
     }
 }
