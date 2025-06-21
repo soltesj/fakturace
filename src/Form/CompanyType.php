@@ -4,8 +4,10 @@ namespace App\Form;
 
 use App\Entity\Company;
 use App\Entity\Country;
+use App\Enum\VatPaymentMode;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -21,6 +23,11 @@ class CompanyType extends AbstractType
                 'attr' => [
                     'placeholder' => t('form.company.is_vat_payer'),
                 ],
+            ])
+            ->add('vatPaymentMode', EnumType::class, [
+                'class' => VatPaymentMode::class,
+                'label' => t('form.company.vat_payment_mode'),
+                'choice_label' => fn(VatPaymentMode $mode) => $mode->label(),
             ])
             ->add(child: 'isOss', options: [
                 'label' => t('form.company.is_oss'),

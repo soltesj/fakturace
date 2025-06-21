@@ -60,13 +60,13 @@
                 <tbody class="text-text-secondary">
                 <tr class="border-b border-b-border">
                     {% for vatToPay in vatsToPay.thisPeriod %}
-                        <td class="p-2 px-3">{{ company.vatPaymentMode.value == enum('App\\Enum\\VatPaymentMode').MONTHLY.value?'dashboard.vat_records.this_month':'dashboard.vat_records.this_quarter'|trans }}</td>
+                        <td class="p-2 px-3">{{ company.vatPaymentMode.value == enum('App\\Enum\\VatPaymentMode').MONTHLY.value?'dashboard.vat_records.this_month'|trans:'dashboard.vat_records.this_quarter'|trans }}</td>
                         <td class="p-2 px-3 text-right">{{ vatToPay.vatTotal }}{{ vatToPay.currency }}</td>
                     {% endfor %}
                 </tr>
 
                 {% for vatToPay in vatsToPay.previousPeriod %}
-                    <td class="p-2 px-3">{{ company.vatPaymentMode.value == enum('App\\Enum\\VatPaymentMode').MONTHLY.value?'dashboard.vat_records.previous_month':'dashboard.vat_records.previous_quarter'|trans }}</td>
+                    <td class="p-2 px-3">{{ company.vatPaymentMode.value == enum('App\\Enum\\VatPaymentMode').MONTHLY.value?'dashboard.vat_records.previous_month'|trans:'dashboard.vat_records.previous_quarter'|trans }}</td>
                     <td class="p-2 px-3 text-right">{{ vatToPay.vatTotal }}{{ vatToPay.currency }}</td>
                 {% endfor %}
                 </tbody>
