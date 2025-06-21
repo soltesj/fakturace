@@ -2,12 +2,11 @@
 
 namespace App\Repository;
 
-use App\Document\Types;
 use App\DocumentPrice\Types as PriceTypes;
 use App\Entity\Company;
-use App\Entity\Customer;
 use App\Entity\Document;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\ParameterType;
@@ -185,5 +184,26 @@ SQL;
             ->andWhere('document.id = :id')
             ->setParameter('id', $id)
             ->getQuery()->getSingleResult();
+    }
+
+
+    /**
+     * @return array<int, array{currency: string, vatTotal: string}
+     */
+    public function getVatToPay(Company $company, DateTimeImmutable $dateFrom, DateTimeImmutable $dateTo): array
+    {
+        return $this->createQueryBuilder('document')
+            ->select('curr.symbol AS currency, SUM(document_prices.vatAmount) AS vatTotal')
+            ->leftJoin('document.documentPrices', 'document_prices')
+            ->leftJoin('document.currency', 'curr') // <-- JOIN na entitu Currency
+            ->andWhere('document.company = :company')
+            ->setParameter('company', $company)
+            ->andWhere('document.dateTaxable >= :dateFrom')
+            ->setParameter('dateFrom', $dateFrom)
+            ->andWhere('document.dateTaxable <= :dateTo')
+            ->setParameter('dateTo', $dateTo)
+            ->groupBy('curr.code')
+            ->getQuery()
+            ->getResult();
     }
 }

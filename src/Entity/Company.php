@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\VatPaymentMode;
 use App\Repository\CompanyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -27,6 +28,9 @@ class Company
 
     #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
     private bool $isVatPayer = false;
+
+    #[ORM\Column(type: 'string', nullable: true, enumType: VatPaymentMode::class)]
+    private ?VatPaymentMode $vatPaymentMode = null;
 
     //OSS => One Stop Shop
     #[ORM\Column(type: Types::BOOLEAN, nullable: false)]
@@ -161,6 +165,16 @@ class Company
     public function setIsVatPayer(bool $isVatPayer): void
     {
         $this->isVatPayer = $isVatPayer;
+    }
+
+    public function getVatPaymentMode(): ?VatPaymentMode
+    {
+        return $this->vatPaymentMode;
+    }
+
+    public function setVatPaymentMode(?VatPaymentMode $vatPaymentMode): void
+    {
+        $this->vatPaymentMode = $vatPaymentMode;
     }
 
     public function isOss(): bool

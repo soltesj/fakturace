@@ -212,3 +212,7 @@ form.customer.bank_account: 'Bankovni účet'
 form.customer.bank_account.placeholder: 'Číslo účetu a kód banky'
 form.customer.country: Země
 form.customer.country.placeholder: Země
+dashboard.vat_records.this_month: 'Tento měsíc'
+dashboard.vat_records.previous_month: 'Minulý měsíc'
+dashboard.vat_records.this_quarter: 'Toto čtvrtetí'
+dashboard.vat_records.previous_quarter: 'Minulé čtvrtetí'

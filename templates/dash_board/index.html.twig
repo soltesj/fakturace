@@ -59,13 +59,16 @@
                 </thead>
                 <tbody class="text-text-secondary">
                 <tr class="border-b border-b-border">
-                    <td class="p-2 px-3">Tento měsíc</td>
-                    <td class="p-2 px-3 text-right">10 000kč</td>
+                    {% for vatToPay in vatsToPay.thisPeriod %}
+                        <td class="p-2 px-3">{{ company.vatPaymentMode.value == enum('App\\Enum\\VatPaymentMode').MONTHLY.value?'dashboard.vat_records.this_month':'dashboard.vat_records.this_quarter'|trans }}</td>
+                        <td class="p-2 px-3 text-right">{{ vatToPay.vatTotal }}{{ vatToPay.currency }}</td>
+                    {% endfor %}
                 </tr>
-                <tr class="border-b border-b-border">
-                    <td class="p-2 px-3">Minulý měsíc</td>
-                    <td class="p-2 px-3 text-right">10 000kč</td>
-                </tr>
+
+                {% for vatToPay in vatsToPay.previousPeriod %}
+                    <td class="p-2 px-3">{{ company.vatPaymentMode.value == enum('App\\Enum\\VatPaymentMode').MONTHLY.value?'dashboard.vat_records.previous_month':'dashboard.vat_records.previous_quarter'|trans }}</td>
+                    <td class="p-2 px-3 text-right">{{ vatToPay.vatTotal }}{{ vatToPay.currency }}</td>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -81,7 +84,7 @@
                 <div class="p-2 pb-1 md:p-2 md:order-6 text-right text-lg font-medium md:text-base md:font-normal text-text-primary/60">
                     121.00
                 </div>
-                <div class="px-2 px-3 pb-1 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-normal md:col-span-2 lg:col-span-3">
+                <div class="px-3 pb-1 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-normal md:col-span-2 lg:col-span-3">
                     AURES Holdings a.s.
                 </div>
                 <div class="px-2 pb-1 pt-0 md:p-2 md:order-3 text-xs font-light md:text-base md:font-normal md:text-md text-right">
@@ -95,7 +98,7 @@
                 <div class="p-2 pb-1 md:p-2 md:order-6 text-right text-lg font-medium md:text-base md:font-normal text-text-primary/60">
                     200.00
                 </div>
-                <div class="px-2 px-3 pb-1 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-normal md:col-span-2 lg:col-span-3">
+                <div class="px-3 pb-1 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-normal md:col-span-2 lg:col-span-3">
                     AURES Holdings a.s.
                 </div>
                 <div class="px-2 pb-1 pt-0 md:p-2 md:order-3 text-xs font-light md:text-base md:font-normal md:text-md text-right">

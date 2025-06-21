@@ -4,12 +4,16 @@
 
 - [ ] Fix the problem with generation document number in the load test there ware many attempts with same document
   number
+- [ ] if the price is updated, the vat_amount is not recalculated
+- [ ] if the document is edited, the first value off the vat amount is set it is probably caused by changing document
+  vat mode
 
 ## 📦 New features
 
 - [ ] default texts (email, invoice description, ...) management
 - [ ] Add a notification system (new payment, not assigned payment, messages from the system ...)
 - [ ] when a new company is created, add an email template
+- [ ] vat summary on the dashboard now counts only vat from income expense should be counted too
 
 ## 🔧 Refactoring
 

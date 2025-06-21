@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Dashboard\ChartService;
+use App\Dashboard\statisticsService;
 use App\Document\Types;
 use App\DocumentNumber\DocumentNumberGenerator;
 use App\Entity\Company;
@@ -18,7 +18,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class DashBoardController extends AbstractController
 {
     public function __construct(
-        private readonly ChartService $chartService,
+        private readonly statisticsService $statisticsService,
         private readonly LoggerInterface $logger,
         private readonly DocumentNumberGenerator $documentNumber,
     ) {
@@ -28,7 +28,8 @@ class DashBoardController extends AbstractController
     public function index(Company $company): Response
     {
         try {
-            $chartData = $this->chartService->getChart($company, (int)new DateTime()->format('Y'));
+            $vatsToPay = $this->statisticsService->getVatToPay($company);
+            $chartData = $this->statisticsService->getChart($company, (int)new DateTime()->format('Y'));
         } catch (Exception $e) {
             $chartData = [];
             $this->logger->error($e->getMessage(), $e->getTrace());
@@ -44,6 +45,7 @@ class DashBoardController extends AbstractController
             'company' => $company,
             'chartData' => $chartData,
             'documentNumberExist' => $documentNumberExist,
+            'vatsToPay' => $vatsToPay,
         ]);
     }
 }
