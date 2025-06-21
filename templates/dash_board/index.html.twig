@@ -98,15 +98,13 @@
             </div>
         {% endif %}
 
-        {# <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary ">
+        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary ">
             <h2 class="text-xl font-semibold p-2 px-3 bg-table-header text-text-primary">{{ 'dashboard.best_customers'|trans }}</h2>
 
             <p class="p-2 px-3">
-                Data<br>
-                Data<br>
-                data<br>
-                Data<br>
-                data</p>
-        </div> #}
+                {% for customer in customers %}
+                    {{ customer.name }}<br>
+                {% endfor %}
+        </div>
     </div>
 {% endblock %}

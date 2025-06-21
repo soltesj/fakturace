@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Company;
 use App\Entity\Customer;
 use App\Status\StatusValues;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -82,5 +83,22 @@ class CustomerRepository extends ServiceEntityRepository
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
+    }
+
+
+    public function findTopCustomers(Company $company, int $limit = 5): array
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->select('c', 'SUM(document.totalAmount) AS HIDDEN total')
+            ->leftJoin('c.documents', 'document')
+            ->groupBy('c.id')
+            ->orderBy('total', 'DESC')
+            ->andWhere('c.company = :company')
+            ->setParameter('company', $company)
+            ->andWhere('document.dateIssue > :date')
+            ->setParameter('date', new DateTime('-12months'))
+            ->setMaxResults($limit);
+
+        return $qb->getQuery()->getResult();
     }
 }

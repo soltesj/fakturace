@@ -3,9 +3,12 @@
 namespace App\Dashboard;
 
 use App\Document\Types;
+use App\Entity\BankAccountBalance;
 use App\Entity\Company;
 use App\Entity\Document;
 use App\Enum\VatPaymentMode;
+use App\Repository\BankAccountBalanceRepository;
+use App\Repository\CustomerRepository;
 use App\Repository\DocumentRepository;
 use DateMalformedStringException;
 use DateTime;
@@ -13,13 +16,13 @@ use DateTimeImmutable;
 use Doctrine\DBAL\Exception;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-use function Symfony\Component\Translation\t;
-
-readonly class statisticsService
+readonly class StatisticsService
 {
     public function __construct(
         private DocumentRepository $documentRepository,
-        private TranslatorInterface $translator
+        private TranslatorInterface $translator,
+        private BankAccountBalanceRepository $balanceRepository,
+        private CustomerRepository $customerRepository,
     ) {
     }
 
@@ -97,7 +100,6 @@ readonly class statisticsService
         return [$dateFrom, $dateTo];
     }
 
-
     /**
      * @param Company $company
      * @return Document[]
@@ -107,4 +109,19 @@ readonly class statisticsService
         return $this->documentRepository->filtered(company: $company, documentTypes: Types::INVOICE_OUTGOING_TYPES,
             state: 'OVERDUE');
     }
+
+    /**
+     * @return BankAccountBalance[]
+     */
+    public function findBalances(Company $company): array
+    {
+        return $this->balanceRepository->findBalances($company);
+    }
+
+    public function findTopCustomers(Company $company, int $limit = 5): array
+    {
+        return $this->customerRepository->findTopCustomers($company, $limit);
+    }
+
+
 }
