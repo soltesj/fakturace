@@ -6,6 +6,8 @@ use App\Dashboard\statisticsService;
 use App\Document\Types;
 use App\DocumentNumber\DocumentNumberGenerator;
 use App\Entity\Company;
+use App\Repository\BankAccountBalanceRepository;
+use App\Repository\DocumentRepository;
 use DateTime;
 use Doctrine\DBAL\Exception;
 use Psr\Log\LoggerInterface;
@@ -21,6 +23,7 @@ class DashBoardController extends AbstractController
         private readonly statisticsService $statisticsService,
         private readonly LoggerInterface $logger,
         private readonly DocumentNumberGenerator $documentNumber,
+        private readonly BankAccountBalanceRepository $balanceRepository,
     ) {
     }
 
@@ -28,6 +31,8 @@ class DashBoardController extends AbstractController
     public function index(Company $company): Response
     {
         try {
+            $balances = $this->balanceRepository->findBalances($company);
+            dump($balances);
             $vatsToPay = $this->statisticsService->getVatToPay($company);
             $chartData = $this->statisticsService->getChart($company, (int)new DateTime()->format('Y'));
             $overdueInvoices = $this->statisticsService->getOverdueInvoices($company);
@@ -48,6 +53,7 @@ class DashBoardController extends AbstractController
             'documentNumberExist' => $documentNumberExist,
             'vatsToPay' => $vatsToPay,
             'overdueInvoices' => $overdueInvoices,
+            'balances' => $balances,
         ]);
     }
 }

@@ -38,14 +38,12 @@
                 </tr>
                 </thead>
                 <tbody class="text-text-secondary">
+                {% for balance in balances %}
                 <tr class="border-b border-b-border">
-                    <td class="p-2 px-3">Fio</td>
-                    <td class="p-2 px-3 text-right">10 000 Kč</td>
+                    <td class="p-2 px-3">{{ balance.bankAccount.shortName?? balance.bankAccount.name }}</td>
+                    <td class="p-2 px-3 text-right">{{ balance.balance }}</td>
                 </tr>
-                <tr class="border-b border-b-border">
-                    <td class="p-2 px-3">Air bank</td>
-                    <td class="p-2 px-3 text-right">99 000 Kč</td>
-                </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
@@ -100,7 +98,7 @@
             </div>
         {% endif %}
 
-        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary ">
+        {# <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary ">
             <h2 class="text-xl font-semibold p-2 px-3 bg-table-header text-text-primary">{{ 'dashboard.best_customers'|trans }}</h2>
 
             <p class="p-2 px-3">
@@ -109,6 +107,6 @@
                 data<br>
                 Data<br>
                 data</p>
-        </div>
+        </div> #}
     </div>
 {% endblock %}

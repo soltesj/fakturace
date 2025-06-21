@@ -60,6 +60,9 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $request->request->all()['form']['user']['plainPassword'];
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+            if (!$company->isVatPayer()) {
+                $company->setVatPaymentMode(null);
+            }
             $entityManager->persist($company);
             $entityManager->flush();
             $address = new Address('registration@i-fakturace.eu', 'registrace');

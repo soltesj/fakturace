@@ -22,6 +22,9 @@ class CompanyController extends AbstractController
         $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if (!$company->isVatPayer()) {
+                $company->setVatPaymentMode(null);
+            }
             $entityManager->flush();
             $this->addFlash('success', 'message.changes_have_been_saved');
 
