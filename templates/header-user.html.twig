@@ -86,7 +86,7 @@
 
                     <!-- Profile dropdown -->
                     <div class="relative ml-3">
-                        <div class="relative" id="user-menu">
+                        <div class="relative group" id="user-menu">
                             <button type="button"
                                     data-action="click->navigation#toggleUserMenu"
                                     class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-0"
@@ -96,7 +96,7 @@
                                 </svg>
                             </button>
                             <div {{ stimulus_target('navigation','userSubmenu') }}
-                                    class="absolute hidden group-hover:block right-0 mt-5 origin-top-right  py-1  bg-nav-background-secondary text-white rounded-sm shadow-lg z-10 w-max whitespace-nowrap">
+                                    class="absolute hidden group-hover:block right-0 origin-top-right  py-1  bg-nav-background-secondary text-white rounded-sm shadow-lg z-10 w-max whitespace-nowrap">
                                 <!-- Active: "bg-gray-100 outline-hidden", Not Active: "" -->
                                 <a href="{{ path('app_user_edit', {'company': company.publicId}) }}"
                                    class="block px-4 py-2 text-sm hover:bg-gray-700">{{ 'navigation.personal_info'|trans }}</a>

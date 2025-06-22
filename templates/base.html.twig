@@ -9,18 +9,24 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
     <script>
+        window.serverTheme = "{{ app.user.setting.theme|default('') }}";
         (() => {
             try {
-                const theme = localStorage.getItem('theme');
-                if (theme) {
-                    document.documentElement.classList.add(theme);
+                const localTheme = localStorage.getItem('theme');
+                const serverTheme = window.serverTheme;
+                document.documentElement.className = '';
+                if (localTheme) {
+                    document.documentElement.classList.add(serverTheme);
+                    localStorage.setItem('theme', serverTheme);
+                } else if (localTheme) {
+                    document.documentElement.classList.add(localTheme);
                 } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
                     document.documentElement.classList.add('dark');
                 } else {
                     document.documentElement.classList.add('light');
                 }
             } catch (_) {
-                document.documentElement.classList.add('light');
+                document.documentElement.classList.add('dark');
             }
         })();
     </script>
@@ -70,15 +76,15 @@
             let theme = localStorage.getItem('theme')
 
             document.documentElement.className = '';
-            if (theme !== 'dark') {
-                localStorage.setItem('theme', 'dark')
-                document.documentElement.classList.add('dark')
-                console.log('dark')
-            } else {
-                localStorage.setItem('theme', 'light')
-                document.documentElement.classList.remove('dark')
-                console.log('light')
-            }
+            theme = theme !== 'dark' ? 'dark' : 'light';
+            localStorage.setItem('theme', theme)
+            document.documentElement.classList.add(theme)
+            console.log(theme)
+            fetch('/api/user/theme', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({theme: theme})
+            });
         })
     })
 </script>
