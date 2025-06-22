@@ -11,12 +11,12 @@
         </a>
         <span>{{ 'email_template.invoice_template'|trans }}</span>
     </h1>
-    <div class="bg-background-secondary p-2 mt-5 md:p-4">
+    <div class="bg-card-bg p-2 mt-5 md:p-4">
         {{ form_start(form) }}
         {{ form_row(form.subject) }}
         {{ form_row(form.content) }}
 
-        <button class="w-full mt-10 p-2 bg-green-700 hover:bg-green-500 text-green-100"
+        <button class="w-full mt-10 p-2 bg-success/60 hover:bg-success text-white/80 hover:text-white/90"
                 type="submit">{{ 'button.save'|trans }}</button>
         {{ form_end(form) }}
     </div>
@@ -24,7 +24,7 @@
     <h2 class="bg-table-header p-2 mt-8 md:p-4">
         Proměnne v šabloně
     </h2>
-    <div class="grid grid-cols-3 gap-x-2 bg-background-secondary p-2 md:p-4">
+    <div class="grid grid-cols-3 gap-x-2 bg-card-bg p-2 md:p-4">
         <div class="text-right">{number}</div>
         <div class="col-span-2">je proměnná pro číslo dokumentu</div>
         <div class="text-right">{username}</div>

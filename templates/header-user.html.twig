@@ -1,13 +1,13 @@
-<header class="bg-gray-900 text-white border-b border-gray-800 mb-4"
+<header class=" text-white border-b border-border mb-4"
         {{ stimulus_controller('navigation') }}>
-    <nav class="bg-gray-800">
+    <nav class="bg-nav-background">
         <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div class="relative flex h-16 items-center justify-between">
                 <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
                     {# Mobile menu button #}
                     <button type="button"
                             {{ stimulus_target('navigation','mobileMenuButton') }}
-                            data-action="touchstart->navigation#toggleMobileMenu"
+                            {{ stimulus_action('navigation','toggleMobileMenu') }}
                             class="relative inline-flex items-center justify-center rounded-sm p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset">
                         <span class="absolute -inset-0.5"></span>
                         <span class="sr-only">Open main menu</span>
@@ -96,7 +96,7 @@
                                 </svg>
                             </button>
                             <div {{ stimulus_target('navigation','userSubmenu') }}
-                                    class="absolute hidden group-hover:block right-0 mt-1 origin-top-right  py-1  bg-gray-800 text-white rounded-sm shadow-lg z-10 w-max whitespace-nowrap">
+                                    class="absolute hidden group-hover:block right-0 mt-5 origin-top-right  py-1  bg-nav-background-secondary text-white rounded-sm shadow-lg z-10 w-max whitespace-nowrap">
                                 <!-- Active: "bg-gray-100 outline-hidden", Not Active: "" -->
                                 <a href="{{ path('app_user_edit', {'company': company.publicId}) }}"
                                    class="block px-4 py-2 text-sm hover:bg-gray-700">{{ 'navigation.personal_info'|trans }}</a>
@@ -111,11 +111,11 @@
 
         <!-- Mobile menu, show/hide based on menu state. -->
         <div {{ stimulus_target('navigation','mobileMenu') }}
-                class="hidden sm:hidden z-10 absolute bg-gray-900 w-full">
-            <div class="space-y-1 px-2 pt-2 pb-3">
+                class="hidden sm:hidden z-10 absolute bg-nav-background-secondary w-full">
+            <div class="space-y-1 px-0 pt-2 pb-3">
                 <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
                 <a href="{{ path('app_dash_board',{'company': company.publicId}) }}"
-                   class="block rounded-sm {% if app.current_route == 'app_dash_board' %}bg-gray-900{% endif %}  px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                   class="block rounded-sm {% if app.current_route == 'app_dash_board' %}bg-gray-900{% endif %} px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                 >{{ 'navigation.dashboard'|trans }}</a>
                 <a href="{{ path('app_document_index', {'company': company.publicId}) }}"
                    class="block rounded-sm {% if app.current_route starts with 'app_document' %}bg-gray-900{% endif %} px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">{{ 'navigation.invoices'|trans }}</a>
@@ -130,15 +130,15 @@
                    class="block rounded-sm px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">{{ 'navigation.settings'|trans }}</a>
                 <div class="pl-4">
                     <a href="{{ path('app_setting_edit', {'company': company.publicId}) }}"
-                       class="block px-3 py-1 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">{{ 'navigation.company_info'|trans }}</a>
+                       class="block px-3 py-1 text-sm text-gray-300 {% if app.current_route == 'app_setting_edit' %}bg-gray-900{% endif %} hover:bg-gray-700 hover:text-white">{{ 'navigation.company_info'|trans }}</a>
                     <a href="{{ path('app_setting_account_index', {'company': company.publicId}) }}"
-                       class="block px-3 py-1 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">{{ 'navigation.bank_accounts'|trans }}</a>
+                       class="block px-3 py-1 text-sm text-gray-300 {% if app.current_route == 'app_setting_account_index' %}bg-gray-900{% endif %}  hover:bg-gray-700 hover:text-white">{{ 'navigation.bank_accounts'|trans }}</a>
                     <a href="{{ path('app_setting_document_numbers_index', {'company': company.publicId}) }}"
-                       class="block px-3 py-1 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">{{ 'navigation.document_numbers'|trans }}</a>
+                       class="block px-3 py-1 text-sm text-gray-300 {% if app.current_route == 'app_setting_document_numbers_index' %}bg-gray-900{% endif %} hover:bg-gray-700 hover:text-white">{{ 'navigation.document_numbers'|trans }}</a>
                     <a href="{{ path('app_setting_currency_edit', {'company': company.publicId}) }}"
-                       class="block px-3 py-1 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">{{ 'navigation.currencies'|trans }}</a>
+                       class="block px-3 py-1 text-sm text-gray-300 {% if app.current_route == 'app_setting_currency_edit' %}bg-gray-900{% endif %}  hover:bg-gray-700 hover:text-white">{{ 'navigation.currencies'|trans }}</a>
                     <a href="{{ path('app_email_template', {'company': company.publicId}) }}"
-                       class="block px-3 py-1 text-sm text-gray-300 hover:bg-gray-700 hover:text-white">{{ 'navigation.invoice_template'|trans }}</a>
+                       class="block px-3 py-1 text-sm text-gray-300 {% if app.current_route == 'app_email_template' %}bg-gray-900{% endif %}  hover:bg-gray-700 hover:text-white">{{ 'navigation.invoice_template'|trans }}</a>
                 </div>
 
                 {# <div class="pt-4 border-t-2 border-border">

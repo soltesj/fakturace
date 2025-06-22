@@ -1,4 +1,4 @@
-<div class="bg-background-secondary p-0 md:p-4">
+<div class="bg-card-bg p-0 md:p-4">
     <div class="bg-table-header text-text-primary/80 grid grid-cols-2 md:grid-cols-6 lg:grid-cols-7">
         <div class="p-2 pb-1 md:p-2 md:order-1 sm:col-span-1">{{ 'payment.document'|trans }}</div>
         <div class="p-2 pb-1 md:p-2 md:order-6 text-right">{{ 'payment.amount'|trans }}</div>
@@ -12,7 +12,7 @@
     </div>
     {% for payment in payments %}
         <div class="grid grid-cols-2 md:grid-cols-6 lg:grid-cols-7 border-b border-b-border">
-            <div class="p-2 pb-1 md:p-2 sm:col-span-1 md:order-1 text-lg {{ payment.document?'font-medium md:font-bold':'font-light' }} md:text-base text-text-primary/60 flex items-center">{% if is_granted('EDIT',payment) %}
+            <div class="p-2 pb-1 md:p-2 sm:col-span-1 md:order-1 text-lg {{ payment.document?'font-medium md:font-bold':'font-light' }} md:text-base text-text-primary flex items-center">{% if is_granted('EDIT',payment) %}
                     <svg class="size-4 {{ payment.type.value == enum('App\\Enum\\PaymentType').EXPENSE.value?'text-red-800':'text-green-800' }}">
                         <use href="#dollar-sign"/>
                     </svg>
@@ -22,7 +22,7 @@
                     {{ payment.document.documentNumber|default('payment.no_document_assigned')|trans }}
                 {% endif %}
             </div>
-            <div class="p-2 pb-1 md:p-2 md:order-6 text-right text-lg font-medium md:text-base md:font-normal text-text-primary/60">
+            <div class="p-2 pb-1 md:p-2 md:order-6 text-right text-lg font-medium md:text-base md:font-normal text-text-primary">
                 {{ payment.amount }}&nbsp;{{ payment.currency?payment.currency.symbol:'' }}
             </div>
             <div class="px-2 pb-1 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-semibold md:col-span-2 lg:col-span-3">

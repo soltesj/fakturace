@@ -6,7 +6,7 @@
     <div {{ stimulus_target('customer/ico-autofill','alertBox') }}></div>
 
     <h2 class="text-xl font-semibold p-2 bg-table-header text-text-primary">{{ 'customer.load_by_customer_number'|trans }}</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 gap-x-4 px-2 mb-10 bg-background-secondary">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 gap-x-4 px-2 mb-10 bg-card-bg">
         <div class="mb-1 md:grid md:grid-cols-[12rem_1fr]">
             <label for="look-up_country" class="p-2 md:px-0">Zeme</label>
             <select id="look-up_country" name="look-up_country" {{ stimulus_target('customer/ico-autofill','country') }}
@@ -19,7 +19,7 @@
                    class="rounded-sm mt-0 block w-full border-0 border-b-2 bg-input-bg border-input-border focus:border-input-border-focus focus:ring-0"
                     {{ stimulus_target('customer/ico-autofill','companyNumber') }}>
         </div>
-        <button class="bg-blue-800 text-blue-100 disabled:bg-gray-500 flex items-center justify-center p-2"
+        <button class="bg-info/60 hover:bg-info text-white/80 hover:text-white/90 disabled:bg-gray-500 flex items-center justify-center p-2"
                 type="button" id="button-addon"
                 {{ stimulus_action('customer--ico-autofill','lookup') }}
                 {{ stimulus_target('customer--ico-autofill','lookupButton') }}
@@ -35,7 +35,7 @@
     </div>
 
     <h2 class="text-xl font-semibold mb-0 p-2 bg-table-header text-text-primary">Fakturační údaje</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-x-4 p-2 bg-background-secondary">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-x-4 p-2 bg-card-bg">
 
 
         {{ form_row(form.name, { attr: { 'data-customer--ico-autofill-target': 'nameInput' } }) }}
@@ -55,6 +55,6 @@
         {{ form_row(form.contact) }}
 
     </div>
-    <button class="w-full mt-10 p-2 bg-green-700 hover:bg-green-500 text-green-100 mb-16">{{ button_label|default('button.save')|trans }}</button>
+    <button class="w-full mt-10 p-2 bg-success/60 hover:bg-success text-white/80 hover:text-white/90 mb-16">{{ button_label|default('button.save')|trans }}</button>
 </div>
 {{ form_end(form) }}

@@ -7,7 +7,7 @@
                     {# Mobile menu button #}
                     <button type="button"
                             {{ stimulus_target('navigation','mobileMenuButton') }}
-                            data-action="touchstart->navigation#toggleMobileMenu"
+                            {{ stimulus_action('navigation','toggleMobileMenu') }}
                             class="relative inline-flex items-center justify-center rounded-sm p-2 text-gray-400 hover:bg-gray-700 hover:text-white">
                         <svg class="block size-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                              stroke="currentColor" aria-hidden="true" data-slot="icon">

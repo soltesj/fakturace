@@ -1,4 +1,4 @@
-<div class="bg-background-secondary p-0 md:p-4">
+<div class="bg-card-bg p-0 md:p-4">
     <div class="bg-table-header text-text-primary/80 grid grid-cols-2 md:grid-cols-6 lg:grid-cols-7">
         <div class="p-2 pb-1 md:p-2 md:order-1 sm:col-span-1">{{ 'invoice.document_number'|trans }}</div>
         <div class="p-2 pb-1 md:p-2 md:order-6 text-right">{{ 'invoice.to_pay'|trans }}</div>
@@ -15,7 +15,7 @@
     {% for document in documents %}
         {% set diff = ('now'|date('U') - document.dateDue|date('U')) // 86400 %}
         <div class="grid grid-cols-2 md:grid-cols-6 lg:grid-cols-7 border-b border-b-border">
-            <div class="p-2 pb-1 md:p-2 sm:col-span-1 md:order-1 text-lg font-medium md:text-base md:font-bold text-text-primary/60 flex items-center">{% if is_granted('EDIT',document) %}
+            <div class="p-2 pb-1 md:p-2 sm:col-span-1 md:order-1 text-lg font-medium md:text-base md:font-bold text-text-primary flex items-center">{% if is_granted('EDIT',document) %}
                     <a
                     href="{{ path('app_document_show', {'company': company.publicId, 'document': document.id}) }}"
                     class="text-decoration-none">{{ document.documentNumber }}</a>{% else %}{{ document.documentNumber }}{% endif %}
@@ -30,15 +30,15 @@
                     </svg>
                 {% endif %}
                 {% if diff > 0 and document.remainingAmount > 0 %}
-                    <svg class="size-3.5 ml-2 {% if (diff > 0) and (diff < 7) %} text-yellow-500 {% endif %} {{ diff >= 7 ?' text-red-500' : '' }}">
+                    <svg class="size-3.5 ml-2 {% if (diff > 0) and (diff < 7) %} text-warning {% endif %} {{ diff >= 7 ?' text-red-500' : '' }}">
                         <use href="#triangle-exclamation"/>
                     </svg>
                 {% endif %}
             </div>
-            <div class="p-2 pb-1 md:p-2 md:order-6 text-right text-lg font-medium md:text-base md:font-normal text-text-primary/60">{{ document.remainingAmount }}</div>
+            <div class="p-2 pb-1 md:p-2 md:order-6 text-right text-lg font-medium md:text-base md:font-normal text-text-primary">{{ document.remainingAmount }}</div>
             <div class="px-2 pb-1 pt-0 md:p-2 md:order-2 text-xs font-light md:text-base md:font-semibold md:col-span-2 lg:col-span-3">{{ document.customer.name|default('') }}</div>
             <div class="px-2 pb-1 pt-0 md:p-2 md:order-3 text-xs font-normal md:text-base md:font-normal md:text-md text-right
-                {% if document.remainingAmount >0 and (diff > 0) and (diff < 7) %} text-yellow-500 {% endif %} {{ document.remainingAmount >0 and diff >= 7 ?' text-red-500' : '' }}">
+                {% if document.remainingAmount >0 and (diff > 0) and (diff < 7) %} text-warning {% endif %} {{ document.remainingAmount >0 and diff >= 7 ?' text-red-500' : '' }}">
                 {% if document.remainingAmount >0 and diff >= 0 %}
                     <span title="{{ 'invoice.date_due'|trans }}: {{ document.dateDue|format_date }}">{{ document.dateDue|diff_for_humans }}</span>
                 {% else %}

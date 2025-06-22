@@ -11,13 +11,13 @@
         {% endfor %}
 
 <div class="w-full col-span-2 md:col-span-1 justify-items-stretch">
-    <button type="reset" class="bg-red-900 hover:bg-red-700 text-red-100 p-2 flex items-center w-full">
+    <button type="reset" class="bg-error/60 hover:bg-error text-error-text p-2 flex items-center w-full">
         <svg class="size-4 text-red-100 mr-2">
             <use href="#square-xmark"/>
         </svg>
         <span>{{ 'invoice.reset_filter'|trans }}</span>
     </button>
-    <button class="bg-blue-700 hover:bg-blue-500 text-blue-100 p-2 hidden"
+    <button class="bg-info/60 hover:bg-info text-white/80 hover:text-white/90 p-2 hidden"
             type="submit" {{ stimulus_action('documents/filter', 'submitForm', 'click') }}>{{ 'button.invoice.filter'|trans }}</button>
 </div>
 

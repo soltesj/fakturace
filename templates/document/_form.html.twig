@@ -13,7 +13,7 @@
          data-document--dates-maturity-days-value="{{ company.maturityDays|default(14) }}"
          data-action="document--document-item-collection:add-row->document--price-calc#toggleDocumentWithWat">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 gap-x-4 px-2">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 gap-x-4 p-2 bg-card-bg">
             <div class="col-start-1 col-span-1 order-1"
                     {{ stimulus_controller('document/customer') }}
                  data-document--customer-api-url-value="{{ path('api_customers_lookup',{'company':company.publicId}) }}"
@@ -48,7 +48,7 @@
                         <div class="absolute z-10 bg-table-header w-full py-2 mt-0.5">
                             <div class="relative px-2 mb-2">
                                 <input type="text" id="customer-search" name="customer-search"
-                                       class="pr-7 rounded-sm mt-0 block w-full border-0 border-b-2 bg-input-bg border-input-border px-1 focus:border-input-border-focus focus:ring-0 invalid:border-red-700"
+                                       class="pr-7 rounded-sm mt-0 block w-full border-0 border-b-2 bg-input-bg border-input-border px-1 focus:border-input-border-focus focus:ring-0 invalid:border-error"
                                         {{ stimulus_target('document/customer','searchInput') }}
                                         {{ stimulus_action('document/customer', 'onChange') }}
                                 >
@@ -65,7 +65,7 @@
                             </div>
                             <div class="px-2 py-1">
                                 <button type="button"
-                                        class="px-2 py-1 w-full mt-3 bg-green-700 hover:bg-green-500 text-green-100"
+                                        class="px-2 py-1 w-full mt-3 bg-success/60 hover:bg-success text-white/60"
                                         {{ stimulus_action('document/customer','addCustomer') }}>{{ 'invoice.customer.add'|trans }}
                                 </button>
                             </div>
@@ -124,7 +124,7 @@
                 <div class="mb-1 grid grid-cols-[12rem_1fr]">
                     <span></span>
                     <button type="button"
-                            class="flex align-middle justify-center gap-2 p-2 bg-blue-700 hover:bg-blue-500 text-blue-100"
+                            class="flex align-middle justify-center gap-2 p-2 bg-info/60 hover:bg-info text-white/80 hover:text-white/90"
                             data-action="document--extended-info#toggleInfo">
                         <svg class="size-4 mt-1">
                             <use href="#plus-circle-fill"/>
@@ -137,7 +137,7 @@
 
 
         <div>
-            <div class="mt-10"
+            <div class="mt-10 bg-card-bg pb-2"
                     {{ stimulus_controller('document/document-item-collection', {
                         index:  form.documentItems|length > 0 ? form.documentItems|last.vars.name + 1 : 0,
                     }) }}
@@ -253,7 +253,7 @@
         }) }}
 
 
-        <button class="w-full mt-10 p-2 bg-green-700 hover:bg-green-500 text-green-100"
+        <button class="w-full mt-10 p-2 bg-success/60 hover:bg-success text-white/80 hover:text-white/90"
                 type="submit"
                 {{ stimulus_target('document/validator','submitButton') }}
         >{{ button_label|trans|default('save') }}</button>
@@ -280,7 +280,7 @@
                     </svg>
                 </button>
             </div>
-            <div class="p-4 bg-background-secondary max-h-[90vh] overflow-y-auto"
+            <div class="p-4 bg-card-bg max-h-[90vh] overflow-y-auto"
                     {{ stimulus_target('document/new-customer','body') }}
             >
             </div>

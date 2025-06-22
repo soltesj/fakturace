@@ -1,5 +1,5 @@
 {% form_theme form 'form/form_layout_horizontal.html.twig' %}
-<div class="bg-background-secondary p-2 mt-5 md:p-4">
+<div class="bg-card-bg p-2 mt-5 md:p-4">
     {{ form_start(form) }}
     {{ form_row(form.country) }}
     {{ form_row(form.businessId) }}
@@ -20,7 +20,7 @@
 
     {{ form_row(form.info) }}
 
-    <button class="w-full mt-10 p-2 bg-green-700 hover:bg-green-500 text-green-100"
+    <button class="w-full mt-10 p-2 bg-success/60 hover:bg-success text-white/80 hover:text-white/90"
             type="submit">{{ button_label|trans|default('button.save') }}</button>
 </div>
 {{ form_end(form) }}

@@ -23,7 +23,7 @@ export default class extends Controller {
         if (isValid) {
             event.target.submit()
         } else {
-            this.submitButtonTarget.classList.remove('bg-green-700')
+            this.submitButtonTarget.classList.remove('bg-success/60')
             this.submitButtonTarget.classList.add('bg-green-950')
         }
     }
@@ -38,17 +38,17 @@ export default class extends Controller {
         console.log(customerName)
         if (customerId > 0 && customerName.length > 1) {
             this.submitButtonTarget.removeAttribute("disabled", "");
-            this.customerNameTarget.classList.remove('border-red-700')
+            this.customerNameTarget.classList.remove('border-error')
             // this.submitButtonTarget.classList.remove('bg-green-950')
-            // this.submitButtonTarget.classList.add('hover:bg-green-500')
-            // this.submitButtonTarget.classList.add('bg-green-700')
+            // this.submitButtonTarget.classList.add('hover:bg-success')
+            // this.submitButtonTarget.classList.add('bg-success/60')
             return true
         } else {
             this.submitButtonTarget.setAttribute("disabled", "");
-            this.customerNameTarget.classList.add('border-red-700')
+            this.customerNameTarget.classList.add('border-error')
             // this.submitButtonTarget.classList.add('bg-green-950')
-            // this.submitButtonTarget.classList.remove('hover:bg-green-500')
-            // this.submitButtonTarget.classList.remove('bg-green-700')
+            // this.submitButtonTarget.classList.remove('hover:bg-success')
+            // this.submitButtonTarget.classList.remove('bg-success/60')
             return false
         }
     }

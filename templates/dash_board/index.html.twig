@@ -20,7 +20,7 @@
         {% endif %}
     </div>
     <div class="mb-2" {{ stimulus_controller('dashboard/masonry') }}>
-        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary">
+        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-card-bg">
             <h2 class="text-xl font-semibold mb-4 p-2 bg-table-header text-text-primary">{{ 'dashboard.sales_overview'|trans }}</h2>
             <canvas
                     class="px-2"
@@ -29,7 +29,7 @@
                     data-dashboard--chart-data-value='{{ chartData|json_encode }}'
             ></canvas>
         </div>
-        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary">
+        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-card-bg">
             <table class="w-full mb-4">
                 <thead>
                 <tr>
@@ -47,7 +47,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary">
+        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-card-bg">
             <table class="w-full mb-4">
                 <thead>
                 <tr>
@@ -71,7 +71,7 @@
             </table>
         </div>
         {% if overdueInvoices|length >0 %}
-            <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary">
+            <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-card-bg">
                 <div class="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-6">
                     <div class="md:order-1 col-span-2 md:col-span-5 lg:col-span-6"><h2
                                 class="text-xl font-semibold p-2 px-3 bg-table-header text-text-primary">{{ 'dashboard.unpaid_invoices'|trans }}</h2>
@@ -80,17 +80,17 @@
                 {% for overdueInvoice in overdueInvoices %}
                     {% set diff = ('now'|date('U') - overdueInvoice.dateDue|date('U')) // 86400 %}
                     <div class="grid grid-cols-2 border-b border-b-border">
-                        <div class="p-2 px-3 pb-1 sm:col-span-1 text-lg font-medium text-text-primary/60">
+                        <div class="p-2 px-3 pb-1 sm:col-span-1 text-lg font-medium text-text-primary">
                             <a href="{{ path('app_document_show',{'company':company.publicId,'document':overdueInvoice.id}) }}"
                                class="text-decoration-none">{{ overdueInvoice.documentNumber }}</a></div>
-                        <div class="p-2 pb-1 text-right text-lg font-medium text-text-primary/60">
+                        <div class="p-2 pb-1 text-right text-lg font-medium text-text-primary">
                             {{ overdueInvoice.remainingAmount }}
                         </div>
                         <div class="px-3 pb-1 pt-0 text-xs font-normal">
                             {{ overdueInvoice.customer.name|default('') }}
                         </div>
                         <div class="px-2 pb-1 pt-0 text-xs font-normal lg:text-base text-right
-{% if (diff > 0) and (diff < 7) %} text-yellow-500 {% endif %} {{ diff >= 7 ?' text-red-500' : '' }}">
+{% if (diff > 0) and (diff < 7) %} text-warning {% endif %} {{ diff >= 7 ?' text-red-500' : '' }}">
                             {{ overdueInvoice.dateDue|diff_for_humans }}
                         </div>
                     </div>
@@ -98,7 +98,7 @@
             </div>
         {% endif %}
 
-        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-background-secondary ">
+        <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-card-bg ">
             <h2 class="text-xl font-semibold p-2 px-3 bg-table-header text-text-primary">{{ 'dashboard.best_customers'|trans }}</h2>
 
             <p class="p-2 px-3">

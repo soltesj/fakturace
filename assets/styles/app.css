@@ -4,18 +4,33 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 .light {
-    --primary: 39, 55, 77;
-    --secondary: 108, 117, 125;
-    --success: 40, 167, 69;
-    --info: 23, 162, 184;
-    --warning: 255, 193, 7;
-    --error: 220, 53, 69;
-    --light: 248, 249, 250;
-    --dark: 52, 58, 64;
-    --color-table-header: 21, 32, 60;
-    --color-form-input-bg: 12, 20, 39;
-    --color-form-input-border: 12, 20, 39;
-    --color-form-input-border-focus: 12, 20, 39;
+    /*0 144 217*/
+    --color-primary: 96, 93, 255;
+
+    --color-secondary: 134, 149, 170;
+    --color-background-secondary: 12, 20, 39;
+
+    --color-form-input-bg: 255, 255, 255;
+    --color-form-input-border: 175, 175, 175;
+    --color-form-input-border-focus: 82, 109, 130;
+
+
+    --color-text-primary: 80, 84, 88;
+    --color-text-secondary: 65, 75, 87;
+    --color-background: 229, 233, 236;
+    --color-card-bg: 255, 255, 255;
+    --color-card-header-bg: 255, 255, 255;
+    --color-border: 221, 221, 221;
+    --color-success: 27, 110, 46;
+    --color-success-text: 207, 218, 212;
+    --color-info: 73, 71, 198;
+    --color-info-text: 229, 229, 255;
+    --color-warning: 211, 160, 9;
+    --color-warning-text: 255, 249, 229;
+    --color-error: 186, 45, 59;
+    --color-error-text: 221, 208, 210;
+    --color-nav-background: 27, 30, 36;
+    --color-nav-background-secondary: 17, 24, 39;
 }
 
 .dark {
@@ -23,15 +38,29 @@
     /* 157, 178, 191*/
 
     --color-secondary: 134, 149, 170;
-    --color-text-primary: 255, 255, 255;
-    --color-text-secondary: 134, 149, 170;
-    --color-background: 10, 14, 25;
     --color-background-secondary: 12, 20, 39;
-    --color-border: 23, 32, 54;
-    --color-table-header: 21, 32, 60;
-    --color-form-input-bg: 12, 20, 39;
+
+    --color-form-input-bg: 14, 24, 47;
     --color-form-input-border: 31, 44, 62;
     --color-form-input-border-focus: 82, 109, 130;
+
+
+    --color-text-primary: 220, 220, 220;
+    --color-text-secondary: 134, 149, 170;
+    --color-background: 10, 14, 25;
+    --color-card-bg: 12, 20, 39;
+    --color-card-header-bg: 21, 32, 60;
+    --color-border: 23, 32, 54;
+    --color-success: 27, 110, 46;
+    --color-success-text: 207, 218, 212;
+    --color-info: 73, 71, 198;
+    --color-info-text: 229, 229, 255;
+    --color-warning: 211, 160, 9;
+    --color-warning-text: 255, 249, 229;
+    --color-error: 186, 45, 59;
+    --color-error-text: 221, 208, 210;
+    --color-nav-background: 31, 41, 55;
+    --color-nav-background-secondary: 17, 24, 39;
 }
 
 .test {

@@ -45,7 +45,7 @@
             </a>
         </div>
 
-        <div class="bg-background-secondary p-0 md:p-8 mb-8">
+        <div class="bg-card-bg p-0 md:p-8 mb-8">
             <div class="grid grid-cols-1 md:grid-cols-2">
                 <div class="p-4 md:ml-32">
                     <div class="w-fit mx-auto md:mx-0">
@@ -71,7 +71,7 @@
                     <div class="text-right">{{ 'document.variable_symbol'|trans }}:</div>
                     <div>{{ document.dateIssue|format_date }}</div>
                     <div class="{% if document.isPaid == false %}
-                                {% if (diff > 0) and (diff < 7) %} text-yellow-500 {% endif %}
+                                {% if (diff > 0) and (diff < 7) %} text-warning {% endif %}
                                 {% if diff >= 7 %} text-red-500 {% endif %}
                             {% endif %}">{{ document.dateDue|format_date }}</div>
                     <div>{{ document.dateTaxable|format_date }}</div>
@@ -83,9 +83,9 @@
             <div class="text-center  font-semibold">
                 {% set diff = ('now'|date('U') - document.dateDue|date('U')) // 86400 %}
                 {% if document.remainingAmount == 0 %}
-                    <div class="bg-green-700 text-green-100 p-2 block sm:block md:inline">{{ 'invoice.paid'|trans }}</div>
+                    <div class="bg-success/60 text-white/80 hover:text-white/90 p-2 block sm:block md:inline">{{ 'invoice.paid'|trans }}</div>
                 {% elseif document.remainingAmount > 0 and diff>0 %}
-                    <div class="{{ (diff > 0) and (diff < 7)? 'bg-yellow-700 text-yellow-100' }} {{ diff >= 7 ?' bg-red-700 text-red-100' }}  p-2 block sm:block md:inline">{{ 'invoice.overdue'|trans }}
+                    <div class="{{ (diff > 0) and (diff < 7)? 'bg-yellow-700 text-yellow-100' }} {{ diff >= 7 ?' bg-error/60 text-red-100' }}  p-2 block sm:block md:inline">{{ 'invoice.overdue'|trans }}
                         : {{ document.remainingAmount|default(0)|number_format(2,',',' ') }} {{ document.currency.symbol }}</div>
                 {% elseif document.remainingAmount > 0 and diff<=0 %}
                     {{ 'invoice.to_pay'|trans }}: {{ document.remainingAmount|default(0)|number_format(2,',',' ') }} {{ document.currency.symbol }}
@@ -98,13 +98,13 @@
             </div>
         </div>
         {% if document.note %}
-            <div class="bg-background-secondary p-0 md:p-8 mb-8">
+            <div class="bg-card-bg p-0 md:p-8 mb-8">
                 <div class="bg-table-header p-2 px-4">{{ 'invoice.note'|trans }}</div>
                 <p class="p-4">{{ document.note }}</p>
             </div>
         {% endif %}
 
-        <div class="bg-background-secondary p-0 md:p-8">
+        <div class="bg-card-bg p-0 md:p-8">
             <div class="grid grid-cols-[3fr_7fr_3fr_2fr] sm:grid-cols-[2fr_8fr_3fr_2fr] md:grid-cols-[1fr_3fr_1fr_1fr] lg:grid-cols-[1fr_8fr_2fr_1fr] gap-2 bg-table-header p-2 px-4">
                 <div>
                     {{ 'invoice.item_quantity'|trans }}
