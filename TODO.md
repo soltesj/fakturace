@@ -8,7 +8,6 @@
 - [ ] if the document is edited, the first value off the vat amount is set it is probably caused by changing document
   vat mode
 - [ ] set vatMode for existing documents
-- [ ] set currency for existing documents
 
 ## 📦 New features
 
@@ -43,6 +42,7 @@
 - [x] management for default template for sending invoice by email
 - [x] set default email template for existing company
 - [x] set roles for exiting users "ROLE_USER","ROLE_COMPANY_EDITOR", "ROLE_COMPANY_ADMIN"
+- [x] set currency for existing documents
 
 ## REMOVED
 
