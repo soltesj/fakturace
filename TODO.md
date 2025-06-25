@@ -7,8 +7,8 @@
 - [ ] if the price is updated, the vat_amount is not recalculated
 - [ ] if the document is edited, the first value off the vat amount is set it is probably caused by changing document
   vat mode
-- [ ] set default email template for existing company
-- [ ] set vatMode for existing document
+- [ ] set vatMode for existing documents
+- [ ] set currency for existing documents
 - [ ] set roles for exiting users "ROLE_USER","ROLE_COMPANY_EDITOR", "ROLE_COMPANY_ADMIN"
 
 ## 📦 New features
@@ -42,6 +42,7 @@
 - [x] refactor the document customer ⇒ remove all customer columns and create customers in the customer table with
   relations
 - [x] management for default template for sending invoice by email
+- [x] set default email template for existing company
 
 ## REMOVED
 
