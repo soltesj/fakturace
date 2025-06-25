@@ -22,7 +22,7 @@ class UserController extends AbstractController
     ) {
     }
 
-    #[Route('/api/user/theme', name: 'api_customers_lookup')]
+    #[Route('/api/user/theme', name: 'api_user_theme')]
     public function theme(Request $request): jsonResponse
     {
         /** @var User $user */
