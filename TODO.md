@@ -7,6 +7,9 @@
 - [ ] if the price is updated, the vat_amount is not recalculated
 - [ ] if the document is edited, the first value off the vat amount is set it is probably caused by changing document
   vat mode
+- [ ] set default email template for existing company
+- [ ] set vatMode for existing document
+- [ ] set roles for exiting users "ROLE_USER","ROLE_COMPANY_EDITOR", "ROLE_COMPANY_ADMIN"
 
 ## 📦 New features
 

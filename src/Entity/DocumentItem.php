@@ -14,7 +14,7 @@ class DocumentItem
     #[ORM\Column]
     protected ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Document::class, inversedBy: 'documentItems')]
+    #[ORM\ManyToOne(targetEntity: Document::class, inversedBy: 'documentItems', cascade: ['persist', 'remove'])]
     private ?Document $document = null;
 
     #[ORM\Column(name: 'name', type: Types::STRING, length: 255, nullable: false)]

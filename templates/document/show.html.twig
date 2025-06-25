@@ -4,8 +4,8 @@
 
 {% block body %}
     <div {{ stimulus_controller('email/send-email') }}
-            data-email--send-email-subject-template-value="{{ emailTemplate.subject }}"
-            data-email--send-email-content-template-value="{{ emailTemplate.content }}"
+            data-email--send-email-subject-template-value="{{ emailTemplate.subject|default }}"
+            data-email--send-email-content-template-value="{{ emailTemplate.content|default('') }}"
             data-email--send-email-user-name-value="{{ userName }}"
             data-email--send-email-company-name-value="{{ company.name }}"
     >
@@ -15,7 +15,7 @@
                     <use href="#arrow-left-circle"/>
                 </svg>
             </a>
-            <span>{{ 'invoice.invoice'|trans }}: {{ document.documentNumber }}</span>
+            <span>{{ 'invoice.invoice'|trans }}:{{ document.documentType.name }} {{ document.documentNumber }}</span>
         </h1>
 
         <div class="mt-8 md:mb-8 flex fixed bottom-0 left-0 justify-center w-full md:relative md:justify-start bg-gray-900 md:bg-transparent py-2">
@@ -75,7 +75,7 @@
                                 {% if diff >= 7 %} text-red-500 {% endif %}
                             {% endif %}">{{ document.dateDue|format_date }}</div>
                     <div>{{ document.dateTaxable|format_date }}</div>
-                    <div>{{ document.paymentType.name }}</div>
+                    <div>{{ document.paymentType.name|default('') }}</div>
                     <div>{{ document.datePaid?document.datePaid|format_date:'&nbsp;' }}</div>
                     <div>{{ document.variableSymbol }}</div>
                 </div>
@@ -86,13 +86,13 @@
                     <div class="bg-success/60 text-white/80 hover:text-white/90 p-2 block sm:block md:inline">{{ 'invoice.paid'|trans }}</div>
                 {% elseif document.remainingAmount > 0 and diff>0 %}
                     <div class="{{ (diff > 0) and (diff < 7)? 'bg-yellow-700 text-yellow-100' }} {{ diff >= 7 ?' bg-error/60 text-red-100' }}  p-2 block sm:block md:inline">{{ 'invoice.overdue'|trans }}
-                        : {{ document.remainingAmount|default(0)|number_format(2,',',' ') }} {{ document.currency.symbol }}</div>
+                        : {{ document.remainingAmount|default(0)|number_format(2,',',' ') }} {{ document.currency.symbol|default('') }}</div>
                 {% elseif document.remainingAmount > 0 and diff<=0 %}
-                    {{ 'invoice.to_pay'|trans }}: {{ document.remainingAmount|default(0)|number_format(2,',',' ') }} {{ document.currency.symbol }}
+                    {{ 'invoice.to_pay'|trans }}: {{ document.remainingAmount|default(0)|number_format(2,',',' ') }} {{ document.currency.symbol|default('') }}
                 {% elseif document.remainingAmount < 0 %}
                     <div class="bg-purple-700 text-purple-100 p-2 block sm:block md:inline">
                         {{ 'invoice.overpayment'|trans }}
-                        : {{ document.remainingAmount|default(0)|abs|number_format(2,',',' ') }} {{ document.currency.symbol }}
+                        : {{ document.remainingAmount|default(0)|abs|number_format(2,',',' ') }} {{ document.currency.symbol|default('') }}
                     </div>
                 {% endif %}
             </div>
@@ -131,7 +131,7 @@
                         {{ item.price }}
                     </div>
                     <div class="text-right">
-                        {{ item.vat.vatAmount }}
+                        {{ item.vat.vatAmount|default('') }}
                     </div>
                 </div>
             {% endfor %}
@@ -141,14 +141,14 @@
                     {% for documentPrice in document.documentPrices %}
                         {% if documentPrice.priceType.id == 2 %}
                             <div class="text-right">{{ documentPrice.vatLevel ? documentPrice.vatLevel.name }}</div>
-                            <div class="text-right">{{ documentPrice.amount|default(0)|number_format(2,',',' ') }} {{ document.currency.symbol }}</div>
+                            <div class="text-right">{{ documentPrice.amount|default(0)|number_format(2,',',' ') }} {{ document.currency.symbol|default('') }}</div>
                         {% endif %}
                     {% endfor %}
                     {% for documentPrice in document.documentPrices %}
                         {% if documentPrice.priceType.id == 1 %}
                             <div class="text-right">CELKEM K ÚHRADĚ</div>
                             <div class="text-right">
-                                {{ documentPrice.amount|default(0)|number_format(2,',',' ') }} {{ document.currency.symbol }}
+                                {{ documentPrice.amount|default(0)|number_format(2,',',' ') }} {{ document.currency.symbol|default('') }}
                             </div>
                         {% endif %}
                     {% endfor %}

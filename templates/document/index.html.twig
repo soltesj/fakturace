@@ -37,8 +37,8 @@
 
     <div data-controller="documents--filter payment--payment email--send-email"
          data-action="payment--payment:document:paid->documents--filter#onChange"
-         data-email--send-email-subject-template-value="{{ emailTemplate.subject }}"
-         data-email--send-email-content-template-value="{{ emailTemplate.content }}"
+         data-email--send-email-subject-template-value="{{ emailTemplate.subject|default('') }}"
+         data-email--send-email-content-template-value="{{ emailTemplate.content|default('') }}"
          data-email--send-email-user-name-value="{{ userName }}"
          data-email--send-email-company-name-value="{{ company.name }}"
     >

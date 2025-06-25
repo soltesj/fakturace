@@ -25,7 +25,7 @@ class Document implements CompanyOwnedInterface
     #[ORM\Column]
     protected ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'documents')]
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'documents', cascade: ['persist', 'remove'])]
     private ?self $document = null;
 
     /**
