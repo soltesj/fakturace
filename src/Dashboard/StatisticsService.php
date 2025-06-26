@@ -70,6 +70,9 @@ readonly class StatisticsService
      */
     public function getVatToPay(Company $company): array
     {
+        if (!$company->isVatPayer()) {
+            return ['thisPeriod' => null, 'previousPeriod' => null];
+        }
         list($dateFrom, $dateTo) = $this->getDates($company->getVatPaymentMode());
         $thisPeriod = $this->documentRepository->getVatToPay($company, $dateFrom, $dateTo);
         list($dateFrom, $dateTo) = $this->getDates($company->getVatPaymentMode(), 'previous');

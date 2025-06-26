@@ -47,6 +47,7 @@
                 </tbody>
             </table>
         </div>
+        {% if company.vatPayer %}
         <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-card-bg">
             <table class="w-full mb-4">
                 <thead>
@@ -70,6 +71,7 @@
                 </tbody>
             </table>
         </div>
+        {% endif %}
         {% if overdueInvoices|length >0 %}
             <div class="masonry-item w-full md:w-1/2 -mx-1 my-2 bg-card-bg">
                 <div class="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-6">
